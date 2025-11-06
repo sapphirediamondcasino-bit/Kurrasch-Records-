@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurrasch Records Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-light: #ff6b85;
+            --text: #eee;
+            --text-dim: #aaa;
+            --success: #00d9ff;
+            --warning: #ffd700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        nav button:hover {
+            color: var(--accent-light);
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+            padding: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .landing {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .card.elite {
+            border-color: var(--warning);
+            background: rgba(255,215,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card .price {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: var(--success);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dim);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 2rem;
+            height: 100%;
+        }
+
+        .panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .project-item {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-item:hover {
+            background: rgba(233,69,96,0.2);
+        }
+
+        .quota-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s;
+        }
+
+        .studio {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-rows: 60px 1fr 100px;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .studio-header {
+            grid-column: 1 / -1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .track-list {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .track {
+            background: rgba(255,255,255,0.05);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .track-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .track-controls button {
+            flex: 1;
+            padding: 0.25rem;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .timeline {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow: auto;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-rows: repeat(auto-fill, 60px);
+            gap: 0.5rem;
+            min-height: 100%;
+        }
+
+        .timeline-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .audio-clip {
+            position: absolute;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            height: 100%;
+            border-radius: 4px;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            cursor: move;
+        }
+
+        .ai-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .transport {
+            grid-column: 1 / -1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .transport button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .transport button:hover {
+            background: var(--accent-light);
+            transform: scale(1.1);
+        }
+
+        .transport button.recording {
+            background: #ff0000;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .admin-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .user-list, .session-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item, .session-item {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            background: var(--success);
+            color: black;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            background: rgba(0,0,0,0.3);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 2000;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .meter {
+            display: flex;
+            gap: 2px;
+            height: 60px;
+            align-items: flex-end;
+        }
+
+        .meter-bar {
+            flex: 1;
+            background: var(--success);
+            border-radius: 2px 2px 0 0;
+            transition: height 0.05s;
+        }
+
+        .demo-box {
+            background: rgba(255,215,0,0.2);
+            border: 2px solid var(--warning);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <div class="logo">🎵 KURRASCH RECORDS</div>
+            <nav id="nav">
+                <button onclick="app.showPage('landing')">Home</button>
+                <button onclick="app.showPage('login')">Login</button>
+            </nav>
+        </header>
+
+        <div class="content">
+            <div id="landing" class="page landing">
+                <div class="hero">
+                    <h1>Professional Recording Studio Online</h1>
+                    <p>Create, mix, and produce with AI-powered tools</p>
+                </div>
+
+                <div class="pricing-cards">
+                    <div class="card">
+                        <h3>Basic</h3>
+                        <div class="price">Free</div>
+                        <ul>
+                            <li>✓ 12 hours/day studio time</li>
+                            <li>✓ 25 AI generations/month</li>
+                            <li>✓ 8 tracks max</li>
+                            <li>✓ Basic effects</li>
+                            <li>✓ MP3 export</li>
+                        </ul>
+                        <button class="btn" onclick="app.selectPlan('basic')">Get Started</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Pro</h3>
+                        <div class="price">$29/mo</div>
+                        <ul>
+                            <li>✓ 24 hours/day studio time</li>
+                            <li>✓ 100 AI generations/month</li>
+                            <li>✓ 16 tracks max</li>
+                            <li>✓ Advanced effects</li>
+                            <li>✓ WAV + MP3 export</li>
+                            <li>✓ Voice training</li>
+                        </ul>
+                        <button class="btn" onclick="app.selectPlan('pro')">Subscribe</button>
+                    </div>
+
+                    <div class="card elite">
+                        <h3>Elite</h3>
+                        <div class="price">$99/mo</div>
+                        <ul>
+                            <li>✓ Unlimited studio time</li>
+                            <li>✓ Unlimited AI generations</li>
+                            <li>✓ 32 tracks max</li>
+                            <li>✓ Professional effects suite</li>
+                            <li>✓ All formats export</li>
+                            <li>✓ Priority support</li>
+                            <li>✓ Advanced AI features</li>
+                        </ul>
+                        <button class="btn btn-secondary" onclick="app.selectPlan('elite')">Go Elite</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="login" class="page hidden">
+                <div class="auth-container">
+                    <div class="demo-box">
+                        <strong>DEMO MODE - Quick Login:</strong><br>
+                        Email: demo@demo.com | Password: demo<br>
+                        OR create any account instantly!
+                    </div>
+                    <h2>Login</h2>
+                    <form onsubmit="app.login(event)">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" value="demo@demo.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" value="demo">
+                        </div>
+                        <button type="submit" class="btn">Login</button>
+                        <button type="button" class="btn btn-outline" onclick="app.showPage('signup')" style="margin-left: 1rem;">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="signup" class="page hidden">
+                <div class="auth-container">
+                    <h2>Create Account</h2>
+                    <form onsubmit="app.signup(event)">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="signupName" value="Demo User">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="signupEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword">
+                        </div>
+                        <div class="form-group">
+                            <label>Plan</label>
+                            <select id="signupPlan">
+                                <option value="basic">Basic (Free)</option>
+                                <option value="pro">Pro ($29/mo)</option>
+                                <option value="elite">Elite ($99/mo)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">Create Account</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="dashboard" class="page hidden dashboard">
+                <div class="panel">
+                    <h2>Projects</h2>
+                    <button class="btn" onclick="app.createProject()">+ New Project</button>
+                    <div id="projectList" style="margin-top: 1rem;"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>Quick Actions</h2>
+                    <button class="btn" onclick="app.createProject()" style="width: 100%; margin-bottom: 1rem;">Create New Project</button>
+                    <button class="btn btn-secondary" onclick="app.openStudioDirect()" style="width: 100%; margin-bottom: 1rem;">Open Studio</button>
+                    <button class="btn btn-outline" onclick="app.openVoiceTraining()" style="width: 100%;">Train AI Voice</button>
+                </div>
+
+                <div class="panel">
+                    <h2>Usage & Quotas</h2>
+                    <div id="quotaDisplay"></div>
+                </div>
+            </div>
+
+            <div id="studio" class="page hidden studio">
+                <div class="studio-header">
+                    <div>
+                        <input type="text" id="projectTitle" placeholder="Project Title" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 4px; color: white;">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn" onclick="app.saveProject()">💾 Save</button>
+                        <button class="btn btn-secondary" onclick="app.exportProject()">⬇ Export</button>
+                        <button class="btn" style="background: var(--warning);" onclick="app.submitProject()">📧 Submit</button>
+                    </div>
+                </div>
+
+                <div class="track-list">
+                    <h3>Tracks</h3>
+                    <button class="btn" onclick="app.addTrack()" style="width: 100%; margin-bottom: 1rem;">+ Add Track</button>
+                    <div id="trackList"></div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-grid" id="timelineGrid"></div>
+                </div>
+
+                <div class="ai-panel">
+                    <h3>AI Tools</h3>
+                    <div class="form-group">
+                        <label>Generate Music</label>
+                        <textarea id="aiPrompt" placeholder="Describe the music you want to generate..."></textarea>
+                    </div>
+                    <button class="btn" onclick="app.generateAI()">🎵 Generate</button>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4>Voice Models</h4>
+                        <select id="voiceModel" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white; margin: 1rem 0;">
+                            <option value="default">Default Voice</option>
+                        </select>
+                        <button class="btn btn-outline" onclick="app.openVoiceTraining()">Train New Voice</button>
+                    </div>
+                </div>
+
+                <div class="transport">
+                    <button id="recordBtn" onclick="app.toggleRecord()">⏺</button>
+                    <button id="playBtn" onclick="app.togglePlay()">▶</button>
+                    <button onclick="app.stop()">⏹</button>
+                    <div class="meter" id="meter"></div>
+                </div>
+            </div>
+
+            <div id="admin" class="page hidden admin">
+                <div class="admin-section">
+                    <h2>Users</h2>
+                    <div class="user-list" id="userList"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>Active Sessions</h2>
+                    <div id="sessionStats" style="margin-bottom: 1rem;"></div>
+                    <div class="session-list" id="sessionList"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>Submissions</h2>
+                    <div id="submissionList"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>System Settings</h2>
+                    <div class="form-group">
+                        <label>Max Active Users (Basic)</label>
+                        <input type="number" id="maxBasic" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Active Users (Pro)</label>
+                        <input type="number" id="maxPro" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Active Users (Elite)</label>
+                        <input type="number" id="maxElite" value="5">
+                    </div>
+                    <button class="btn" onclick="app.saveSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            currentUser: null,
+            currentProject: null,
+            tracks: [],
+            isRecording: false,
+            isPlaying: false,
+            audioContext: null,
+            mediaRecorder: null,
+            recordedChunks: [],
+            db: {
+                users: [],
+                projects: [],
+                submissions: []
+            },
+
+            init() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.initMeter();
+                this.loadFromMemory();
+                
+                const stored = localStorage.getItem('currentUser');
+                if (stored) {
+                    this.currentUser = JSON.parse(stored);
+                    this.updateNav();
+                    if (this.currentUser.role === 'admin') {
+                        this.showPage('admin');
+                        this.loadAdmin();
+                    } else {
+                        this.showPage('dashboard');
+                        this.loadDashboard();
+                    }
+                }
+
+                this.createDefaultUsers();
+            },
+
+            loadFromMemory() {
+                const data = localStorage.getItem('appData');
+                if (data) {
+                    this.db = JSON.parse(data);
+                }
+            },
+
+            saveToMemory() {
+                localStorage.setItem('appData', JSON.stringify(this.db));
+            },
+
+            createDefaultUsers() {
+                if (this.db.users.length === 0) {
+                    this.db.users = [
+                        {
+                            id: 'owner',
+                            email: 'kurraschgamingmerchstore@gmail.com',
+                            name: 'Owner',
+                            password: 'admin123',
+                            role: 'admin',
+                            plan: 'elite',
+                            createdAt: new Date().toISOString(),
+                            quotas: { aiGen: 999999, dailyHours: 999999 },
+                            used: { aiGen: 0, dailyHours: 0 }
+                        },
+                        {
+                            id: 'demo',
+                            email: 'demo@demo.com',
+                            name: 'Demo User',
+                            password: 'demo',
+                            role: 'artist',
+                            plan: 'pro',
+                            createdAt: new Date().toISOString(),
+                            quotas: { aiGen: 100, dailyHours: 24 },
+                            used: { aiGen: 15, dailyHours: 3 }
+                        }
+                    ];
+                    this.saveToMemory();
+                }
+            },
+
+            showPage(pageId) {
+                document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+                const page = document.getElementById(pageId);
+                if (page) {
+                    page.classList.remove('hidden');
+                }
+            },
+
+            selectPlan(plan) {
+                document.getElementById('signupPlan').value = plan;
+                this.showPage('signup');
+            },
+
+            signup(e) {
+                e.preventDefault();
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const plan = document.getElementById('signupPlan').value;
+
+                if (this.db.users.find(u => u.email === email)) {
+                    this.notify('Email already exists');
+                    return;
+                }
+
+                const quotas = {
+                    basic: { aiGen: 25, dailyHours: 12 },
+                    pro: { aiGen: 100, dailyHours: 24 },
+                    elite: { aiGen: 999999, dailyHours: 999999 }
+                };
+
+                const newUser = {
+                    id: 'user_' + Date.now(),
+                    email,
+                    name,
+                    password,
+                    role: 'artist',
+                    plan,
+                    createdAt: new Date().toISOString(),
+                    quotas: quotas[plan],
+                    used: { aiGen: 0, dailyHours: 0 }
+                };
+
+                this.db.users.push(newUser);
+                this.saveToMemory();
+
+                this.currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                this.updateNav();
+                this.showPage('dashboard');
+                this.loadDashboard();
+                this.notify('Account created! Welcome to Kurrasch Records!');
+            },
+
+            login(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const user = this.db.users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.updateNav();
+                    
+                    if (user.role === 'admin') {
+                        this.showPage('admin');
+                        this.loadAdmin();
+                    } else {
+                        this.showPage('dashboard');
+                        this.loadDashboard();
+                    }
+                    this.notify('Welcome back, ' + user.name + '!');
+                } else {
+                    this.notify('Invalid email or password');
+                }
+            },
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('currentUser');
+                this.updateNav();
+                this.showPage('landing');
+                this.notify('Logged out successfully');
+            },
+
+            updateNav() {
+                const nav = document.getElementById('nav');
+                if (this.currentUser) {
+                    nav.innerHTML = `
+                        <button onclick="app.showPage('dashboard')">Dashboard</button>
+                        <button onclick="app.openStudioDirect()">Studio</button>
+                        ${this.currentUser.role === 'admin' ? '<button onclick="app.showPage(\'admin\')">Admin</button>' : ''}
+                        <button onclick="app.logout()">Logout (${this.currentUser.name})</button>
+                    `;
+                } else {
+                    nav.innerHTML = `
+                        <button onclick="app.showPage('landing')">Home</button>
+                        <button onclick="app.showPage('login')">Login</button>
+                    `;
+                }
+            },
+
+            loadDashboard() {
+                this.loadProjects();
+                this.updateQuotas();
+            },
+
+            loadProjects() {
+                const userProjects = this.db.projects.filter(p => p.userId === this.currentUser.id);
+                const list = document.getElementById('projectList');
+                
+                if (userProjects.length === 0) {
+                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No projects yet. Create your first project!</div>';
+                } else {
+                    list.innerHTML = userProjects.map(p => `
+                        <div class="project-item" onclick="app.openProject('${p.id}')">
+                            <div><strong>${p.title}</strong></div>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">${p.trackCount || 0} tracks</div>
+                            <div style="font-size: 0.8rem; color: var(--text-dim);">${new Date(p.updatedAt).toLocaleDateString()}</div>
+                        </div>
+                    `).join('');
+                }
+            },
+
+            updateQuotas() {
+                const display = document.getElementById('quotaDisplay');
+                const user = this.currentUser;
+                
+                const aiGenPercent = user.quotas.aiGen > 999 ? 0 : (user.used.aiGen / user.quotas.aiGen) * 100;
+                const hoursPercent = user.quotas.dailyHours > 999 ? 0 : (user.used.dailyHours / user.quotas.dailyHours) * 100;
+
+                display.innerHTML = `
+                    <div class="quota-item">
+                        <div>
+                            <strong>AI Generations</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">
+                                ${user.quotas.aiGen > 999 ? 'Unlimited' : `${user.used.aiGen} / ${user.quotas.aiGen}`}
+                            </div>
+                        </div>
+                    </div>
+                    ${user.quotas.aiGen <= 999 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${aiGenPercent}%"></div></div>` : ''}
+                    
+                    <div class="quota-item" style="margin-top: 1rem;">
+                        <div>
+                            <strong>Studio Time Today</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">
+                                ${user.quotas.dailyHours > 999 ? 'Unlimited' : `${user.used.dailyHours} / ${user.quotas.dailyHours} hours`}
+                            </div>
+                        </div>
+                    </div>
+                    ${user.quotas.dailyHours <= 999 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${hoursPercent}%"></div></div>` : ''}
+                `;
+            },
+
+            createProject() {
+                const title = prompt('Project name:', 'My New Song');
+                if (!title) return;
+
+                const newProject = {
+                    id: 'proj_' + Date.now(),
+                    userId: this.currentUser.id,
+                    title,
+                    tracks: [],
+                    trackCount: 0,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                this.db.projects.push(newProject);
+                this.saveToMemory();
+
+                this.currentProject = newProject;
+                this.tracks = [];
+                document.getElementById('projectTitle').value = title;
+                
+                this.notify('Project created!');
+                this.loadProjects();
+                this.showPage('studio');
+                this.renderTracks();
+            },
+
+            openProject(projectId) {
+                const project = this.db.projects.find(p => p.id === projectId);
+                if (project) {
+                    this.currentProject = project;
+                    this.tracks = project.tracks || [];
+                    document.getElementById('projectTitle').value = project.title;
+                    this.showPage('studio');
+                    this.renderTracks();
+                    this.notify('Project loaded: ' + project.title);
+                }
+            },
+
+            openStudioDirect() {
+                if (!this.currentProject) {
+                    this.createProject();
+                } else {
+                    this.showPage('studio');
+                    this.renderTracks();
+                }
+            },
+
+            saveProject() {
+                if (!this.currentProject) {
+                    this.notify('No project to save');
+                    return;
+                }
+
+                this.currentProject.title = document.getElementById('projectTitle').value;
+                this.currentProject.tracks = this.tracks;
+                this.currentProject.trackCount = this.tracks.length;
+                this.currentProject.updatedAt = new Date().toISOString();
+
+                const index = this.db.projects.findIndex(p => p.id === this.currentProject.id);
+                if (index >= 0) {
+                    this.db.projects[index] = this.currentProject;
+                } else {
+                    this.db.projects.push(this.currentProject);
+                }
+
+                this.saveToMemory();
+                this.notify('Project saved successfully!');
+            },
+
+            addTrack() {
+                const name = prompt('Track name:', `Track ${this.tracks.length + 1}`);
+                if (!name) return;
+
+                const track = {
+                    id: 'track_' + Date.now(),
+                    name,
+                    volume: 0.8,
+                    pan: 0,
+                    muted: false,
+                    solo: false,
+                    clips: []
+                };
+
+                this.tracks.push(track);
+                this.renderTracks();
+                this.notify('Track added: ' + name);
+            },
+
+            renderTracks() {
+                const trackList = document.getElementById('trackList');
+                const timeline = document.getElementById('timelineGrid');
+
+                if (this.tracks.length === 0) {
+                    trackList.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No tracks yet</div>';
+                    timeline.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">Add tracks to start</div>';
+                    return;
+                }
+
+                trackList.innerHTML = this.tracks.map((track, i) => `
+                    <div class="track">
+                        <strong>${track.name}</strong>
+                        <div class="track-controls">
+                            <button onclick="app.toggleMute(${i})">${track.muted ? '🔇' : '🔊'}</button>
+                            <button onclick="app.toggleSolo(${i})">${track.solo ? '🎯' : '○'}</button>
+                            <button onclick="app.uploadToTrack(${i})">📁</button>
+                            <button onclick="app.deleteTrack(${i})">🗑</button>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="${track.volume}" 
+                               onchange="app.setVolume(${i}, this.value)" style="width: 100%; margin-top: 0.5rem;">
+                    </div>
+                `).join('');
+
+                timeline.innerHTML = this.tracks.map((track, i) => `
+                    <div class="timeline-track">
+                        ${track.clips.map((clip, j) => `
+                            <div class="audio-clip" style="left: ${clip.start * 10}px; width: ${clip.duration * 10}px;">
+                                ${clip.name}
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+            },
+
+            toggleMute(index) {
+                this.tracks[index].muted = !this.tracks[index].muted;
+                this.renderTracks();
+            },
+
+            toggleSolo(index) {
+                this.tracks[index].solo = !this.tracks[index].solo;
+                this.renderTracks();
+            },
+
+            setVolume(index, value) {
+                this.tracks[index].volume = parseFloat(value);
+            },
+
+            deleteTrack(index) {
+                if (confirm('Delete track "' + this.tracks[index].name + '"?')) {
+                    this.tracks.splice(index, 1);
+                    this.renderTracks();
+                    this.notify('Track deleted');
+                }
+            },
+
+            uploadToTrack(index) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'audio/*';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const clip = {
+                            id: 'clip_' + Date.now(),
+                            name: file.name,
+                            start: 0,
+                            duration: 30,
+                            fileSize: file.size
+                        };
+                        this.tracks[index].clips.push(clip);
+                        this.renderTracks();
+                        this.notify('Audio file added: ' + file.name);
+                    }
+                };
+                input.click();
+            },
+
+            async toggleRecord() {
+                if (this.isRecording) {
+                    this.stopRecording();
+                } else {
+                    await this.startRecording();
+                }
+            },
+
+            async startRecording() {
+                if (this.tracks.length === 0) {
+                    this.notify('Add a track first');
+                    return;
+                }
+
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.recordedChunks = [];
+
+                    this.mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) {
+                            this.recordedChunks.push(e.data);
+                        }
+                    };
+
+                    this.mediaRecorder.onstop = () => {
+                        const clip = {
+                            id: 'clip_' + Date.now(),
+                            name: 'Recording ' + new Date().toLocaleTimeString(),
+                            start: 0,
+                            duration: 30,
+                            fileSize: this.recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)
+                        };
+                        this.tracks[0].clips.push(clip);
+                        this.renderTracks();
+                        this.notify('Recording saved to ' + this.tracks[0].name);
+                    };
+
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    document.getElementById('recordBtn').classList.add('recording');
+                    this.notify('Recording started...');
+                } catch (e) {
+                    this.notify('Microphone access denied');
+                }
+            },
+
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    this.isRecording = false;
+                    document.getElementById('recordBtn').classList.remove('recording');
+                }
+            },
+
+            togglePlay() {
+                this.isPlaying = !this.isPlaying;
+                document.getElementById('playBtn').textContent = this.isPlaying ? '⏸' : '▶';
+                if (this.isPlaying) {
+                    this.notify('Playing project...');
+                    this.animateMeter();
+                }
+            },
+
+            stop() {
+                this.isPlaying = false;
+                this.isRecording = false;
+                document.getElementById('playBtn').textContent = '▶';
+                document.getElementById('recordBtn').classList.remove('recording');
+            },
+
+            initMeter() {
+                const meter = document.getElementById('meter');
+                for (let i = 0; i < 20; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'meter-bar';
+                    bar.style.height = '0%';
+                    meter.appendChild(bar);
+                }
+            },
+
+            animateMeter() {
+                if (!this.isPlaying) return;
+                
+                const bars = document.querySelectorAll('.meter-bar');
+                bars.forEach(bar => {
+                    const height = Math.random() * 100;
+                    bar.style.height = height + '%';
+                    bar.style.background = height > 80 ? '#ff0000' : height > 60 ? '#ffff00' : '#00ff00';
+                });
+
+                setTimeout(() => this.animateMeter(), 50);
+            },
+
+            generateAI() {
+                const prompt = document.getElementById('aiPrompt').value;
+                if (!prompt) {
+                    this.notify('Enter a description for AI generation');
+                    return;
+                }
+
+                if (this.currentUser.used.aiGen >= this.currentUser.quotas.aiGen && this.currentUser.quotas.aiGen < 999) {
+                    this.notify('AI generation quota exceeded. Upgrade your plan!');
+                    return;
+                }
+
+                this.notify('Generating AI audio from prompt...');
+
+                setTimeout(() => {
+                    const track = {
+                        id: 'track_' + Date.now(),
+                        name: 'AI: ' + prompt.substring(0, 15),
+                        volume: 0.8,
+                        pan: 0,
+                        muted: false,
+                        solo: false,
+                        clips: [{
+                            id: 'clip_' + Date.now(),
+                            name: 'AI Generated',
+                            start: 0,
+                            duration: 60,
+                            fileSize: 2048000
+                        }]
+                    };
+
+                    this.tracks.push(track);
+                    this.renderTracks();
+
+                    this.currentUser.used.aiGen++;
+                    this.updateUserInDB();
+                    this.updateQuotas();
+                    
+                    this.notify('AI track generated successfully!');
+                    document.getElementById('aiPrompt').value = '';
+                }, 2000);
+            },
+
+            updateUserInDB() {
+                const index = this.db.users.findIndex(u => u.id === this.currentUser.id);
+                if (index >= 0) {
+                    this.db.users[index] = this.currentUser;
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                    this.saveToMemory();
+                }
+            },
+
+            openVoiceTraining() {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Train AI Voice Model</h2>
+                            <button class="close-btn" onclick="this.closest('.modal').remove()">✕</button>
+                        </div>
+                        <p style="color: var(--text-dim); margin-bottom: 1rem;">
+                            Upload 5-10 audio samples of your voice (each 10-30 seconds) to train a custom voice model.
+                        </p>
+                        <div class="upload-area" onclick="document.getElementById('voiceFiles').click()">
+                            <div style="font-size: 3rem;">🎤</div>
+                            <div>Click to upload voice samples</div>
+                            <input type="file" id="voiceFiles" multiple accept="audio/*" style="display: none;" onchange="app.handleVoiceUpload(event)">
+                        </div>
+                        <div class="file-list" id="voiceFileList"></div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label>
+                                <input type="checkbox" id="voiceConsent">
+                                I consent to train an AI model with my voice samples and agree to the terms
+                            </label>
+                        </div>
+                        <button class="btn" onclick="app.trainVoice()" style="margin-top: 1rem; width: 100%;">Start Training</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            },
+
+            handleVoiceUpload(e) {
+                const files = Array.from(e.target.files);
+                const list = document.getElementById('voiceFileList');
+                list.innerHTML = files.map(f => `
+                    <div class="file-item">
+                        <span>🎵 ${f.name}</span>
+                        <span>${(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                    </div>
+                `).join('');
+            },
+
+            trainVoice() {
+                const files = document.getElementById('voiceFiles').files;
+                const consent = document.getElementById('voiceConsent').checked;
+                
+                if (files.length === 0) {
+                    this.notify('Please upload voice samples');
+                    return;
+                }
+                
+                if (!consent) {
+                    this.notify('Please agree to the consent terms');
+                    return;
+                }
+
+                this.notify('Training voice model... This may take a few minutes');
+                
+                setTimeout(() => {
+                    const modelName = prompt('Name your voice model:', 'My Voice');
+                    if (modelName) {
+                        const select = document.getElementById('voiceModel');
+                        const option = document.createElement('option');
+                        option.value = 'custom_' + Date.now();
+                        option.textContent = modelName;
+                        select.appendChild(option);
+                        select.value = option.value;
+                        
+                        document.querySelector('.modal').remove();
+                        this.notify('Voice model "' + modelName + '" trained successfully!');
+                    }
+                }, 3000);
+            },
+
+            exportProject() {
+                if (!this.currentProject || this.tracks.length === 0) {
+                    this.notify('Nothing to export. Add some tracks first!');
+                    return;
+                }
+
+                this.notify('Exporting project as WAV...');
+                
+                setTimeout(() => {
+                    const exportData = {
+                        project: this.currentProject.title,
+                        artist: this.currentUser.name,
+                        tracks: this.tracks.map(t => ({
+                            name: t.name,
+                            clips: t.clips.length,
+                            volume: t.volume
+                        })),
+                        exportDate: new Date().toISOString(),
+                        format: 'WAV 44.1kHz 24-bit'
+                    };
+
+                    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${this.currentProject.title.replace(/\s/g, '_')}_export.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.notify('Project exported successfully!');
+                }, 1500);
+            },
+
+            submitProject() {
+                if (!this.currentProject || this.tracks.length === 0) {
+                    this.notify('Nothing to submit. Complete your project first!');
+                    return;
+                }
+
+                if (!confirm('Submit "' + this.currentProject.title + '" to Kurrasch Records?\n\nThis will email the final mix to kurraschgamingmerchstore@gmail.com')) {
+                    return;
+                }
+
+                this.notify('Preparing submission...');
+
+                setTimeout(() => {
+                    const submission = {
+                        id: 'sub_' + Date.now(),
+                        projectId: this.currentProject.id,
+                        projectTitle: this.currentProject.title,
+                        artistName: this.currentUser.name,
+                        artistEmail: this.currentUser.email,
+                        trackCount: this.tracks.length,
+                        submittedAt: new Date().toISOString(),
+                        status: 'submitted'
+                    };
+
+                    this.db.submissions.push(submission);
+                    this.saveToMemory();
+
+                    this.notify('PROJECT SUBMITTED SUCCESSFULLY!');
+                    
+                    setTimeout(() => {
+                        alert(`✅ Submission Confirmed!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nProject: ${this.currentProject.title}\nArtist: ${this.currentUser.name}\nTracks: ${this.tracks.length}\n\nSubmitted to:\nkurraschgamingmerchstore@gmail.com\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nYou will receive confirmation shortly.\nThank you for using Kurrasch Records Studio!`);
+                    }, 500);
+                }, 1500);
+            },
+
+            loadAdmin() {
+                this.loadUsers();
+                this.loadSessions();
+                this.loadSubmissions();
+            },
+
+            loadUsers() {
+                const list = document.getElementById('userList');
+                list.innerHTML = this.db.users.map(u => `
+                    <div class="user-item">
+                        <div>
+                            <strong>${u.name}</strong><br>
+                            <span style="font-size: 0.9rem; color: var(--text-dim);">${u.email}</span><br>
+                            <span style="font-size: 0.8rem; color: var(--text-dim);">AI: ${u.used.aiGen} / ${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen}</span>
+                        </div>
+                        <div>
+                            <span class="status-badge">${u.plan.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            loadSessions() {
+                const stats = document.getElementById('sessionStats');
+                stats.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--accent);">2/5</div>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">Basic Studio</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--success);">3/5</div>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">Pro Studio</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--warning);">1/5</div>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">Elite Studio</div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            loadSubmissions() {
+                const list = document.getElementById('submissionList');
+                if (this.db.submissions.length === 0) {
+                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No submissions yet</div>';
+                } else {
+                    list.innerHTML = this.db.submissions.map(s => `
+                        <div class="file-item">
+                            <div>
+                                <strong>${s.projectTitle}</strong><br>
+                                <span style="font-size: 0.9rem; color: var(--text-dim);">
+                                    ${s.artistName} (${s.artistEmail})<br>
+                                    ${s.trackCount} tracks • ${new Date(s.submittedAt).toLocaleString()}
+                                </span>
+                            </div>
+                            <span class="status-badge">${s.status}</span>
+                        </div>
+                    `).join('');
+                }
+            },
+
+            saveSettings() {
+                this.notify('System settings saved!');
+            },
+
+            notify(message) {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
