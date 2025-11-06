@@ -27,12 +27,47 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .app {
             display: flex;
             flex-direction: column;
             height: 100vh;
+            position: relative;
+        }
+
+        /* Falling Music Notes Animation */
+        .music-notes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .note {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         header {
@@ -42,6 +77,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent);
+            position: relative;
+            z-index: 10;
         }
 
         .logo {
@@ -68,6 +105,8 @@
             flex: 1;
             overflow: auto;
             padding: 2rem;
+            position: relative;
+            z-index: 5;
         }
 
         .hidden {
@@ -187,7 +226,7 @@
             color: var(--text-dim);
         }
 
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 0.75rem;
             background: rgba(0,0,0,0.3);
@@ -216,7 +255,7 @@
             color: var(--accent);
         }
 
-        .project-item {
+        .project-item, .artist-item {
             background: rgba(0,0,0,0.3);
             padding: 1rem;
             margin-bottom: 0.5rem;
@@ -225,7 +264,7 @@
             transition: all 0.3s;
         }
 
-        .project-item:hover {
+        .project-item:hover, .artist-item:hover {
             background: rgba(233,69,96,0.2);
         }
 
@@ -251,6 +290,27 @@
             height: 100%;
             background: linear-gradient(90deg, var(--accent), var(--accent-light));
             transition: width 0.3s;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .profile-info {
+            flex: 1;
         }
 
         .studio {
@@ -414,6 +474,14 @@
             color: black;
         }
 
+        .status-badge.pending {
+            background: var(--warning);
+        }
+
+        .status-badge.rejected {
+            background: #ff4444;
+        }
+
         .modal {
             position: fixed;
             top: 0;
@@ -530,16 +598,34 @@
             transition: height 0.05s;
         }
 
-        .demo-box {
-            background: rgba(255,215,0,0.2);
+        .collab-request {
+            background: rgba(255,215,0,0.1);
             border: 2px solid var(--warning);
             padding: 1rem;
-            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .collab-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: var(--text);
             margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
+    <div class="music-notes" id="musicNotes"></div>
+    
     <div class="app">
         <header>
             <div class="logo">🎵 KURRASCH RECORDS</div>
@@ -603,20 +689,15 @@
 
             <div id="login" class="page hidden">
                 <div class="auth-container">
-                    <div class="demo-box">
-                        <strong>DEMO MODE - Quick Login:</strong><br>
-                        Email: demo@demo.com | Password: demo<br>
-                        OR create any account instantly!
-                    </div>
                     <h2>Login</h2>
                     <form onsubmit="app.login(event)">
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" id="loginEmail" value="demo@demo.com">
+                            <input type="email" id="loginEmail" required>
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" id="loginPassword" value="demo">
+                            <input type="password" id="loginPassword" required>
                         </div>
                         <button type="submit" class="btn">Login</button>
                         <button type="button" class="btn btn-outline" onclick="app.showPage('signup')" style="margin-left: 1rem;">Sign Up</button>
@@ -630,15 +711,23 @@
                     <form onsubmit="app.signup(event)">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" id="signupName" value="Demo User">
+                            <input type="text" id="signupName" required>
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" id="signupEmail">
+                            <input type="email" id="signupEmail" required>
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" id="signupPassword">
+                            <input type="password" id="signupPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bio (optional)</label>
+                            <textarea id="signupBio" placeholder="Tell other artists about yourself..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Genres (optional)</label>
+                            <input type="text" id="signupGenres" placeholder="Hip-Hop, R&B, Pop...">
                         </div>
                         <div class="form-group">
                             <label>Plan</label>
@@ -664,12 +753,60 @@
                     <h2>Quick Actions</h2>
                     <button class="btn" onclick="app.createProject()" style="width: 100%; margin-bottom: 1rem;">Create New Project</button>
                     <button class="btn btn-secondary" onclick="app.openStudioDirect()" style="width: 100%; margin-bottom: 1rem;">Open Studio</button>
-                    <button class="btn btn-outline" onclick="app.openVoiceTraining()" style="width: 100%;">Train AI Voice</button>
+                    <button class="btn btn-outline" onclick="app.showPage('artists')" style="width: 100%; margin-bottom: 1rem;">Browse Artists</button>
+                    <button class="btn btn-outline" onclick="app.showPage('profile')" style="width: 100%;">My Profile</button>
                 </div>
 
                 <div class="panel">
-                    <h2>Usage & Quotas</h2>
+                    <h2>Notifications</h2>
+                    <div id="collabRequests"></div>
+                    <h2 style="margin-top: 1.5rem;">Usage & Quotas</h2>
                     <div id="quotaDisplay"></div>
+                </div>
+            </div>
+
+            <div id="profile" class="page hidden">
+                <div class="panel" style="max-width: 800px; margin: 0 auto;">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">👤</div>
+                        <div class="profile-info">
+                            <h2 id="profileName"></h2>
+                            <p id="profileEmail" style="color: var(--text-dim);"></p>
+                            <span class="status-badge" id="profilePlan"></span>
+                        </div>
+                    </div>
+                    
+                    <form onsubmit="app.updateProfile(event)">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="profileNameInput">
+                        </div>
+                        <div class="form-group">
+                            <label>Bio</label>
+                            <textarea id="profileBio" placeholder="Tell other artists about yourself..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Genres</label>
+                            <input type="text" id="profileGenres" placeholder="Hip-Hop, R&B, Pop...">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="profileLocation" placeholder="City, Country">
+                        </div>
+                        <div class="form-group">
+                            <label>SoundCloud / Spotify Link</label>
+                            <input type="url" id="profileLink" placeholder="https://...">
+                        </div>
+                        <button type="submit" class="btn">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="artists" class="page hidden">
+                <div class="panel" style="max-width: 1000px; margin: 0 auto;">
+                    <h2>Browse Artists</h2>
+                    <input type="text" class="search-bar" id="artistSearch" placeholder="Search artists by name or genre..." oninput="app.searchArtists()">
+                    <div id="artistList"></div>
                 </div>
             </div>
 
@@ -677,6 +814,7 @@
                 <div class="studio-header">
                     <div>
                         <input type="text" id="projectTitle" placeholder="Project Title" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 4px; color: white;">
+                        <span id="collabIndicator" style="margin-left: 1rem; color: var(--warning);"></span>
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <button class="btn" onclick="app.saveProject()">💾 Save</button>
@@ -738,6 +876,11 @@
                 </div>
 
                 <div class="admin-section">
+                    <h2>Collaboration Requests</h2>
+                    <div id="adminCollabList"></div>
+                </div>
+
+                <div class="admin-section">
                     <h2>System Settings</h2>
                     <div class="form-group">
                         <label>Max Active Users (Basic)</label>
@@ -770,28 +913,32 @@
             db: {
                 users: [],
                 projects: [],
-                submissions: []
+                submissions: [],
+                collabRequests: []
             },
 
             init() {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 this.initMeter();
                 this.loadFromMemory();
-                
-                const stored = localStorage.getItem('currentUser');
-                if (stored) {
-                    this.currentUser = JSON.parse(stored);
-                    this.updateNav();
-                    if (this.currentUser.role === 'admin') {
-                        this.showPage('admin');
-                        this.loadAdmin();
-                    } else {
-                        this.showPage('dashboard');
-                        this.loadDashboard();
-                    }
-                }
+                this.createMusicNotes();
+            },
 
-                this.createDefaultUsers();
+            createMusicNotes() {
+                const container = document.getElementById('musicNotes');
+                const notes = ['♪', '♫', '♬', '𝄞'];
+                
+                setInterval(() => {
+                    const note = document.createElement('div');
+                    note.className = 'note';
+                    note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                    note.style.left = Math.random() * 100 + '%';
+                    note.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    note.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                    container.appendChild(note);
+                    
+                    setTimeout(() => note.remove(), 10000);
+                }, 500);
             },
 
             loadFromMemory() {
@@ -803,36 +950,6 @@
 
             saveToMemory() {
                 localStorage.setItem('appData', JSON.stringify(this.db));
-            },
-
-            createDefaultUsers() {
-                if (this.db.users.length === 0) {
-                    this.db.users = [
-                        {
-                            id: 'owner',
-                            email: 'kurraschgamingmerchstore@gmail.com',
-                            name: 'Owner',
-                            password: 'admin123',
-                            role: 'admin',
-                            plan: 'elite',
-                            createdAt: new Date().toISOString(),
-                            quotas: { aiGen: 999999, dailyHours: 999999 },
-                            used: { aiGen: 0, dailyHours: 0 }
-                        },
-                        {
-                            id: 'demo',
-                            email: 'demo@demo.com',
-                            name: 'Demo User',
-                            password: 'demo',
-                            role: 'artist',
-                            plan: 'pro',
-                            createdAt: new Date().toISOString(),
-                            quotas: { aiGen: 100, dailyHours: 24 },
-                            used: { aiGen: 15, dailyHours: 3 }
-                        }
-                    ];
-                    this.saveToMemory();
-                }
             },
 
             showPage(pageId) {
@@ -853,6 +970,8 @@
                 const name = document.getElementById('signupName').value;
                 const email = document.getElementById('signupEmail').value;
                 const password = document.getElementById('signupPassword').value;
+                const bio = document.getElementById('signupBio').value;
+                const genres = document.getElementById('signupGenres').value;
                 const plan = document.getElementById('signupPlan').value;
 
                 if (this.db.users.find(u => u.email === email)) {
@@ -866,15 +985,21 @@
                     elite: { aiGen: 999999, dailyHours: 999999 }
                 };
 
+                const isAdmin = email === 'kurraschgamingmerchstore@gmail.com';
+
                 const newUser = {
                     id: 'user_' + Date.now(),
                     email,
                     name,
                     password,
-                    role: 'artist',
-                    plan,
+                    role: isAdmin ? 'admin' : 'artist',
+                    plan: isAdmin ? 'elite' : plan,
+                    bio: bio || '',
+                    genres: genres || '',
+                    location: '',
+                    link: '',
                     createdAt: new Date().toISOString(),
-                    quotas: quotas[plan],
+                    quotas: isAdmin ? { aiGen: 999999, dailyHours: 999999 } : quotas[plan],
                     used: { aiGen: 0, dailyHours: 0 }
                 };
 
@@ -884,8 +1009,15 @@
                 this.currentUser = newUser;
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
                 this.updateNav();
-                this.showPage('dashboard');
-                this.loadDashboard();
+                
+                if (isAdmin) {
+                    this.showPage('admin');
+                    this.loadAdmin();
+                } else {
+                    this.showPage('dashboard');
+                    this.loadDashboard();
+                }
+                
                 this.notify('Account created! Welcome to Kurrasch Records!');
             },
 
@@ -927,9 +1059,11 @@
                 if (this.currentUser) {
                     nav.innerHTML = `
                         <button onclick="app.showPage('dashboard')">Dashboard</button>
+                        <button onclick="app.showPage('artists')">Artists</button>
+                        <button onclick="app.showPage('profile')">Profile</button>
                         <button onclick="app.openStudioDirect()">Studio</button>
                         ${this.currentUser.role === 'admin' ? '<button onclick="app.showPage(\'admin\')">Admin</button>' : ''}
-                        <button onclick="app.logout()">Logout (${this.currentUser.name})</button>
+                        <button onclick="app.logout()">Logout</button>
                     `;
                 } else {
                     nav.innerHTML = `
@@ -942,10 +1076,13 @@
             loadDashboard() {
                 this.loadProjects();
                 this.updateQuotas();
+                this.loadCollabRequests();
             },
 
             loadProjects() {
-                const userProjects = this.db.projects.filter(p => p.userId === this.currentUser.id);
+                const userProjects = this.db.projects.filter(p => 
+                    p.userId === this.currentUser.id || p.collaborators?.includes(this.currentUser.id)
+                );
                 const list = document.getElementById('projectList');
                 
                 if (userProjects.length === 0) {
@@ -954,11 +1091,52 @@
                     list.innerHTML = userProjects.map(p => `
                         <div class="project-item" onclick="app.openProject('${p.id}')">
                             <div><strong>${p.title}</strong></div>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">${p.trackCount || 0} tracks</div>
+                            <div style="font-size: 0.9rem; color: var(--text-dim);">${p.trackCount || 0} tracks${p.collaborators?.length ? ' • Collab' : ''}</div>
                             <div style="font-size: 0.8rem; color: var(--text-dim);">${new Date(p.updatedAt).toLocaleDateString()}</div>
                         </div>
                     `).join('');
                 }
+            },
+
+            loadCollabRequests() {
+                const requests = this.db.collabRequests.filter(r => 
+                    r.toUserId === this.currentUser.id && r.status === 'pending'
+                );
+                
+                const container = document.getElementById('collabRequests');
+                if (requests.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-dim); padding: 0.5rem;">No pending requests</div>';
+                } else {
+                    container.innerHTML = requests.map(r => {
+                        const fromUser = this.db.users.find(u => u.id === r.fromUserId);
+                        return `
+                            <div class="collab-request">
+                                <strong>${fromUser.name}</strong> wants to collaborate
+                                <div style="font-size: 0.9rem; color: var(--text-dim); margin: 0.5rem 0;">${r.message}</div>
+                                <div class="collab-actions">
+                                    <button class="btn" onclick="app.respondToCollab('${r.id}', 'accepted')">Accept</button>
+                                    <button class="btn btn-outline" onclick="app.respondToCollab('${r.id}', 'rejected')">Decline</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            },
+
+            respondToCollab(requestId, status) {
+                const request = this.db.collabRequests.find(r => r.id === requestId);
+                if (!request) return;
+
+                request.status = status;
+                this.saveToMemory();
+
+                if (status === 'accepted') {
+                    this.notify('Collaboration accepted! You can now work together in the studio.');
+                } else {
+                    this.notify('Collaboration request declined.');
+                }
+
+                this.loadCollabRequests();
             },
 
             updateQuotas() {
@@ -991,6 +1169,108 @@
                 `;
             },
 
+            updateProfile(e) {
+                e.preventDefault();
+                this.currentUser.name = document.getElementById('profileNameInput').value;
+                this.currentUser.bio = document.getElementById('profileBio').value;
+                this.currentUser.genres = document.getElementById('profileGenres').value;
+                this.currentUser.location = document.getElementById('profileLocation').value;
+                this.currentUser.link = document.getElementById('profileLink').value;
+
+                const index = this.db.users.findIndex(u => u.id === this.currentUser.id);
+                if (index >= 0) {
+                    this.db.users[index] = this.currentUser;
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                    this.saveToMemory();
+                }
+
+                this.notify('Profile updated successfully!');
+                this.loadProfilePage();
+            },
+
+            loadProfilePage() {
+                document.getElementById('profileAvatar').textContent = this.currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('profileName').textContent = this.currentUser.name;
+                document.getElementById('profileEmail').textContent = this.currentUser.email;
+                document.getElementById('profilePlan').textContent = this.currentUser.plan.toUpperCase();
+                
+                document.getElementById('profileNameInput').value = this.currentUser.name;
+                document.getElementById('profileBio').value = this.currentUser.bio || '';
+                document.getElementById('profileGenres').value = this.currentUser.genres || '';
+                document.getElementById('profileLocation').value = this.currentUser.location || '';
+                document.getElementById('profileLink').value = this.currentUser.link || '';
+            },
+
+            searchArtists() {
+                const query = document.getElementById('artistSearch').value.toLowerCase();
+                const artists = this.db.users.filter(u => 
+                    u.role === 'artist' && u.id !== this.currentUser.id &&
+                    (u.name.toLowerCase().includes(query) || 
+                     u.genres?.toLowerCase().includes(query) ||
+                     u.bio?.toLowerCase().includes(query))
+                );
+
+                const list = document.getElementById('artistList');
+                if (artists.length === 0) {
+                    list.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">No artists found</div>';
+                } else {
+                    list.innerHTML = artists.map(artist => {
+                        const hasActiveCollab = this.db.collabRequests.find(r => 
+                            ((r.fromUserId === this.currentUser.id && r.toUserId === artist.id) ||
+                             (r.fromUserId === artist.id && r.toUserId === this.currentUser.id)) &&
+                            r.status === 'accepted'
+                        );
+                        
+                        const hasPendingRequest = this.db.collabRequests.find(r => 
+                            r.fromUserId === this.currentUser.id && 
+                            r.toUserId === artist.id && 
+                            r.status === 'pending'
+                        );
+
+                        return `
+                            <div class="artist-item">
+                                <div style="display: flex; gap: 1rem;">
+                                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--success)); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                        ${artist.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <strong style="font-size: 1.2rem;">${artist.name}</strong>
+                                        <div style="color: var(--text-dim); margin: 0.25rem 0;">${artist.genres || 'No genres listed'}</div>
+                                        <div style="font-size: 0.9rem;">${artist.bio || 'No bio'}</div>
+                                        ${artist.location ? `<div style="font-size: 0.8rem; color: var(--text-dim);">📍 ${artist.location}</div>` : ''}
+                                        ${artist.link ? `<a href="${artist.link}" target="_blank" style="font-size: 0.8rem; color: var(--success);">🔗 Listen</a>` : ''}
+                                    </div>
+                                    <div>
+                                        ${hasActiveCollab ? '<span class="status-badge">Collaborating</span>' : 
+                                          hasPendingRequest ? '<span class="status-badge pending">Request Sent</span>' :
+                                          `<button class="btn" onclick="app.requestCollab('${artist.id}')">Request Collab</button>`}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            },
+
+            requestCollab(artistId) {
+                const message = prompt('Send a message with your collaboration request:');
+                if (!message) return;
+
+                const request = {
+                    id: 'collab_' + Date.now(),
+                    fromUserId: this.currentUser.id,
+                    toUserId: artistId,
+                    message,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+
+                this.db.collabRequests.push(request);
+                this.saveToMemory();
+                this.notify('Collaboration request sent!');
+                this.searchArtists();
+            },
+
             createProject() {
                 const title = prompt('Project name:', 'My New Song');
                 if (!title) return;
@@ -1001,6 +1281,7 @@
                     title,
                     tracks: [],
                     trackCount: 0,
+                    collaborators: [],
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 };
@@ -1021,9 +1302,28 @@
             openProject(projectId) {
                 const project = this.db.projects.find(p => p.id === projectId);
                 if (project) {
+                    const canAccess = project.userId === this.currentUser.id || 
+                                    project.collaborators?.includes(this.currentUser.id);
+                    
+                    if (!canAccess) {
+                        this.notify('You do not have access to this project');
+                        return;
+                    }
+
                     this.currentProject = project;
                     this.tracks = project.tracks || [];
                     document.getElementById('projectTitle').value = project.title;
+                    
+                    if (project.collaborators?.length > 0) {
+                        const collabNames = project.collaborators.map(id => {
+                            const user = this.db.users.find(u => u.id === id);
+                            return user ? user.name : 'Unknown';
+                        }).join(', ');
+                        document.getElementById('collabIndicator').textContent = `🤝 Collaborating with: ${collabNames}`;
+                    } else {
+                        document.getElementById('collabIndicator').textContent = '';
+                    }
+
                     this.showPage('studio');
                     this.renderTracks();
                     this.notify('Project loaded: ' + project.title);
@@ -1451,6 +1751,7 @@
                 this.loadUsers();
                 this.loadSessions();
                 this.loadSubmissions();
+                this.loadAdminCollabs();
             },
 
             loadUsers() {
@@ -1471,18 +1772,22 @@
 
             loadSessions() {
                 const stats = document.getElementById('sessionStats');
+                const basicActive = this.db.users.filter(u => u.plan === 'basic').length;
+                const proActive = this.db.users.filter(u => u.plan === 'pro').length;
+                const eliteActive = this.db.users.filter(u => u.plan === 'elite').length;
+
                 stats.innerHTML = `
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
                         <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--accent);">2/5</div>
+                            <div style="font-size: 2rem; color: var(--accent);">${basicActive}/5</div>
                             <div style="font-size: 0.9rem; color: var(--text-dim);">Basic Studio</div>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--success);">3/5</div>
+                            <div style="font-size: 2rem; color: var(--success);">${proActive}/5</div>
                             <div style="font-size: 0.9rem; color: var(--text-dim);">Pro Studio</div>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--warning);">1/5</div>
+                            <div style="font-size: 2rem; color: var(--warning);">${eliteActive}/5</div>
                             <div style="font-size: 0.9rem; color: var(--text-dim);">Elite Studio</div>
                         </div>
                     </div>
@@ -1509,6 +1814,30 @@
                 }
             },
 
+            loadAdminCollabs() {
+                const list = document.getElementById('adminCollabList');
+                if (this.db.collabRequests.length === 0) {
+                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No collaboration requests</div>';
+                } else {
+                    list.innerHTML = this.db.collabRequests.map(r => {
+                        const fromUser = this.db.users.find(u => u.id === r.fromUserId);
+                        const toUser = this.db.users.find(u => u.id === r.toUserId);
+                        return `
+                            <div class="file-item">
+                                <div>
+                                    <strong>${fromUser?.name || 'Unknown'}</strong> → <strong>${toUser?.name || 'Unknown'}</strong><br>
+                                    <span style="font-size: 0.9rem; color: var(--text-dim);">
+                                        ${r.message}<br>
+                                        ${new Date(r.createdAt).toLocaleString()}
+                                    </span>
+                                </div>
+                                <span class="status-badge ${r.status === 'pending' ? 'pending' : r.status === 'rejected' ? 'rejected' : ''}">${r.status}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            },
+
             saveSettings() {
                 this.notify('System settings saved!');
             },
@@ -1527,6 +1856,16 @@
         };
 
         window.addEventListener('DOMContentLoaded', () => app.init());
+
+        // Handle profile page when navigating to it
+        document.addEventListener('click', (e) => {
+            if (e.target.textContent === 'Profile' && app.currentUser) {
+                setTimeout(() => app.loadProfilePage(), 0);
+            }
+            if (e.target.textContent === 'Artists' && app.currentUser) {
+                setTimeout(() => app.searchArtists(), 0);
+            }
+        });
     </script>
 </body>
 </html>
