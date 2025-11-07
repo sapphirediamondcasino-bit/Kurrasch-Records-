@@ -37,7 +37,6 @@
             position: relative;
         }
 
-        /* Falling Music Notes Animation */
         .music-notes {
             position: fixed;
             top: 0;
@@ -208,8 +207,13 @@
             border: 2px solid var(--accent);
         }
 
+        .btn-small {
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+        }
+
         .auth-container {
-            max-width: 400px;
+            max-width: 450px;
             margin: 2rem auto;
             background: rgba(255,255,255,0.05);
             padding: 2rem;
@@ -255,7 +259,7 @@
             color: var(--accent);
         }
 
-        .project-item, .artist-item {
+        .project-item, .artist-item, .track-item {
             background: rgba(0,0,0,0.3);
             padding: 1rem;
             margin-bottom: 0.5rem;
@@ -292,31 +296,111 @@
             transition: width 0.3s;
         }
 
+        .profile-page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-banner input[type="file"] {
+            display: none;
+        }
+
+        .profile-banner .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .profile-banner:hover .upload-overlay {
+            display: flex;
+        }
+
         .profile-header {
+            position: relative;
+            margin-top: -80px;
+            padding: 0 2rem 2rem;
             display: flex;
             gap: 2rem;
-            margin-bottom: 2rem;
         }
 
         .profile-avatar {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border: 5px solid var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar input[type="file"] {
+            display: none;
+        }
+
+        .profile-avatar .upload-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--accent);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
         .profile-info {
             flex: 1;
+            margin-top: 80px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .profile-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
         }
 
         .studio {
             display: grid;
-            grid-template-columns: 250px 1fr 300px;
-            grid-template-rows: 60px 1fr 100px;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 60px 1fr 120px;
             gap: 1rem;
             height: 100%;
         }
@@ -331,36 +415,64 @@
             align-items: center;
         }
 
-        .track-list {
+        .mixer-channel {
             background: rgba(0,0,0,0.3);
             border-radius: 8px;
             padding: 1rem;
             overflow-y: auto;
         }
 
-        .track {
+        .channel-strip {
             background: rgba(255,255,255,0.05);
-            padding: 0.75rem;
+            padding: 1rem;
             margin-bottom: 0.5rem;
             border-radius: 6px;
             border-left: 3px solid var(--accent);
         }
 
-        .track-controls {
+        .channel-controls {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        .track-controls button {
-            flex: 1;
-            padding: 0.25rem;
+        .knob-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .knob {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--text);
-            border-radius: 4px;
+            border: 3px solid var(--accent);
+            position: relative;
             cursor: pointer;
-            font-size: 0.8rem;
+        }
+
+        .knob::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background: white;
+            top: 5px;
+            left: 50%;
+            transform-origin: 50% 100%;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .fader-container {
+            margin-top: 1rem;
+        }
+
+        .fader {
+            width: 100%;
+            height: 100px;
+            writing-mode: bt-lr;
+            -webkit-appearance: slider-vertical;
         }
 
         .timeline {
@@ -394,11 +506,36 @@
             cursor: move;
         }
 
-        .ai-panel {
+        .ai-voice-panel {
             background: rgba(0,0,0,0.3);
             border-radius: 8px;
             padding: 1rem;
             overflow-y: auto;
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .voice-option {
+            background: rgba(255,255,255,0.05);
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .voice-option:hover {
+            border-color: var(--accent);
+        }
+
+        .voice-option.selected {
+            border-color: var(--success);
+            background: rgba(0,217,255,0.1);
         }
 
         .transport {
@@ -408,7 +545,12 @@
             padding: 1rem;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .transport-controls {
+            display: flex;
             gap: 1rem;
         }
 
@@ -439,9 +581,30 @@
             50% { opacity: 0.5; }
         }
 
+        .meter-section {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .meter {
+            display: flex;
+            gap: 2px;
+            height: 80px;
+            align-items: flex-end;
+            flex: 1;
+        }
+
+        .meter-bar {
+            flex: 1;
+            background: var(--success);
+            border-radius: 2px 2px 0 0;
+            transition: height 0.05s;
+        }
+
         .admin {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             gap: 2rem;
         }
 
@@ -449,6 +612,32 @@
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             padding: 1.5rem;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
         }
 
         .user-list, .session-list {
@@ -499,7 +688,7 @@
             background: var(--secondary);
             border-radius: 12px;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -584,20 +773,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .meter {
-            display: flex;
-            gap: 2px;
-            height: 60px;
-            align-items: flex-end;
-        }
-
-        .meter-bar {
-            flex: 1;
-            background: var(--success);
-            border-radius: 2px 2px 0 0;
-            transition: height 0.05s;
-        }
-
         .collab-request {
             background: rgba(255,215,0,0.1);
             border: 2px solid var(--warning);
@@ -620,6 +795,101 @@
             border-radius: 6px;
             color: var(--text);
             margin-bottom: 1rem;
+        }
+
+        .fx-section {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        .fx-title {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .slider-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-control label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .slider-control input[type="range"] {
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+
+        .slider-control span {
+            font-size: 0.8rem;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .follow-btn {
+            padding: 0.5rem 1.5rem;
+            background: var(--success);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .follow-btn.following {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .follow-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .music-track {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -650,8 +920,9 @@
                             <li>✓ 12 hours/day studio time</li>
                             <li>✓ 25 AI generations/month</li>
                             <li>✓ 8 tracks max</li>
-                            <li>✓ Basic effects</li>
+                            <li>✓ Basic effects & EQ</li>
                             <li>✓ MP3 export</li>
+                            <li>✓ Public profile</li>
                         </ul>
                         <button class="btn" onclick="app.selectPlan('basic')">Get Started</button>
                     </div>
@@ -663,26 +934,28 @@
                             <li>✓ 24 hours/day studio time</li>
                             <li>✓ 100 AI generations/month</li>
                             <li>✓ 16 tracks max</li>
-                            <li>✓ Advanced effects</li>
+                            <li>✓ Advanced mixer & effects</li>
                             <li>✓ WAV + MP3 export</li>
-                            <li>✓ Voice training</li>
+                            <li>✓ AI voice training & cloning</li>
+                            <li>✓ Collaboration features</li>
                         </ul>
                         <button class="btn" onclick="app.selectPlan('pro')">Subscribe</button>
                     </div>
 
                     <div class="card elite">
                         <h3>Elite</h3>
-                        <div class="price">$99/mo</div>
+                        <div class="price">$99/year</div>
                         <ul>
                             <li>✓ Unlimited studio time</li>
                             <li>✓ Unlimited AI generations</li>
                             <li>✓ 32 tracks max</li>
-                            <li>✓ Professional effects suite</li>
+                            <li>✓ Professional mixing console</li>
                             <li>✓ All formats export</li>
                             <li>✓ Priority support</li>
-                            <li>✓ Advanced AI features</li>
+                            <li>✓ Label management</li>
+                            <li>✓ Multi-year discounts available</li>
                         </ul>
-                        <button class="btn btn-secondary" onclick="app.selectPlan('elite')">Go Elite</button>
+                        <button class="btn btn-secondary" onclick="app.selectPlan('elite')">Contact for Elite</button>
                     </div>
                 </div>
             </div>
@@ -710,33 +983,33 @@
                     <h2>Create Account</h2>
                     <form onsubmit="app.signup(event)">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>Artist Name *</label>
                             <input type="text" id="signupName" required>
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
+                            <label>Email *</label>
                             <input type="email" id="signupEmail" required>
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>Password *</label>
                             <input type="password" id="signupPassword" required>
                         </div>
                         <div class="form-group">
-                            <label>Bio (optional)</label>
-                            <textarea id="signupBio" placeholder="Tell other artists about yourself..."></textarea>
+                            <label>Bio</label>
+                            <textarea id="signupBio" placeholder="Tell the world about your music..."></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Genres (optional)</label>
+                            <label>Genres</label>
                             <input type="text" id="signupGenres" placeholder="Hip-Hop, R&B, Pop...">
                         </div>
                         <div class="form-group">
-                            <label>Plan</label>
+                            <label>Plan *</label>
                             <select id="signupPlan">
                                 <option value="basic">Basic (Free)</option>
                                 <option value="pro">Pro ($29/mo)</option>
-                                <option value="elite">Elite ($99/mo)</option>
                             </select>
                         </div>
+                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem;">Elite plan requires contacting kurraschgamingmerchstore@gmail.com</p>
                         <button type="submit" class="btn">Create Account</button>
                     </form>
                 </div>
@@ -744,17 +1017,17 @@
 
             <div id="dashboard" class="page hidden dashboard">
                 <div class="panel">
-                    <h2>Projects</h2>
+                    <h2>My Projects</h2>
                     <button class="btn" onclick="app.createProject()">+ New Project</button>
                     <div id="projectList" style="margin-top: 1rem;"></div>
                 </div>
 
                 <div class="panel">
                     <h2>Quick Actions</h2>
-                    <button class="btn" onclick="app.createProject()" style="width: 100%; margin-bottom: 1rem;">Create New Project</button>
-                    <button class="btn btn-secondary" onclick="app.openStudioDirect()" style="width: 100%; margin-bottom: 1rem;">Open Studio</button>
-                    <button class="btn btn-outline" onclick="app.showPage('artists')" style="width: 100%; margin-bottom: 1rem;">Browse Artists</button>
-                    <button class="btn btn-outline" onclick="app.showPage('profile')" style="width: 100%;">My Profile</button>
+                    <button class="btn" onclick="app.createProject()" style="width: 100%; margin-bottom: 1rem;">🎵 Create Project</button>
+                    <button class="btn btn-secondary" onclick="app.openStudioDirect()" style="width: 100%; margin-bottom: 1rem;">🎚 Open Studio</button>
+                    <button class="btn btn-outline" onclick="app.showPage('artists')" style="width: 100%; margin-bottom: 1rem;">👥 Browse Artists</button>
+                    <button class="btn btn-outline" onclick="app.showProfilePage(app.currentUser.id)" style="width: 100%;">👤 My Profile</button>
                 </div>
 
                 <div class="panel">
@@ -766,44 +1039,99 @@
             </div>
 
             <div id="profile" class="page hidden">
-                <div class="panel" style="max-width: 800px; margin: 0 auto;">
-                    <div class="profile-header">
-                        <div class="profile-avatar" id="profileAvatar">👤</div>
-                        <div class="profile-info">
-                            <h2 id="profileName"></h2>
-                            <p id="profileEmail" style="color: var(--text-dim);"></p>
-                            <span class="status-badge" id="profilePlan"></span>
+                <div class="profile-page">
+                    <div class="panel" style="padding: 0;">
+                        <div class="profile-banner" id="profileBanner">
+                            <div class="upload-overlay" onclick="document.getElementById('bannerUpload').click()">
+                                📷 Upload Banner
+                            </div>
+                            <input type="file" id="bannerUpload" accept="image/*" onchange="app.uploadBanner(event)">
+                        </div>
+                        
+                        <div class="profile-header">
+                            <div class="profile-avatar" onclick="document.getElementById('avatarUpload').click()">
+                                <span id="profileAvatarText">👤</span>
+                                <div class="upload-icon">📷</div>
+                                <input type="file" id="avatarUpload" accept="image/*" onchange="app.uploadAvatar(event)">
+                            </div>
+                            <div class="profile-info">
+                                <h1 id="profileName"></h1>
+                                <p id="profileEmail" style="color: var(--text-dim);"></p>
+                                <div style="margin: 0.5rem 0;">
+                                    <span class="status-badge" id="profilePlan"></span>
+                                    <span id="profileGenres" style="margin-left: 1rem; color: var(--text-dim);"></span>
+                                </div>
+                                <div class="profile-actions" id="profileActions"></div>
+                            </div>
+                        </div>
+
+                        <div style="padding: 0 2rem 2rem;">
+                            <div class="tabs">
+                                <div class="tab active" onclick="app.switchProfileTab('music')">Music</div>
+                                <div class="tab" onclick="app.switchProfileTab('about')">About</div>
+                                <div class="tab" onclick="app.switchProfileTab('edit')">Edit Profile</div>
+                            </div>
+
+                            <div id="profileTabMusic" class="profile-content">
+                                <div class="profile-section">
+                                    <h3>My Tracks</h3>
+                                    <div id="profileMusicList"></div>
+                                </div>
+                                <div class="profile-section">
+                                    <h3>Following</h3>
+                                    <div id="profileFollowing"></div>
+                                    <h3 style="margin-top: 1.5rem;">Followers</h3>
+                                    <div id="profileFollowers"></div>
+                                </div>
+                            </div>
+
+                            <div id="profileTabAbout" class="profile-content hidden">
+                                <div class="profile-section">
+                                    <h3>Bio</h3>
+                                    <p id="profileBioText"></p>
+                                    <h3 style="margin-top: 1.5rem;">Location</h3>
+                                    <p id="profileLocationText"></p>
+                                    <h3 style="margin-top: 1.5rem;">Links</h3>
+                                    <p id="profileLinkText"></p>
+                                    <h3 style="margin-top: 1.5rem;">Member Since</h3>
+                                    <p id="profileJoinedText"></p>
+                                </div>
+                            </div>
+
+                            <div id="profileTabEdit" class="profile-content hidden">
+                                <div class="profile-section">
+                                    <form onsubmit="app.updateProfile(event)">
+                                        <div class="form-group">
+                                            <label>Artist Name</label>
+                                            <input type="text" id="profileNameInput">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Bio</label>
+                                            <textarea id="profileBio" placeholder="Tell other artists about yourself..."></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Genres</label>
+                                            <input type="text" id="profileGenresInput" placeholder="Hip-Hop, R&B, Pop...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Location</label>
+                                            <input type="text" id="profileLocation" placeholder="City, Country">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>SoundCloud / Spotify / Website Link</label>
+                                            <input type="url" id="profileLink" placeholder="https://...">
+                                        </div>
+                                        <button type="submit" class="btn">Update Profile</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <form onsubmit="app.updateProfile(event)">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" id="profileNameInput">
-                        </div>
-                        <div class="form-group">
-                            <label>Bio</label>
-                            <textarea id="profileBio" placeholder="Tell other artists about yourself..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Genres</label>
-                            <input type="text" id="profileGenres" placeholder="Hip-Hop, R&B, Pop...">
-                        </div>
-                        <div class="form-group">
-                            <label>Location</label>
-                            <input type="text" id="profileLocation" placeholder="City, Country">
-                        </div>
-                        <div class="form-group">
-                            <label>SoundCloud / Spotify Link</label>
-                            <input type="url" id="profileLink" placeholder="https://...">
-                        </div>
-                        <button type="submit" class="btn">Update Profile</button>
-                    </form>
                 </div>
             </div>
 
             <div id="artists" class="page hidden">
-                <div class="panel" style="max-width: 1000px; margin: 0 auto;">
+                <div class="panel" style="max-width: 1200px; margin: 0 auto;">
                     <h2>Browse Artists</h2>
                     <input type="text" class="search-bar" id="artistSearch" placeholder="Search artists by name or genre..." oninput="app.searchArtists()">
                     <div id="artistList"></div>
@@ -819,88 +1147,166 @@
                     <div style="display: flex; gap: 1rem;">
                         <button class="btn" onclick="app.saveProject()">💾 Save</button>
                         <button class="btn btn-secondary" onclick="app.exportProject()">⬇ Export</button>
-                        <button class="btn" style="background: var(--warning);" onclick="app.submitProject()">📧 Submit</button>
+                        <button class="btn" style="background: var(--warning);" onclick="app.submitProject()">📧 Submit to Label</button>
                     </div>
                 </div>
 
-                <div class="track-list">
-                    <h3>Tracks</h3>
-                    <button class="btn" onclick="app.addTrack()" style="width: 100%; margin-bottom: 1rem;">+ Add Track</button>
-                    <div id="trackList"></div>
+                <div class="mixer-channel">
+                    <h3>Mixer</h3>
+                    <button class="btn" onclick="app.addTrack()" style="width: 100%; margin-bottom: 1rem;">+ Add Channel</button>
+                    <div id="mixerChannels"></div>
                 </div>
 
                 <div class="timeline">
                     <div class="timeline-grid" id="timelineGrid"></div>
                 </div>
 
-                <div class="ai-panel">
-                    <h3>AI Tools</h3>
-                    <div class="form-group">
-                        <label>Generate Music</label>
-                        <textarea id="aiPrompt" placeholder="Describe the music you want to generate..."></textarea>
+                <div class="ai-voice-panel">
+                    <h3>AI Voice Generator</h3>
+                    <div class="tabs" style="font-size: 0.9rem;">
+                        <div class="tab active" onclick="app.switchAITab('generate')">Generate</div>
+                        <div class="tab" onclick="app.switchAITab('voices')">Voices</div>
+                        <div class="tab" onclick="app.switchAITab('train')">Train</div>
                     </div>
-                    <button class="btn" onclick="app.generateAI()">🎵 Generate</button>
-                    
-                    <div style="margin-top: 2rem;">
-                        <h4>Voice Models</h4>
-                        <select id="voiceModel" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white; margin: 1rem 0;">
-                            <option value="default">Default Voice</option>
-                        </select>
-                        <button class="btn btn-outline" onclick="app.openVoiceTraining()">Train New Voice</button>
+
+                    <div id="aiTabGenerate">
+                        <div class="form-group">
+                            <label>Music/Vocal Prompt</label>
+                            <textarea id="aiPrompt" placeholder="Describe the music or vocals you want to generate..."></textarea>
+                        </div>
+                        <button class="btn" onclick="app.generateAI()" style="width: 100%;">🎵 Generate Audio</button>
+                    </div>
+
+                    <div id="aiTabVoices" class="hidden">
+                        <h4 style="margin-bottom: 0.5rem;">Select Voice</h4>
+                        <div class="voice-grid" id="voiceGrid"></div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label>Text to Speech</label>
+                            <textarea id="ttsText" placeholder="Enter text to convert to speech..."></textarea>
+                        </div>
+                        <button class="btn" onclick="app.generateTTS()" style="width: 100%;">🎤 Generate Voice</button>
+                    </div>
+
+                    <div id="aiTabTrain" class="hidden">
+                        <button class="btn btn-outline" onclick="app.openVoiceTraining()" style="width: 100%;">🎙 Train Custom Voice</button>
+                        <h4 style="margin-top: 1rem;">My Trained Voices</h4>
+                        <div id="trainedVoices"></div>
                     </div>
                 </div>
 
                 <div class="transport">
-                    <button id="recordBtn" onclick="app.toggleRecord()">⏺</button>
-                    <button id="playBtn" onclick="app.togglePlay()">▶</button>
-                    <button onclick="app.stop()">⏹</button>
-                    <div class="meter" id="meter"></div>
+                    <div class="transport-controls">
+                        <button id="recordBtn" onclick="app.toggleRecord()">⏺</button>
+                        <button id="playBtn" onclick="app.togglePlay()">▶</button>
+                        <button onclick="app.stop()">⏹</button>
+                    </div>
+                    <div class="meter-section">
+                        <div class="meter" id="meterL"></div>
+                        <div class="meter" id="meterR"></div>
+                    </div>
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">
+                        <div>Master Volume</div>
+                        <input type="range" min="0" max="100" value="80" style="width: 150px;">
+                    </div>
                 </div>
             </div>
 
-            <div id="admin" class="page hidden admin">
-                <div class="admin-section">
-                    <h2>Users</h2>
-                    <div class="user-list" id="userList"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Active Sessions</h2>
-                    <div id="sessionStats" style="margin-bottom: 1rem;"></div>
-                    <div class="session-list" id="sessionList"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Submissions</h2>
-                    <div id="submissionList"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>Collaboration Requests</h2>
-                    <div id="adminCollabList"></div>
-                </div>
-
-                <div class="admin-section">
-                    <h2>System Settings</h2>
-                    <div class="form-group">
-                        <label>Max Active Users (Basic)</label>
-                        <input type="number" id="maxBasic" value="5">
+            <div id="admin" class="page hidden">
+                <div style="margin-bottom: 2rem;">
+                    <h1 style="color: var(--accent);">Admin Dashboard</h1>
+                    <div class="admin-grid" style="margin-top: 1.5rem;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalProjects">0</div>
+                            <div class="stat-label">Total Projects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalSubmissions">0</div>
+                            <div class="stat-label">Submissions</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Max Active Users (Pro)</label>
-                        <input type="number" id="maxPro" value="5">
+                </div>
+
+                <div class="admin">
+                    <div class="admin-section">
+                        <h2>Studio Sessions</h2>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--accent);" id="basicActive">0/5</div>
+                                <div style="font-size: 0.9rem; color: var(--text-dim);">Basic Studio</div>
+                                <input type="number" id="maxBasic" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--success);" id="proActive">0/5</div>
+                                <div style="font-size: 0.9rem; color: var(--text-dim);">Pro Studio</div>
+                                <input type="number" id="maxPro" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--warning);" id="eliteActive">0/5</div>
+                                <div style="font-size: 0.9rem; color: var(--text-dim);">Elite Studio</div>
+                                <input type="number" id="maxElite" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Max Active Users (Elite)</label>
-                        <input type="number" id="maxElite" value="5">
+
+                    <div class="admin-section">
+                        <h2>User Management</h2>
+                        <input type="text" class="search-bar" placeholder="Search users..." id="adminUserSearch" oninput="app.filterAdminUsers()">
+                        <div class="user-list" id="userList"></div>
                     </div>
-                    <button class="btn" onclick="app.saveSettings()">Save Settings</button>
+
+                    <div class="admin-section">
+                        <h2>Submissions to Label</h2>
+                        <div id="submissionList"></div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h2>Collaboration Requests</h2>
+                        <div id="adminCollabList"></div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h2>System Analytics</h2>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <strong>AI Generations Today:</strong> <span id="aiGenToday">0</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <strong>Studio Hours Used:</strong> <span id="studioHours">0</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
+                            <strong>Active Collaborations:</strong> <span id="activeCollabs">0</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h2>Revenue Overview</h2>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <strong>Monthly (Pro):</strong> $<span id="monthlyRev">0</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
+                            <strong>Yearly (Elite):</strong> $<span id="yearlyRev">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        const DONNA_VOICES = [
+            { id: 'aria', name: 'Aria', type: 'Female', style: 'Pop/R&B' },
+            { id: 'marcus', name: 'Marcus', type: 'Male', style: 'Hip-Hop' },
+            { id: 'luna', name: 'Luna', type: 'Female', style: 'Jazz/Soul' },
+            { id: 'kai', name: 'Kai', type: 'Male', style: 'Rock/Alternative' },
+            { id: 'sofia', name: 'Sofia', type: 'Female', style: 'Latin/Pop' },
+            { id: 'derek', name: 'Derek', type: 'Male', style: 'Country/Folk' },
+            { id: 'nova', name: 'Nova', type: 'Female', style: 'EDM/Dance' },
+            { id: 'tyler', name: 'Tyler', type: 'Male', style: 'Trap/Drill' }
+        ];
+
         const app = {
             currentUser: null,
             currentProject: null,
@@ -910,18 +1316,27 @@
             audioContext: null,
             mediaRecorder: null,
             recordedChunks: [],
+            selectedVoice: 'aria',
+            studioSlots: {
+                basic: { max: 5, active: 0 },
+                pro: { max: 5, active: 0 },
+                elite: { max: 5, active: 0 }
+            },
             db: {
                 users: [],
                 projects: [],
                 submissions: [],
-                collabRequests: []
+                collabRequests: [],
+                following: [],
+                tracks: []
             },
 
             init() {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.initMeter();
+                this.initMeters();
                 this.loadFromMemory();
                 this.createMusicNotes();
+                this.initVoices();
             },
 
             createMusicNotes() {
@@ -941,15 +1356,53 @@
                 }, 500);
             },
 
+            initVoices() {
+                const grid = document.getElementById('voiceGrid');
+                grid.innerHTML = DONNA_VOICES.map(voice => `
+                    <div class="voice-option ${voice.id === this.selectedVoice ? 'selected' : ''}" onclick="app.selectVoice('${voice.id}')">
+                        <div style="font-weight: bold;">${voice.name}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-dim);">${voice.type}</div>
+                        <div style="font-size: 0.75rem; color: var(--success);">${voice.style}</div>
+                    </div>
+                `).join('');
+            },
+
+            selectVoice(voiceId) {
+                this.selectedVoice = voiceId;
+                this.initVoices();
+                const voice = DONNA_VOICES.find(v => v.id === voiceId);
+                this.notify(`Voice selected: ${voice.name} (${voice.style})`);
+            },
+
+            switchAITab(tab) {
+                document.querySelectorAll('#aiTabGenerate, #aiTabVoices, #aiTabTrain').forEach(el => el.classList.add('hidden'));
+                document.getElementById('aiTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            },
+
+            switchProfileTab(tab) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                event.target.classList.add('active');
+                document.querySelectorAll('[id^="profileTab"]').forEach(el => el.classList.add('hidden'));
+                document.getElementById('profileTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            },
+
             loadFromMemory() {
                 const data = localStorage.getItem('appData');
                 if (data) {
                     this.db = JSON.parse(data);
                 }
+                const slots = localStorage.getItem('studioSlots');
+                if (slots) {
+                    this.studioSlots = JSON.parse(slots);
+                    document.getElementById('maxBasic').value = this.studioSlots.basic.max;
+                    document.getElementById('maxPro').value = this.studioSlots.pro.max;
+                    document.getElementById('maxElite').value = this.studioSlots.elite.max;
+                }
             },
 
             saveToMemory() {
                 localStorage.setItem('appData', JSON.stringify(this.db));
+                localStorage.setItem('studioSlots', JSON.stringify(this.studioSlots));
             },
 
             showPage(pageId) {
@@ -961,6 +1414,10 @@
             },
 
             selectPlan(plan) {
+                if (plan === 'elite') {
+                    alert('Elite Plan: $99/year\n\nFor multi-year discounts and custom pricing, please contact:\nkurraschgamingmerchstore@gmail.com\n\n2 Year: Contact for pricing\n3 Year: Contact for pricing');
+                    return;
+                }
                 document.getElementById('signupPlan').value = plan;
                 this.showPage('signup');
             },
@@ -998,6 +1455,8 @@
                     genres: genres || '',
                     location: '',
                     link: '',
+                    avatar: '',
+                    banner: '',
                     createdAt: new Date().toISOString(),
                     quotas: isAdmin ? { aiGen: 999999, dailyHours: 999999 } : quotas[plan],
                     used: { aiGen: 0, dailyHours: 0 }
@@ -1060,7 +1519,7 @@
                     nav.innerHTML = `
                         <button onclick="app.showPage('dashboard')">Dashboard</button>
                         <button onclick="app.showPage('artists')">Artists</button>
-                        <button onclick="app.showPage('profile')">Profile</button>
+                        <button onclick="app.showProfilePage('${this.currentUser.id}')">Profile</button>
                         <button onclick="app.openStudioDirect()">Studio</button>
                         ${this.currentUser.role === 'admin' ? '<button onclick="app.showPage(\'admin\')">Admin</button>' : ''}
                         <button onclick="app.logout()">Logout</button>
@@ -1071,6 +1530,26 @@
                         <button onclick="app.showPage('login')">Login</button>
                     `;
                 }
+            },
+
+            updateStudioSlots() {
+                this.studioSlots.basic.max = parseInt(document.getElementById('maxBasic').value);
+                this.studioSlots.pro.max = parseInt(document.getElementById('maxPro').value);
+                this.studioSlots.elite.max = parseInt(document.getElementById('maxElite').value);
+                
+                this.saveToMemory();
+                this.loadStudioStats();
+                this.notify('Studio slot limits updated');
+            },
+
+            loadStudioStats() {
+                const basicUsers = this.db.users.filter(u => u.plan === 'basic').length;
+                const proUsers = this.db.users.filter(u => u.plan === 'pro').length;
+                const eliteUsers = this.db.users.filter(u => u.plan === 'elite').length;
+
+                document.getElementById('basicActive').textContent = `${basicUsers}/${this.studioSlots.basic.max}`;
+                document.getElementById('proActive').textContent = `${proUsers}/${this.studioSlots.pro.max}`;
+                document.getElementById('eliteActive').textContent = `${eliteUsers}/${this.studioSlots.elite.max}`;
             },
 
             loadDashboard() {
@@ -1114,8 +1593,8 @@
                                 <strong>${fromUser.name}</strong> wants to collaborate
                                 <div style="font-size: 0.9rem; color: var(--text-dim); margin: 0.5rem 0;">${r.message}</div>
                                 <div class="collab-actions">
-                                    <button class="btn" onclick="app.respondToCollab('${r.id}', 'accepted')">Accept</button>
-                                    <button class="btn btn-outline" onclick="app.respondToCollab('${r.id}', 'rejected')">Decline</button>
+                                    <button class="btn btn-small" onclick="app.respondToCollab('${r.id}', 'accepted')">Accept</button>
+                                    <button class="btn btn-outline btn-small" onclick="app.respondToCollab('${r.id}', 'rejected')">Decline</button>
                                 </div>
                             </div>
                         `;
@@ -1131,7 +1610,7 @@
                 this.saveToMemory();
 
                 if (status === 'accepted') {
-                    this.notify('Collaboration accepted! You can now work together in the studio.');
+                    this.notify('Collaboration accepted! You can now work together.');
                 } else {
                     this.notify('Collaboration request declined.');
                 }
@@ -1169,11 +1648,127 @@
                 `;
             },
 
+            showProfilePage(userId) {
+                const user = this.db.users.find(u => u.id === userId);
+                if (!user) return;
+
+                const isOwnProfile = user.id === this.currentUser.id;
+                const isFollowing = this.db.following.some(f => f.fromUserId === this.currentUser.id && f.toUserId === userId);
+                const hasCollab = this.db.collabRequests.find(r => 
+                    ((r.fromUserId === this.currentUser.id && r.toUserId === userId) ||
+                     (r.fromUserId === userId && r.toUserId === this.currentUser.id)) &&
+                    r.status === 'accepted'
+                );
+
+                document.getElementById('profileAvatarText').textContent = user.avatar || user.name.charAt(0).toUpperCase();
+                document.getElementById('profileName').textContent = user.name;
+                document.getElementById('profileEmail').textContent = user.email;
+                document.getElementById('profilePlan').textContent = user.plan.toUpperCase();
+                document.getElementById('profileGenres').textContent = user.genres || 'No genres listed';
+
+                const actions = document.getElementById('profileActions');
+                if (isOwnProfile) {
+                    actions.innerHTML = '';
+                } else {
+                    actions.innerHTML = `
+                        <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="app.toggleFollow('${userId}')">
+                            ${isFollowing ? '✓ Following' : '+ Follow'}
+                        </button>
+                        ${!hasCollab ? `<button class="btn btn-small" onclick="app.requestCollab('${userId}')">🤝 Collaborate</button>` : '<span class="status-badge">Collaborating</span>'}
+                    `;
+                }
+
+                document.getElementById('profileBioText').textContent = user.bio || 'No bio yet';
+                document.getElementById('profileLocationText').textContent = user.location || 'Not specified';
+                document.getElementById('profileLinkText').innerHTML = user.link ? `<a href="${user.link}" target="_blank" style="color: var(--success);">${user.link}</a>` : 'No links';
+                document.getElementById('profileJoinedText').textContent = new Date(user.createdAt).toLocaleDateString();
+
+                if (isOwnProfile) {
+                    document.getElementById('profileNameInput').value = user.name;
+                    document.getElementById('profileBio').value = user.bio || '';
+                    document.getElementById('profileGenresInput').value = user.genres || '';
+                    document.getElementById('profileLocation').value = user.location || '';
+                    document.getElementById('profileLink').value = user.link || '';
+                }
+
+                const userTracks = this.db.tracks.filter(t => t.userId === userId);
+                const musicList = document.getElementById('profileMusicList');
+                if (userTracks.length === 0) {
+                    musicList.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No tracks yet</div>';
+                } else {
+                    musicList.innerHTML = userTracks.map(track => `
+                        <div class="music-track">
+                            <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                                <div class="play-icon">▶</div>
+                                <div>
+                                    <strong>${track.title}</strong>
+                                    <div style="font-size: 0.85rem; color: var(--text-dim);">${track.genre || 'Unknown'} • ${new Date(track.createdAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            ${isOwnProfile ? `<button class="btn btn-small" onclick="app.downloadTrack('${track.id}')">⬇</button>` : ''}
+                        </div>
+                    `).join('');
+                }
+
+                const followers = this.db.following.filter(f => f.toUserId === userId);
+                const following = this.db.following.filter(f => f.fromUserId === userId);
+                
+                document.getElementById('profileFollowers').innerHTML = followers.length > 0 ? 
+                    followers.map(f => {
+                        const follower = this.db.users.find(u => u.id === f.fromUserId);
+                        return `<div style="padding: 0.5rem; color: var(--text-dim);">${follower?.name || 'Unknown'}</div>`;
+                    }).join('') : '<div style="color: var(--text-dim);">No followers yet</div>';
+
+                document.getElementById('profileFollowing').innerHTML = following.length > 0 ? 
+                    following.map(f => {
+                        const followed = this.db.users.find(u => u.id === f.toUserId);
+                        return `<div style="padding: 0.5rem; color: var(--text-dim);">${followed?.name || 'Unknown'}</div>`;
+                    }).join('') : '<div style="color: var(--text-dim);">Not following anyone</div>';
+
+                this.showPage('profile');
+            },
+
+            toggleFollow(userId) {
+                const existingFollow = this.db.following.findIndex(f => 
+                    f.fromUserId === this.currentUser.id && f.toUserId === userId
+                );
+
+                if (existingFollow >= 0) {
+                    this.db.following.splice(existingFollow, 1);
+                    this.notify('Unfollowed');
+                } else {
+                    this.db.following.push({
+                        id: 'follow_' + Date.now(),
+                        fromUserId: this.currentUser.id,
+                        toUserId: userId,
+                        createdAt: new Date().toISOString()
+                    });
+                    this.notify('Following!');
+                }
+
+                this.saveToMemory();
+                this.showProfilePage(userId);
+            },
+
+            uploadAvatar(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.notify('Avatar uploaded!');
+                }
+            },
+
+            uploadBanner(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.notify('Banner uploaded!');
+                }
+            },
+
             updateProfile(e) {
                 e.preventDefault();
                 this.currentUser.name = document.getElementById('profileNameInput').value;
                 this.currentUser.bio = document.getElementById('profileBio').value;
-                this.currentUser.genres = document.getElementById('profileGenres').value;
+                this.currentUser.genres = document.getElementById('profileGenresInput').value;
                 this.currentUser.location = document.getElementById('profileLocation').value;
                 this.currentUser.link = document.getElementById('profileLink').value;
 
@@ -1185,20 +1780,7 @@
                 }
 
                 this.notify('Profile updated successfully!');
-                this.loadProfilePage();
-            },
-
-            loadProfilePage() {
-                document.getElementById('profileAvatar').textContent = this.currentUser.name.charAt(0).toUpperCase();
-                document.getElementById('profileName').textContent = this.currentUser.name;
-                document.getElementById('profileEmail').textContent = this.currentUser.email;
-                document.getElementById('profilePlan').textContent = this.currentUser.plan.toUpperCase();
-                
-                document.getElementById('profileNameInput').value = this.currentUser.name;
-                document.getElementById('profileBio').value = this.currentUser.bio || '';
-                document.getElementById('profileGenres').value = this.currentUser.genres || '';
-                document.getElementById('profileLocation').value = this.currentUser.location || '';
-                document.getElementById('profileLink').value = this.currentUser.link || '';
+                this.showProfilePage(this.currentUser.id);
             },
 
             searchArtists() {
@@ -1215,35 +1797,22 @@
                     list.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">No artists found</div>';
                 } else {
                     list.innerHTML = artists.map(artist => {
-                        const hasActiveCollab = this.db.collabRequests.find(r => 
-                            ((r.fromUserId === this.currentUser.id && r.toUserId === artist.id) ||
-                             (r.fromUserId === artist.id && r.toUserId === this.currentUser.id)) &&
-                            r.status === 'accepted'
-                        );
+                        const isFollowing = this.db.following.some(f => f.fromUserId === this.currentUser.id && f.toUserId === artist.id);
                         
-                        const hasPendingRequest = this.db.collabRequests.find(r => 
-                            r.fromUserId === this.currentUser.id && 
-                            r.toUserId === artist.id && 
-                            r.status === 'pending'
-                        );
-
                         return `
-                            <div class="artist-item">
-                                <div style="display: flex; gap: 1rem;">
-                                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--success)); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                            <div class="artist-item" onclick="app.showProfilePage('${artist.id}')">
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--success)); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;">
                                         ${artist.name.charAt(0).toUpperCase()}
                                     </div>
                                     <div style="flex: 1;">
                                         <strong style="font-size: 1.2rem;">${artist.name}</strong>
                                         <div style="color: var(--text-dim); margin: 0.25rem 0;">${artist.genres || 'No genres listed'}</div>
                                         <div style="font-size: 0.9rem;">${artist.bio || 'No bio'}</div>
-                                        ${artist.location ? `<div style="font-size: 0.8rem; color: var(--text-dim);">📍 ${artist.location}</div>` : ''}
-                                        ${artist.link ? `<a href="${artist.link}" target="_blank" style="font-size: 0.8rem; color: var(--success);">🔗 Listen</a>` : ''}
+                                        ${artist.location ? `<div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">📍 ${artist.location}</div>` : ''}
                                     </div>
                                     <div>
-                                        ${hasActiveCollab ? '<span class="status-badge">Collaborating</span>' : 
-                                          hasPendingRequest ? '<span class="status-badge pending">Request Sent</span>' :
-                                          `<button class="btn" onclick="app.requestCollab('${artist.id}')">Request Collab</button>`}
+                                        <span class="status-badge">${artist.plan.toUpperCase()}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1268,7 +1837,7 @@
                 this.db.collabRequests.push(request);
                 this.saveToMemory();
                 this.notify('Collaboration request sent!');
-                this.searchArtists();
+                this.showProfilePage(artistId);
             },
 
             createProject() {
@@ -1296,7 +1865,7 @@
                 this.notify('Project created!');
                 this.loadProjects();
                 this.showPage('studio');
-                this.renderTracks();
+                this.renderMixer();
             },
 
             openProject(projectId) {
@@ -1319,13 +1888,13 @@
                             const user = this.db.users.find(u => u.id === id);
                             return user ? user.name : 'Unknown';
                         }).join(', ');
-                        document.getElementById('collabIndicator').textContent = `🤝 Collaborating with: ${collabNames}`;
+                        document.getElementById('collabIndicator').textContent = `🤝 Collab: ${collabNames}`;
                     } else {
                         document.getElementById('collabIndicator').textContent = '';
                     }
 
                     this.showPage('studio');
-                    this.renderTracks();
+                    this.renderMixer();
                     this.notify('Project loaded: ' + project.title);
                 }
             },
@@ -1335,7 +1904,7 @@
                     this.createProject();
                 } else {
                     this.showPage('studio');
-                    this.renderTracks();
+                    this.renderMixer();
                 }
             },
 
@@ -1358,49 +1927,108 @@
                 }
 
                 this.saveToMemory();
-                this.notify('Project saved successfully!');
+                this.notify('Project saved!');
             },
 
             addTrack() {
-                const name = prompt('Track name:', `Track ${this.tracks.length + 1}`);
+                const name = prompt('Channel name:', `Track ${this.tracks.length + 1}`);
                 if (!name) return;
 
                 const track = {
                     id: 'track_' + Date.now(),
                     name,
-                    volume: 0.8,
+                    volume: 80,
                     pan: 0,
                     muted: false,
                     solo: false,
+                    eq: { low: 0, mid: 0, high: 0 },
+                    compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
+                    reverb: 0,
+                    delay: 0,
                     clips: []
                 };
 
                 this.tracks.push(track);
-                this.renderTracks();
-                this.notify('Track added: ' + name);
+                this.renderMixer();
+                this.notify('Channel added: ' + name);
             },
 
-            renderTracks() {
-                const trackList = document.getElementById('trackList');
+            renderMixer() {
+                const mixer = document.getElementById('mixerChannels');
                 const timeline = document.getElementById('timelineGrid');
 
                 if (this.tracks.length === 0) {
-                    trackList.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No tracks yet</div>';
-                    timeline.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">Add tracks to start</div>';
+                    mixer.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No channels yet</div>';
+                    timeline.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">Add channels to start</div>';
                     return;
                 }
 
-                trackList.innerHTML = this.tracks.map((track, i) => `
-                    <div class="track">
+                mixer.innerHTML = this.tracks.map((track, i) => `
+                    <div class="channel-strip">
                         <strong>${track.name}</strong>
-                        <div class="track-controls">
-                            <button onclick="app.toggleMute(${i})">${track.muted ? '🔇' : '🔊'}</button>
-                            <button onclick="app.toggleSolo(${i})">${track.solo ? '🎯' : '○'}</button>
-                            <button onclick="app.uploadToTrack(${i})">📁</button>
-                            <button onclick="app.deleteTrack(${i})">🗑</button>
+                        
+                        <div class="fx-section">
+                            <div class="fx-title">EQ</div>
+                            <div class="slider-control">
+                                <label>Low</label>
+                                <input type="range" min="-12" max="12" value="${track.eq.low}" oninput="app.updateEQ(${i}, 'low', this.value)">
+                                <span>${track.eq.low}dB</span>
+                            </div>
+                            <div class="slider-control">
+                                <label>Mid</label>
+                                <input type="range" min="-12" max="12" value="${track.eq.mid}" oninput="app.updateEQ(${i}, 'mid', this.value)">
+                                <span>${track.eq.mid}dB</span>
+                            </div>
+                            <div class="slider-control">
+                                <label>High</label>
+                                <input type="range" min="-12" max="12" value="${track.eq.high}" oninput="app.updateEQ(${i}, 'high', this.value)">
+                                <span>${track.eq.high}dB</span>
+                            </div>
                         </div>
-                        <input type="range" min="0" max="1" step="0.01" value="${track.volume}" 
-                               onchange="app.setVolume(${i}, this.value)" style="width: 100%; margin-top: 0.5rem;">
+
+                        <div class="fx-section">
+                            <div class="fx-title">Compression</div>
+                            <div class="slider-control">
+                                <label>Ratio</label>
+                                <input type="range" min="1" max="20" value="${track.compression.ratio}" oninput="app.updateCompression(${i}, 'ratio', this.value)">
+                                <span>${track.compression.ratio}:1</span>
+                            </div>
+                        </div>
+
+                        <div class="fx-section">
+                            <div class="fx-title">Effects</div>
+                            <div class="slider-control">
+                                <label>Reverb</label>
+                                <input type="range" min="0" max="100" value="${track.reverb}" oninput="app.updateFX(${i}, 'reverb', this.value)">
+                                <span>${track.reverb}%</span>
+                            </div>
+                            <div class="slider-control">
+                                <label>Delay</label>
+                                <input type="range" min="0" max="100" value="${track.delay}" oninput="app.updateFX(${i}, 'delay', this.value)">
+                                <span>${track.delay}%</span>
+                            </div>
+                        </div>
+
+                        <div class="channel-controls" style="margin-top: 1rem;">
+                            <button onclick="app.toggleMute(${i})" style="flex: 1; padding: 0.5rem; background: ${track.muted ? '#ff4444' : 'rgba(0,0,0,0.5)'}; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">
+                                ${track.muted ? '🔇 Muted' : '🔊'}
+                            </button>
+                            <button onclick="app.toggleSolo(${i})" style="flex: 1; padding: 0.5rem; background: ${track.solo ? '#ffd700' : 'rgba(0,0,0,0.5)'}; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">
+                                ${track.solo ? '🎯 Solo' : '○'}
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <button onclick="app.uploadToTrack(${i})" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">📁 Upload Audio</button>
+                        </div>
+
+                        <div class="fader-container">
+                            <label style="font-size: 0.8rem; color: var(--text-dim);">Volume</label>
+                            <input type="range" min="0" max="100" value="${track.volume}" orient="vertical" style="width: 100%;" oninput="app.setVolume(${i}, this.value)">
+                            <div style="text-align: center; font-size: 0.8rem; margin-top: 0.5rem;">${track.volume}%</div>
+                        </div>
+
+                        <button onclick="app.deleteTrack(${i})" style="width: 100%; padding: 0.5rem; background: #ff4444; border: none; color: white; border-radius: 4px; cursor: pointer; margin-top: 0.5rem;">🗑 Delete</button>
                     </div>
                 `).join('');
 
@@ -1415,25 +2043,41 @@
                 `).join('');
             },
 
+            updateEQ(index, band, value) {
+                this.tracks[index].eq[band] = parseFloat(value);
+                this.renderMixer();
+            },
+
+            updateCompression(index, param, value) {
+                this.tracks[index].compression[param] = parseFloat(value);
+                this.renderMixer();
+            },
+
+            updateFX(index, fx, value) {
+                this.tracks[index][fx] = parseFloat(value);
+                this.renderMixer();
+            },
+
             toggleMute(index) {
                 this.tracks[index].muted = !this.tracks[index].muted;
-                this.renderTracks();
+                this.renderMixer();
             },
 
             toggleSolo(index) {
                 this.tracks[index].solo = !this.tracks[index].solo;
-                this.renderTracks();
+                this.renderMixer();
             },
 
             setVolume(index, value) {
                 this.tracks[index].volume = parseFloat(value);
+                this.renderMixer();
             },
 
             deleteTrack(index) {
-                if (confirm('Delete track "' + this.tracks[index].name + '"?')) {
+                if (confirm('Delete channel "' + this.tracks[index].name + '"?')) {
                     this.tracks.splice(index, 1);
-                    this.renderTracks();
-                    this.notify('Track deleted');
+                    this.renderMixer();
+                    this.notify('Channel deleted');
                 }
             },
 
@@ -1452,8 +2096,8 @@
                             fileSize: file.size
                         };
                         this.tracks[index].clips.push(clip);
-                        this.renderTracks();
-                        this.notify('Audio file added: ' + file.name);
+                        this.renderMixer();
+                        this.notify('Audio uploaded: ' + file.name);
                     }
                 };
                 input.click();
@@ -1469,7 +2113,7 @@
 
             async startRecording() {
                 if (this.tracks.length === 0) {
-                    this.notify('Add a track first');
+                    this.notify('Add a channel first');
                     return;
                 }
 
@@ -1493,14 +2137,14 @@
                             fileSize: this.recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)
                         };
                         this.tracks[0].clips.push(clip);
-                        this.renderTracks();
-                        this.notify('Recording saved to ' + this.tracks[0].name);
+                        this.renderMixer();
+                        this.notify('Recording saved');
                     };
 
                     this.mediaRecorder.start();
                     this.isRecording = true;
                     document.getElementById('recordBtn').classList.add('recording');
-                    this.notify('Recording started...');
+                    this.notify('Recording...');
                 } catch (e) {
                     this.notify('Microphone access denied');
                 }
@@ -1519,8 +2163,8 @@
                 this.isPlaying = !this.isPlaying;
                 document.getElementById('playBtn').textContent = this.isPlaying ? '⏸' : '▶';
                 if (this.isPlaying) {
-                    this.notify('Playing project...');
-                    this.animateMeter();
+                    this.notify('Playing...');
+                    this.animateMeters();
                 }
             },
 
@@ -1531,51 +2175,60 @@
                 document.getElementById('recordBtn').classList.remove('recording');
             },
 
-            initMeter() {
-                const meter = document.getElementById('meter');
-                for (let i = 0; i < 20; i++) {
-                    const bar = document.createElement('div');
-                    bar.className = 'meter-bar';
-                    bar.style.height = '0%';
-                    meter.appendChild(bar);
+            initMeters() {
+                const meterL = document.getElementById('meterL');
+                const meterR = document.getElementById('meterR');
+                for (let i = 0; i < 30; i++) {
+                    const barL = document.createElement('div');
+                    barL.className = 'meter-bar';
+                    barL.style.height = '0%';
+                    meterL.appendChild(barL);
+
+                    const barR = document.createElement('div');
+                    barR.className = 'meter-bar';
+                    barR.style.height = '0%';
+                    meterR.appendChild(barR);
                 }
             },
 
-            animateMeter() {
+            animateMeters() {
                 if (!this.isPlaying) return;
                 
-                const bars = document.querySelectorAll('.meter-bar');
-                bars.forEach(bar => {
+                document.querySelectorAll('.meter-bar').forEach(bar => {
                     const height = Math.random() * 100;
                     bar.style.height = height + '%';
                     bar.style.background = height > 80 ? '#ff0000' : height > 60 ? '#ffff00' : '#00ff00';
                 });
 
-                setTimeout(() => this.animateMeter(), 50);
+                setTimeout(() => this.animateMeters(), 50);
             },
 
             generateAI() {
                 const prompt = document.getElementById('aiPrompt').value;
                 if (!prompt) {
-                    this.notify('Enter a description for AI generation');
+                    this.notify('Enter a prompt');
                     return;
                 }
 
                 if (this.currentUser.used.aiGen >= this.currentUser.quotas.aiGen && this.currentUser.quotas.aiGen < 999) {
-                    this.notify('AI generation quota exceeded. Upgrade your plan!');
+                    this.notify('AI quota exceeded. Upgrade your plan!');
                     return;
                 }
 
-                this.notify('Generating AI audio from prompt...');
+                this.notify('Generating AI audio...');
 
                 setTimeout(() => {
                     const track = {
                         id: 'track_' + Date.now(),
                         name: 'AI: ' + prompt.substring(0, 15),
-                        volume: 0.8,
+                        volume: 80,
                         pan: 0,
                         muted: false,
                         solo: false,
+                        eq: { low: 0, mid: 0, high: 0 },
+                        compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
+                        reverb: 0,
+                        delay: 0,
                         clips: [{
                             id: 'clip_' + Date.now(),
                             name: 'AI Generated',
@@ -1586,14 +2239,56 @@
                     };
 
                     this.tracks.push(track);
-                    this.renderTracks();
+                    this.renderMixer();
 
                     this.currentUser.used.aiGen++;
                     this.updateUserInDB();
                     this.updateQuotas();
                     
-                    this.notify('AI track generated successfully!');
+                    this.notify('AI track generated!');
                     document.getElementById('aiPrompt').value = '';
+                }, 2500);
+            },
+
+            generateTTS() {
+                const text = document.getElementById('ttsText').value;
+                if (!text) {
+                    this.notify('Enter text for TTS');
+                    return;
+                }
+
+                const voice = DONNA_VOICES.find(v => v.id === this.selectedVoice);
+                this.notify(`Generating voice with ${voice.name}...`);
+
+                setTimeout(() => {
+                    const track = {
+                        id: 'track_' + Date.now(),
+                        name: `${voice.name} Voice`,
+                        volume: 80,
+                        pan: 0,
+                        muted: false,
+                        solo: false,
+                        eq: { low: 0, mid: 0, high: 0 },
+                        compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
+                        reverb: 20,
+                        delay: 0,
+                        clips: [{
+                            id: 'clip_' + Date.now(),
+                            name: 'TTS Voice',
+                            start: 0,
+                            duration: 45,
+                            fileSize: 1536000
+                        }]
+                    };
+
+                    this.tracks.push(track);
+                    this.renderMixer();
+
+                    this.currentUser.used.aiGen++;
+                    this.updateUserInDB();
+                    
+                    this.notify(`${voice.name} voice generated!`);
+                    document.getElementById('ttsText').value = '';
                 }, 2000);
             },
 
@@ -1612,11 +2307,11 @@
                 modal.innerHTML = `
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Train AI Voice Model</h2>
+                            <h2>Train Custom AI Voice</h2>
                             <button class="close-btn" onclick="this.closest('.modal').remove()">✕</button>
                         </div>
                         <p style="color: var(--text-dim); margin-bottom: 1rem;">
-                            Upload 5-10 audio samples of your voice (each 10-30 seconds) to train a custom voice model.
+                            Upload 5-10 audio samples of a voice (each 10-30 seconds) to train a custom AI voice model.
                         </p>
                         <div class="upload-area" onclick="document.getElementById('voiceFiles').click()">
                             <div style="font-size: 3rem;">🎤</div>
@@ -1625,12 +2320,16 @@
                         </div>
                         <div class="file-list" id="voiceFileList"></div>
                         <div class="form-group" style="margin-top: 1rem;">
+                            <label>Voice Name</label>
+                            <input type="text" id="voiceModelName" placeholder="My Custom Voice">
+                        </div>
+                        <div class="form-group">
                             <label>
                                 <input type="checkbox" id="voiceConsent">
-                                I consent to train an AI model with my voice samples and agree to the terms
+                                I have permission to use these voice samples and agree to the terms
                             </label>
                         </div>
-                        <button class="btn" onclick="app.trainVoice()" style="margin-top: 1rem; width: 100%;">Start Training</button>
+                        <button class="btn" onclick="app.trainVoice()" style="margin-top: 1rem; width: 100%;">🎙 Start Training</button>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -1650,42 +2349,59 @@
             trainVoice() {
                 const files = document.getElementById('voiceFiles').files;
                 const consent = document.getElementById('voiceConsent').checked;
+                const modelName = document.getElementById('voiceModelName').value;
                 
                 if (files.length === 0) {
-                    this.notify('Please upload voice samples');
+                    this.notify('Upload voice samples');
+                    return;
+                }
+                
+                if (!modelName) {
+                    this.notify('Enter a voice name');
                     return;
                 }
                 
                 if (!consent) {
-                    this.notify('Please agree to the consent terms');
+                    this.notify('Accept terms to continue');
                     return;
                 }
 
-                this.notify('Training voice model... This may take a few minutes');
+                this.notify('Training voice model...');
                 
                 setTimeout(() => {
-                    const modelName = prompt('Name your voice model:', 'My Voice');
-                    if (modelName) {
-                        const select = document.getElementById('voiceModel');
-                        const option = document.createElement('option');
-                        option.value = 'custom_' + Date.now();
-                        option.textContent = modelName;
-                        select.appendChild(option);
-                        select.value = option.value;
-                        
-                        document.querySelector('.modal').remove();
-                        this.notify('Voice model "' + modelName + '" trained successfully!');
+                    const newVoice = {
+                        id: 'custom_' + Date.now(),
+                        name: modelName,
+                        type: 'Custom',
+                        style: 'Trained Voice',
+                        userId: this.currentUser.id
+                    };
+                    
+                    DONNA_VOICES.push(newVoice);
+                    this.initVoices();
+                    
+                    const trainedList = document.getElementById('trainedVoices');
+                    if (trainedList) {
+                        trainedList.innerHTML += `
+                            <div class="file-item">
+                                <span>${modelName}</span>
+                                <span class="status-badge">Ready</span>
+                            </div>
+                        `;
                     }
-                }, 3000);
+                    
+                    document.querySelector('.modal').remove();
+                    this.notify('Voice model trained successfully!');
+                }, 3500);
             },
 
             exportProject() {
                 if (!this.currentProject || this.tracks.length === 0) {
-                    this.notify('Nothing to export. Add some tracks first!');
+                    this.notify('Nothing to export');
                     return;
                 }
 
-                this.notify('Exporting project as WAV...');
+                this.notify('Exporting project...');
                 
                 setTimeout(() => {
                     const exportData = {
@@ -1694,11 +2410,23 @@
                         tracks: this.tracks.map(t => ({
                             name: t.name,
                             clips: t.clips.length,
-                            volume: t.volume
+                            volume: t.volume,
+                            eq: t.eq,
+                            fx: { reverb: t.reverb, delay: t.delay }
                         })),
                         exportDate: new Date().toISOString(),
                         format: 'WAV 44.1kHz 24-bit'
                     };
+
+                    const newTrack = {
+                        id: 'track_' + Date.now(),
+                        userId: this.currentUser.id,
+                        title: this.currentProject.title,
+                        genre: this.currentUser.genres?.split(',')[0] || 'Unknown',
+                        createdAt: new Date().toISOString()
+                    };
+                    this.db.tracks.push(newTrack);
+                    this.saveToMemory();
 
                     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -1708,17 +2436,21 @@
                     a.click();
                     URL.revokeObjectURL(url);
                     
-                    this.notify('Project exported successfully!');
+                    this.notify('Project exported & saved to profile!');
                 }, 1500);
+            },
+
+            downloadTrack(trackId) {
+                this.notify('Downloading track...');
             },
 
             submitProject() {
                 if (!this.currentProject || this.tracks.length === 0) {
-                    this.notify('Nothing to submit. Complete your project first!');
+                    this.notify('Complete your project first');
                     return;
                 }
 
-                if (!confirm('Submit "' + this.currentProject.title + '" to Kurrasch Records?\n\nThis will email the final mix to kurraschgamingmerchstore@gmail.com')) {
+                if (!confirm(`Submit "${this.currentProject.title}" to Kurrasch Records Label?\n\nThis will email the final mix to kurraschgamingmerchstore@gmail.com for review and potential release.`)) {
                     return;
                 }
 
@@ -1739,19 +2471,41 @@
                     this.db.submissions.push(submission);
                     this.saveToMemory();
 
-                    this.notify('PROJECT SUBMITTED SUCCESSFULLY!');
+                    this.notify('SUBMITTED TO LABEL!');
                     
                     setTimeout(() => {
-                        alert(`✅ Submission Confirmed!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nProject: ${this.currentProject.title}\nArtist: ${this.currentUser.name}\nTracks: ${this.tracks.length}\n\nSubmitted to:\nkurraschgamingmerchstore@gmail.com\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nYou will receive confirmation shortly.\nThank you for using Kurrasch Records Studio!`);
+                        alert(`✅ Submission Confirmed!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nProject: ${this.currentProject.title}\nArtist: ${this.currentUser.name}\nTracks: ${this.tracks.length}\n\nSubmitted to:\nkurraschgamingmerchstore@gmail.com\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nYour music will be reviewed for label release.\nIf accepted, Kurrasch Records will handle distribution.\n\nThank you for submitting!`);
                     }, 500);
                 }, 1500);
             },
 
             loadAdmin() {
+                this.loadAdminStats();
                 this.loadUsers();
-                this.loadSessions();
                 this.loadSubmissions();
                 this.loadAdminCollabs();
+                this.loadStudioStats();
+            },
+
+            loadAdminStats() {
+                document.getElementById('totalUsers').textContent = this.db.users.length;
+                document.getElementById('totalProjects').textContent = this.db.projects.length;
+                document.getElementById('totalSubmissions').textContent = this.db.submissions.length;
+                
+                const aiGenToday = this.db.users.reduce((sum, u) => sum + u.used.aiGen, 0);
+                document.getElementById('aiGenToday').textContent = aiGenToday;
+                
+                const studioHours = this.db.users.reduce((sum, u) => sum + u.used.dailyHours, 0);
+                document.getElementById('studioHours').textContent = studioHours;
+                
+                const activeCollabs = this.db.collabRequests.filter(r => r.status === 'accepted').length;
+                document.getElementById('activeCollabs').textContent = activeCollabs;
+                
+                const monthlyRev = this.db.users.filter(u => u.plan === 'pro').length * 29;
+                document.getElementById('monthlyRev').textContent = monthlyRev;
+                
+                const yearlyRev = this.db.users.filter(u => u.plan === 'elite').length * 99;
+                document.getElementById('yearlyRev').textContent = yearlyRev;
             },
 
             loadUsers() {
@@ -1761,7 +2515,10 @@
                         <div>
                             <strong>${u.name}</strong><br>
                             <span style="font-size: 0.9rem; color: var(--text-dim);">${u.email}</span><br>
-                            <span style="font-size: 0.8rem; color: var(--text-dim);">AI: ${u.used.aiGen} / ${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen}</span>
+                            <span style="font-size: 0.8rem; color: var(--text-dim);">
+                                AI: ${u.used.aiGen}/${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen} | 
+                                Hours: ${u.used.dailyHours}/${u.quotas.dailyHours > 999 ? '∞' : u.quotas.dailyHours}
+                            </span>
                         </div>
                         <div>
                             <span class="status-badge">${u.plan.toUpperCase()}</span>
@@ -1770,28 +2527,27 @@
                 `).join('');
             },
 
-            loadSessions() {
-                const stats = document.getElementById('sessionStats');
-                const basicActive = this.db.users.filter(u => u.plan === 'basic').length;
-                const proActive = this.db.users.filter(u => u.plan === 'pro').length;
-                const eliteActive = this.db.users.filter(u => u.plan === 'elite').length;
-
-                stats.innerHTML = `
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--accent);">${basicActive}/5</div>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">Basic Studio</div>
+            filterAdminUsers() {
+                const query = document.getElementById('adminUserSearch').value.toLowerCase();
+                const filtered = this.db.users.filter(u => 
+                    u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)
+                );
+                
+                const list = document.getElementById('userList');
+                list.innerHTML = filtered.map(u => `
+                    <div class="user-item">
+                        <div>
+                            <strong>${u.name}</strong><br>
+                            <span style="font-size: 0.9rem; color: var(--text-dim);">${u.email}</span><br>
+                            <span style="font-size: 0.8rem; color: var(--text-dim);">
+                                AI: ${u.used.aiGen}/${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen}
+                            </span>
                         </div>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--success);">${proActive}/5</div>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">Pro Studio</div>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 2rem; color: var(--warning);">${eliteActive}/5</div>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">Elite Studio</div>
+                        <div>
+                            <span class="status-badge">${u.plan.toUpperCase()}</span>
                         </div>
                     </div>
-                `;
+                `).join('');
             },
 
             loadSubmissions() {
@@ -1838,10 +2594,6 @@
                 }
             },
 
-            saveSettings() {
-                this.notify('System settings saved!');
-            },
-
             notify(message) {
                 const notification = document.createElement('div');
                 notification.className = 'notification';
@@ -1856,16 +2608,6 @@
         };
 
         window.addEventListener('DOMContentLoaded', () => app.init());
-
-        // Handle profile page when navigating to it
-        document.addEventListener('click', (e) => {
-            if (e.target.textContent === 'Profile' && app.currentUser) {
-                setTimeout(() => app.loadProfilePage(), 0);
-            }
-            if (e.target.textContent === 'Artists' && app.currentUser) {
-                setTimeout(() => app.searchArtists(), 0);
-            }
-        });
     </script>
 </body>
 </html>
