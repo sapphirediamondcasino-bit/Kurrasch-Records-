@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurrasch Records Studio</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🎵</text></svg>">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -58,8 +57,8 @@
             }
         }
 
-        /* LOGIN SCREEN */
-        .login-screen {
+        /* LOGIN/SIGNUP SCREEN */
+        .auth-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -72,27 +71,22 @@
             z-index: 10;
         }
 
-        .login-box {
+        .auth-screen.hidden {
+            display: none;
+        }
+
+        .auth-box {
             background: var(--panel);
             padding: 3rem;
             border-radius: 10px;
             border: 2px solid var(--accent);
-            width: 400px;
+            width: 450px;
             box-shadow: 0 0 50px rgba(233,69,96,0.5);
             position: relative;
             z-index: 11;
         }
 
-        .login-logo {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px currentColor;
-        }
-
-        .login-logo-img {
+        .auth-logo-img {
             width: 120px;
             height: 120px;
             margin: 0 auto 1rem;
@@ -102,11 +96,18 @@
             box-shadow: 0 0 30px rgba(233,69,96,0.6);
             object-fit: contain;
             background: var(--panel);
-        }--accent);
-            box-shadow: 0 0 30px rgba(233,69,96,0.6);
         }
 
-        .login-input {
+        .auth-logo {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .auth-input {
             width: 100%;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -117,12 +118,12 @@
             border-radius: 5px;
         }
 
-        .login-input:focus {
+        .auth-input:focus {
             outline: none;
             border-color: var(--accent);
         }
 
-        .login-btn {
+        .auth-btn {
             width: 100%;
             padding: 1rem;
             background: var(--accent);
@@ -135,16 +136,20 @@
             margin-top: 1rem;
         }
 
-        .login-btn:hover {
+        .auth-btn:hover {
             background: #ff5577;
         }
 
-        .signup-link {
+        .auth-link {
             text-align: center;
             margin-top: 1rem;
             color: var(--cyan);
             cursor: pointer;
             font-size: 0.9rem;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
         }
 
         /* MAIN DAW */
@@ -644,15 +649,6 @@
             overflow: auto;
         }
 
-        .midi-note {
-            position: absolute;
-            height: 13px;
-            background: var(--accent);
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 2px;
-            cursor: move;
-        }
-
         /* STEP SEQUENCER VIEW */
         .step-seq-container {
             padding: 2rem;
@@ -890,14 +886,28 @@
     <div class="rainbow-notes" id="rainbowNotes"></div>
 
     <!-- LOGIN SCREEN -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-box">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%231a1a1a' width='200' height='200'/%3E%3Ctext x='100' y='120' font-size='80' text-anchor='middle' fill='%23e94560'%3E🎵%3C/text%3E%3C/svg%3E" class="login-logo-img" id="logoImage" alt="Kurrasch Records">
-            <div class="login-logo">KURRASCH<br>RECORDS</div>
-            <input type="email" class="login-input" id="loginEmail" placeholder="Email Address">
-            <input type="password" class="login-input" id="loginPassword" placeholder="Password">
-            <button class="login-btn" onclick="APP.login()">LOGIN</button>
-            <div class="signup-link" onclick="APP.showSignup()">Create New Account</div>
+    <div class="auth-screen" id="loginScreen">
+        <div class="auth-box">
+            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="auth-logo-img" alt="Kurrasch Records">
+            <div class="auth-logo">KURRASCH RECORDS</div>
+            <input type="email" class="auth-input" id="loginEmail" placeholder="Email Address">
+            <input type="password" class="auth-input" id="loginPassword" placeholder="Password">
+            <button class="auth-btn" onclick="APP.login()">LOGIN</button>
+            <div class="auth-link" onclick="APP.showSignupScreen()">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
+    <!-- SIGNUP SCREEN -->
+    <div class="auth-screen hidden" id="signupScreen">
+        <div class="auth-box">
+            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="auth-logo-img" alt="Kurrasch Records">
+            <div class="auth-logo">CREATE ACCOUNT</div>
+            <input type="text" class="auth-input" id="signupName" placeholder="Full Name">
+            <input type="email" class="auth-input" id="signupEmail" placeholder="Email Address">
+            <input type="password" class="auth-input" id="signupPassword" placeholder="Password">
+            <input type="password" class="auth-input" id="signupConfirm" placeholder="Confirm Password">
+            <button class="auth-btn" onclick="APP.signup()">CREATE ACCOUNT</button>
+            <div class="auth-link" onclick="APP.showLoginScreen()">Already have an account? Login</div>
         </div>
     </div>
 
@@ -906,8 +916,8 @@
         <!-- TOP MENU BAR -->
         <div class="menu-bar">
             <div class="logo">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%231a1a1a' width='200' height='200'/%3E%3Ctext x='100' y='120' font-size='80' text-anchor='middle' fill='%23e94560'%3E🎵%3C/text%3E%3C/svg%3E" class="logo-img" id="topLogoImage" alt="KR">
-                <span>KURRASCH<br>RECORDS</span>
+                <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="logo-img" alt="KR">
+                <span>KURRASCH RECORDS</span>
             </div>
             <div class="menu-items">
                 <div class="menu-item">File</div>
@@ -986,19 +996,6 @@
                         </div>
                     </div>
 
-                    <div class="browser-section">
-                        <div class="section-header">INSTRUMENTS</div>
-                        <div class="browser-item">
-                            🎹 Piano
-                        </div>
-                        <div class="browser-item">
-                            🎸 Guitar
-                        </div>
-                        <div class="browser-item">
-                            🥁 Drums
-                        </div>
-                    </div>
-
                     <button class="add-track-btn" onclick="DAW.addTrack()">+ ADD TRACK</button>
                     <button class="upload-btn" onclick="DAW.uploadAudio()">📁 UPLOAD AUDIO</button>
                     <button class="upload-btn" onclick="DAW.recordMic()" style="background: var(--accent); margin-top: 0.5rem;">🎤 RECORD MIC</button>
@@ -1049,13 +1046,6 @@
                         <input type="range" class="control-slider" min="-20" max="60" value="0" oninput="DAW.updateGain(this.value)">
                         <div class="control-value" id="gainValue">0 dB</div>
                     </div>
-                    <div class="property-control">
-                        <div class="control-label">+48V Phantom Power</div>
-                        <select class="control-select">
-                            <option>OFF</option>
-                            <option>ON</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="property-group">
@@ -1066,16 +1056,6 @@
                         <div class="control-value" id="eqLowValue">0 dB</div>
                     </div>
                     <div class="property-control">
-                        <div class="control-label">Low-Mid (400Hz)</div>
-                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('lowmid', this.value)">
-                        <div class="control-value" id="eqLowMidValue">0 dB</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">High-Mid (2.5kHz)</div>
-                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('highmid', this.value)">
-                        <div class="control-value" id="eqHighMidValue">0 dB</div>
-                    </div>
-                    <div class="property-control">
                         <div class="control-label">High (12kHz)</div>
                         <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('high', this.value)">
                         <div class="control-value" id="eqHighValue">0 dB</div>
@@ -1083,126 +1063,16 @@
                 </div>
 
                 <div class="property-group">
-                    <div class="property-header">COMPRESSOR</div>
-                    <div class="property-control">
-                        <div class="control-label">Threshold</div>
-                        <input type="range" class="control-slider" min="-40" max="0" value="-20" oninput="DAW.updateComp('threshold', this.value)">
-                        <div class="control-value" id="compThresholdValue">-20 dB</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Ratio</div>
-                        <input type="range" class="control-slider" min="1" max="20" value="4" oninput="DAW.updateComp('ratio', this.value)">
-                        <div class="control-value" id="compRatioValue">4:1</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Attack</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="10" oninput="DAW.updateComp('attack', this.value)">
-                        <div class="control-value" id="compAttackValue">10 ms</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Release</div>
-                        <input type="range" class="control-slider" min="0" max="1000" value="100" oninput="DAW.updateComp('release', this.value)">
-                        <div class="control-value" id="compReleaseValue">100 ms</div>
-                    </div>
-                </div>
-
-                <div class="property-group">
-                    <div class="property-header">NOISE GATE</div>
-                    <div class="property-control">
-                        <div class="control-label">Threshold</div>
-                        <input type="range" class="control-slider" min="-60" max="0" value="-40" oninput="DAW.updateGate('threshold', this.value)">
-                        <div class="control-value" id="gateThresholdValue">-40 dB</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Range</div>
-                        <input type="range" class="control-slider" min="0" max="60" value="0" oninput="DAW.updateGate('range', this.value)">
-                        <div class="control-value" id="gateRangeValue">0 dB</div>
-                    </div>
-                </div>
-
-                <div class="property-group">
-                    <div class="property-header">EFFECTS</div>
-                    <div class="property-control">
-                        <div class="control-label">Reverb</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('reverb', this.value)">
-                        <div class="control-value" id="reverbValue">0%</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Delay</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('delay', this.value)">
-                        <div class="control-value" id="delayValue">0%</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Chorus</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('chorus', this.value)">
-                        <div class="control-value" id="chorusValue">0%</div>
-                    </div>
-                </div>
-
-                <div class="property-group">
                     <div class="property-header">NOSTALGIA/LO-FI FILTERS</div>
                     <div class="property-control">
                         <div class="control-label">Filter Type</div>
-                        <select class="control-select" onchange="DAW.updateLoFi(this.value)">
-                            <option value="off">Off</option>
-                            <option value="vinyl">Vinyl Record</option>
-                            <option value="cassette1">Cassette Type I</option>
-                            <option value="cassette2">Cassette Type II</option>
-                            <option value="cassette3">Cassette Type III</option>
-                            <option value="cassette4">Cassette Type IV</option>
-                            <option value="vhs">VHS Tape</option>
-                            <option value="reel">Reel-to-Reel</option>
-                            <option value="8bit">8-bit/Chiptune</option>
-                            <option value="telephone">Telephone</option>
-                            <option value="radio">AM Radio</option>
-                        </select>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Wow & Flutter</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateLoFiParam('wow', this.value)">
-                        <div class="control-value" id="wowValue">0%</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Noise Amount</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateLoFiParam('noise', this.value)">
-                        <div class="control-value" id="noiseValue">0%</div>
-                    </div>
-                </div>
-
-                <div class="property-group">
-                    <div class="property-header">INSERT EFFECTS</div>
-                    <div class="property-control">
-                        <div class="control-label">Slot 1</div>
                         <select class="control-select">
-                            <option value="off">Empty</option>
-                            <option value="distortion">Distortion</option>
-                            <option value="bitcrusher">Bitcrusher</option>
-                            <option value="flanger">Flanger</option>
-                            <option value="phaser">Phaser</option>
+                            <option>Off</option>
+                            <option>Vinyl Record</option>
+                            <option>Cassette Type I</option>
+                            <option>VHS Tape</option>
+                            <option>8-bit/Chiptune</option>
                         </select>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Slot 2</div>
-                        <select class="control-select">
-                            <option value="off">Empty</option>
-                            <option value="autotune">Auto-Tune</option>
-                            <option value="vocoder">Vocoder</option>
-                            <option value="pitchshift">Pitch Shift</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="property-group">
-                    <div class="property-header">SEND/AUX</div>
-                    <div class="property-control">
-                        <div class="control-label">Send 1</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateSend(1, this.value)">
-                        <div class="control-value" id="send1Value">0%</div>
-                    </div>
-                    <div class="property-control">
-                        <div class="control-label">Send 2</div>
-                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateSend(2, this.value)">
-                        <div class="control-value" id="send2Value">0%</div>
                     </div>
                 </div>
             </div>
@@ -1229,56 +1099,24 @@
     </div>
 
     <script>
-        // GLOBAL STATE
         const APP = {
             currentUser: null,
-            session: null,
 
             async init() {
                 this.startRainbowNotes();
                 this.initTimeline();
                 this.initPianoRoll();
                 this.initStepSequencer();
-                
-                // Allow logo uploads
-                document.getElementById('logoImage')?.addEventListener('click', () => this.uploadLogo('login'));
-                document.getElementById('topLogoImage')?.addEventListener('click', () => this.uploadLogo('top'));
             },
 
-            async uploadLogo(location) {
-                if (!this.currentUser || this.currentUser.email !== 'kurraschgamingmerchstore@gmail.com') {
-                    this.showNotification('Only admin can change logo');
-                    return;
-                }
+            showLoginScreen() {
+                document.getElementById('signupScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+            },
 
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = async (event) => {
-                            const logoData = event.target.result;
-                            try {
-                                await window.storage.set('site-logo', logoData, true);
-                                document.getElementById('logoImage').src = logoData;
-                                document.getElementById('topLogoImage').src = logoData;
-                                
-                                // Update favicon
-                                const link = document.querySelector("link[rel*='icon']");
-                                if (link) link.href = logoData;
-                                
-                                this.showNotification('Logo updated!');
-                            } catch (error) {
-                                console.error('Logo save error:', error);
-                                this.showNotification('Logo upload failed');
-                            }
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                input.click();
+            showSignupScreen() {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('signupScreen').classList.remove('hidden');
             },
 
             async login() {
@@ -1294,7 +1132,6 @@
                     const userKey = `user:${email}`;
                     let userData = await window.storage.get(userKey);
 
-                    // If account doesn't exist and it's the admin email, create it automatically
                     if (!userData && email === 'kurraschgamingmerchstore@gmail.com') {
                         const adminUser = {
                             email: email,
@@ -1302,22 +1139,9 @@
                             password: password,
                             tier: 'Elite',
                             isAdmin: true,
-                            createdAt: Date.now(),
-                            profile: {
-                                bio: 'Official Kurrasch Records Account',
-                                genres: ['All Genres'],
-                                location: 'Global',
-                                avatar: '',
-                                banner: '',
-                                musicLinks: []
-                            },
-                            projects: [],
-                            followers: [],
-                            following: []
+                            createdAt: Date.now()
                         };
-
                         await window.storage.set(userKey, JSON.stringify(adminUser));
-                        this.showNotification('Admin account created! Logging in...');
                         userData = { value: JSON.stringify(adminUser) };
                     }
 
@@ -1335,70 +1159,63 @@
 
                     this.currentUser = user;
                     
-                    // Check if admin
                     if (email === 'kurraschgamingmerchstore@gmail.com') {
                         this.currentUser.isAdmin = true;
                         this.currentUser.tier = 'Elite';
                     }
 
-                    // Load saved logo if exists
-                    try {
-                        const logoResult = await window.storage.get('site-logo', true);
-                        if (logoResult) {
-                            document.getElementById('logoImage').src = logoResult.value;
-                            document.getElementById('topLogoImage').src = logoResult.value;
-                            const link = document.querySelector("link[rel*='icon']");
-                            if (link) link.href = logoResult.value;
-                        }
-                    } catch (error) {
-                        // No saved logo, use default
-                    }
-
-                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('dawApp').classList.add('active');
                     
-                    this.showNotification(`Welcome back, ${user.name}!`);
+                    this.showNotification(`Welcome, ${user.name}!`);
                 } catch (error) {
                     console.error('Login error:', error);
                     this.showNotification('Login failed');
                 }
             },
 
-            async showSignup() {
-                const email = prompt('Enter your email:');
-                if (!email) return;
+            async signup() {
+                const name = document.getElementById('signupName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim();
+                const password = document.getElementById('signupPassword').value;
+                const confirm = document.getElementById('signupConfirm').value;
 
-                const name = prompt('Enter your name:');
-                if (!name) return;
+                if (!name || !email || !password || !confirm) {
+                    this.showNotification('Please fill in all fields');
+                    return;
+                }
 
-                const password = prompt('Create a password:');
-                if (!password) return;
+                if (password !== confirm) {
+                    this.showNotification('Passwords do not match');
+                    return;
+                }
 
                 try {
                     const userKey = `user:${email}`;
+                    const exists = await window.storage.get(userKey);
+
+                    if (exists) {
+                        this.showNotification('Email already registered');
+                        return;
+                    }
                     
                     const newUser = {
                         email,
                         name,
                         password,
                         tier: 'Basic',
-                        createdAt: Date.now(),
-                        profile: {
-                            bio: '',
-                            genres: [],
-                            location: '',
-                            avatar: '',
-                            banner: '',
-                            musicLinks: []
-                        },
-                        projects: [],
-                        followers: [],
-                        following: []
+                        createdAt: Date.now()
                     };
 
                     await window.storage.set(userKey, JSON.stringify(newUser));
                     
                     this.showNotification('Account created! Please login.');
+                    this.showLoginScreen();
+
+                    document.getElementById('signupName').value = '';
+                    document.getElementById('signupEmail').value = '';
+                    document.getElementById('signupPassword').value = '';
+                    document.getElementById('signupConfirm').value = '';
                 } catch (error) {
                     console.error('Signup error:', error);
                     this.showNotification('Signup failed');
@@ -1408,12 +1225,12 @@
             logout() {
                 this.currentUser = null;
                 document.getElementById('dawApp').classList.remove('active');
-                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginScreen').classList.remove('hidden');
                 this.showNotification('Logged out');
             },
 
             showProfile() {
-                alert('Profile page coming soon! This will show:\n- Avatar & Banner\n- Bio & Genres\n- Your Music Portfolio\n- Followers/Following\n- Collaboration Requests');
+                alert('Profile coming soon!');
             },
 
             startRainbowNotes() {
@@ -1421,7 +1238,6 @@
                 const notes = ['♪', '♫', '♬', '𝄞', '𝄢', '♩', '♭', '♯'];
                 const colors = ['#ff00ff', '#ff69b4', '#ff1493', '#ff0000', '#ff4500', '#ff8c00', '#ffd700', '#adff2f', '#00ff00', '#00ff7f', '#00ffff', '#00bfff', '#0080ff', '#4169e1', '#8a2be2', '#9370db'];
 
-                // Create notes continuously
                 setInterval(() => {
                     for (let i = 0; i < 2; i++) {
                         const note = document.createElement('div');
@@ -1433,7 +1249,6 @@
                         note.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
                         
                         container.appendChild(note);
-
                         setTimeout(() => note.remove(), 8000);
                     }
                 }, 200);
@@ -1465,7 +1280,7 @@
 
             initStepSequencer() {
                 const container = document.getElementById('stepContainer');
-                const tracks = ['Kick', 'Snare', 'Hi-Hat', 'Clap', 'Tom', 'Cymbal'];
+                const tracks = ['Kick', 'Snare', 'Hi-Hat', 'Clap'];
 
                 tracks.forEach(trackName => {
                     const track = document.createElement('div');
@@ -1504,15 +1319,10 @@
             }
         };
 
-        // DAW FUNCTIONALITY
         const DAW = {
             tracks: [],
             isPlaying: false,
-            isRecording: false,
             currentTime: 0,
-            audioContext: null,
-            mediaRecorder: null,
-            recordedChunks: [],
 
             switchView(view) {
                 document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
@@ -1532,15 +1342,7 @@
                     clips: [],
                     volume: 75,
                     muted: false,
-                    solo: false,
-                    settings: {
-                        gain: 0,
-                        eq: { low: 0, lowmid: 0, highmid: 0, high: 0 },
-                        comp: { threshold: -20, ratio: 4, attack: 10, release: 100 },
-                        gate: { threshold: -40, range: 0 },
-                        fx: { reverb: 0, delay: 0, chorus: 0 },
-                        lofi: { type: 'off', wow: 0, noise: 0 }
-                    }
+                    solo: false
                 };
 
                 this.tracks.push(track);
@@ -1565,7 +1367,7 @@
                                 <button class="track-btn ${track.solo ? 'active' : ''}" onclick="DAW.toggleSolo(${index})">S</button>
                                 <button class="track-btn" onclick="DAW.deleteTrack(${index})">X</button>
                             </div>
-                            <input type="range" style="width: 100%;" min="0" max="100" value="${track.volume}" oninput="DAW.setTrackVolume(${index}, this.value)">
+                            <input type="range" style="width: 100%;" min="0" max="100" value="${track.volume}">
                         </div>
                         <div class="track-timeline" id="timeline_${track.id}"></div>
                     `;
@@ -1589,7 +1391,7 @@
                         <div class="level-meter">
                             <div class="meter-level" style="height: ${track.volume}%"></div>
                         </div>
-                        <input type="range" class="vertical-fader" min="0" max="100" value="${track.volume}" oninput="DAW.setTrackVolume(${index}, this.value)">
+                        <input type="range" class="vertical-fader" min="0" max="100" value="${track.volume}">
                         <div class="fader-value">${track.volume}%</div>
                         <div class="strip-controls">
                             <button class="strip-btn ${track.muted ? 'active' : ''}" onclick="DAW.toggleMute(${index})">M</button>
@@ -1599,20 +1401,6 @@
 
                     container.appendChild(strip);
                 });
-
-                // Add Master strip
-                const master = document.createElement('div');
-                master.className = 'mixer-strip';
-                master.style.borderColor = 'var(--gold)';
-                master.innerHTML = `
-                    <div class="strip-name" style="color: var(--gold);">MASTER</div>
-                    <div class="level-meter">
-                        <div class="meter-level" style="height: 75%"></div>
-                    </div>
-                    <input type="range" class="vertical-fader" min="0" max="100" value="75" oninput="DAW.updateMaster(this.value)">
-                    <div class="fader-value">75%</div>
-                `;
-                container.appendChild(master);
             },
 
             toggleMute(index) {
@@ -1627,17 +1415,11 @@
                 this.updateMixerView();
             },
 
-            setTrackVolume(index, value) {
-                this.tracks[index].volume = parseInt(value);
-                this.updateMixerView();
-            },
-
             deleteTrack(index) {
                 if (confirm('Delete this track?')) {
                     this.tracks.splice(index, 1);
                     this.renderTracks();
                     this.updateMixerView();
-                    APP.showNotification('Track deleted');
                 }
             },
 
@@ -1648,7 +1430,7 @@
                 }
 
                 const track = this.tracks[this.tracks.length - 1];
-                const colors = ['#e94560', '#00d9ff', '#ffd700', '#00ff88', '#ff6b6b'];
+                const colors = ['#e94560', '#00d9ff', '#ffd700', '#00ff88'];
                 
                 track.clips.push({
                     name: sampleName,
@@ -1666,7 +1448,7 @@
                 clip.textContent = sampleName;
                 timeline.appendChild(clip);
 
-                APP.showNotification(`${sampleName} added to ${track.name}`);
+                APP.showNotification(`${sampleName} added`);
             },
 
             addAIVoice(voiceName) {
@@ -1677,7 +1459,7 @@
 
                 const track = this.tracks[this.tracks.length - 1];
                 track.clips.push({
-                    name: `AI Voice: ${voiceName}`,
+                    name: `AI: ${voiceName}`,
                     start: track.clips.length * 160,
                     duration: 320,
                     color: '#ff00ff'
@@ -1702,7 +1484,6 @@
                 input.onchange = (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        APP.showNotification(`Uploaded: ${file.name}`);
                         this.addSample(file.name);
                     }
                 };
@@ -1710,41 +1491,15 @@
             },
 
             async recordMic() {
-                if (!this.audioContext) {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    this.mediaRecorder = new MediaRecorder(stream);
-                    this.recordedChunks = [];
-
-                    this.mediaRecorder.ondataavailable = (e) => {
-                        if (e.data.size > 0) {
-                            this.recordedChunks.push(e.data);
-                        }
-                    };
-
-                    this.mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-                        APP.showNotification('Recording saved!');
-                        this.addSample('Recorded Audio');
-                    };
-
-                    this.mediaRecorder.start();
-                    this.isRecording = true;
-                    APP.showNotification('🎤 Recording started...');
+                    APP.showNotification('🎤 Recording for 10 seconds...');
 
                     setTimeout(() => {
-                        if (this.isRecording) {
-                            this.mediaRecorder.stop();
-                            this.isRecording = false;
-                            stream.getTracks().forEach(track => track.stop());
-                        }
+                        stream.getTracks().forEach(track => track.stop());
+                        this.addSample('Recorded Audio');
                     }, 10000);
-
                 } catch (error) {
-                    console.error('Mic access error:', error);
                     APP.showNotification('Could not access microphone');
                 }
             },
@@ -1755,12 +1510,8 @@
 
             playPause() {
                 this.isPlaying = !this.isPlaying;
-                if (this.isPlaying) {
-                    APP.showNotification('▶ Playing');
-                    this.startPlayback();
-                } else {
-                    APP.showNotification('⏸ Paused');
-                }
+                APP.showNotification(this.isPlaying ? '▶ Playing' : '⏸ Paused');
+                if (this.isPlaying) this.startPlayback();
             },
 
             stop() {
@@ -1794,56 +1545,8 @@
             },
 
             updateEQ(band, value) {
-                const id = band === 'low' ? 'eqLowValue' : 
-                          band === 'lowmid' ? 'eqLowMidValue' :
-                          band === 'highmid' ? 'eqHighMidValue' : 'eqHighValue';
+                const id = band === 'low' ? 'eqLowValue' : 'eqHighValue';
                 document.getElementById(id).textContent = value + ' dB';
-            },
-
-            updateComp(param, value) {
-                if (param === 'threshold') {
-                    document.getElementById('compThresholdValue').textContent = value + ' dB';
-                } else if (param === 'ratio') {
-                    document.getElementById('compRatioValue').textContent = value + ':1';
-                } else if (param === 'attack') {
-                    document.getElementById('compAttackValue').textContent = value + ' ms';
-                } else if (param === 'release') {
-                    document.getElementById('compReleaseValue').textContent = value + ' ms';
-                }
-            },
-
-            updateGate(param, value) {
-                if (param === 'threshold') {
-                    document.getElementById('gateThresholdValue').textContent = value + ' dB';
-                } else if (param === 'range') {
-                    document.getElementById('gateRangeValue').textContent = value + ' dB';
-                }
-            },
-
-            updateFX(fx, value) {
-                if (fx === 'reverb') {
-                    document.getElementById('reverbValue').textContent = value + '%';
-                } else if (fx === 'delay') {
-                    document.getElementById('delayValue').textContent = value + '%';
-                } else if (fx === 'chorus') {
-                    document.getElementById('chorusValue').textContent = value + '%';
-                }
-            },
-
-            updateLoFi(type) {
-                APP.showNotification(`Lo-Fi filter: ${type}`);
-            },
-
-            updateLoFiParam(param, value) {
-                if (param === 'wow') {
-                    document.getElementById('wowValue').textContent = value + '%';
-                } else if (param === 'noise') {
-                    document.getElementById('noiseValue').textContent = value + '%';
-                }
-            },
-
-            updateSend(num, value) {
-                document.getElementById(`send${num}Value`).textContent = value + '%';
             },
 
             updateMaster(value) {
@@ -1858,40 +1561,27 @@
 
                 const project = {
                     id: 'project_' + Date.now(),
-                    name: 'My Project',
                     tracks: this.tracks,
-                    bpm: 120,
-                    createdAt: Date.now(),
                     owner: APP.currentUser.email
                 };
 
                 try {
-                    const projectKey = `project:${APP.currentUser.email}:${project.id}`;
-                    await window.storage.set(projectKey, JSON.stringify(project));
+                    await window.storage.set(`project:${project.id}`, JSON.stringify(project));
                     APP.showNotification('💾 Project saved!');
                 } catch (error) {
-                    console.error('Save error:', error);
                     APP.showNotification('Save failed');
                 }
             },
 
             exportProject() {
-                const project = {
-                    name: 'My Project',
-                    tracks: this.tracks,
-                    bpm: 120,
-                    exportedAt: Date.now(),
-                    format: 'WAV/MP3'
-                };
-
+                const project = { tracks: this.tracks };
                 const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'project_export.json';
+                a.download = 'project.json';
                 a.click();
                 URL.revokeObjectURL(url);
-
                 APP.showNotification('⬇ Project exported!');
             },
 
@@ -1902,49 +1592,23 @@
                 }
 
                 const submission = {
-                    id: 'submission_' + Date.now(),
+                    id: 'sub_' + Date.now(),
                     artist: APP.currentUser.name,
-                    email: APP.currentUser.email,
-                    project: {
-                        tracks: this.tracks,
-                        bpm: 120
-                    },
-                    submittedAt: Date.now(),
+                    tracks: this.tracks,
                     status: 'pending'
                 };
 
                 try {
-                    const submissionKey = `submission:${submission.id}`;
-                    await window.storage.set(submissionKey, JSON.stringify(submission), true);
-                    
-                    APP.showNotification(`📧 Submitted to kurraschgamingmerchstore@gmail.com\n\nYour music will be reviewed for label release!`);
+                    await window.storage.set(`submission:${submission.id}`, JSON.stringify(submission), true);
+                    APP.showNotification('📧 Submitted to kurraschgamingmerchstore@gmail.com');
                 } catch (error) {
-                    console.error('Submission error:', error);
                     APP.showNotification('Submission failed');
                 }
             }
         };
 
-        // INITIALIZE APP
         window.addEventListener('DOMContentLoaded', () => {
             APP.init();
-        });
-
-        // KEYBOARD SHORTCUTS
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !e.target.matches('input, textarea')) {
-                e.preventDefault();
-                DAW.playPause();
-            } else if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                DAW.save();
-            } else if (e.ctrlKey && e.key === 'r') {
-                e.preventDefault();
-                DAW.record();
-            } else if (e.ctrlKey && e.key === 'e') {
-                e.preventDefault();
-                DAW.exportProject();
-            }
         });
     </script>
 </body>
