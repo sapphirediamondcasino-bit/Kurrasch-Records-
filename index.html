@@ -1190,13 +1190,22 @@
                     return;
                 }
 
+                if (password.length < 6) {
+                    this.showNotification('Password must be at least 6 characters');
+                    return;
+                }
+
                 try {
                     const userKey = `user:${email}`;
-                    const exists = await window.storage.get(userKey);
-
-                    if (exists) {
-                        this.showNotification('Email already registered');
-                        return;
+                    
+                    try {
+                        const exists = await window.storage.get(userKey);
+                        if (exists) {
+                            this.showNotification('Email already registered');
+                            return;
+                        }
+                    } catch (e) {
+                        // Key doesn't exist, which is what we want
                     }
                     
                     const newUser = {
@@ -1204,21 +1213,26 @@
                         name,
                         password,
                         tier: 'Basic',
+                        isAdmin: false,
                         createdAt: Date.now()
                     };
 
                     await window.storage.set(userKey, JSON.stringify(newUser));
                     
-                    this.showNotification('Account created! Please login.');
-                    this.showLoginScreen();
+                    this.showNotification('✅ Account created successfully! Please login.');
+                    
+                    setTimeout(() => {
+                        this.showLoginScreen();
+                        document.getElementById('loginEmail').value = email;
+                        document.getElementById('signupName').value = '';
+                        document.getElementById('signupEmail').value = '';
+                        document.getElementById('signupPassword').value = '';
+                        document.getElementById('signupConfirm').value = '';
+                    }, 1500);
 
-                    document.getElementById('signupName').value = '';
-                    document.getElementById('signupEmail').value = '';
-                    document.getElementById('signupPassword').value = '';
-                    document.getElementById('signupConfirm').value = '';
                 } catch (error) {
                     console.error('Signup error:', error);
-                    this.showNotification('Signup failed');
+                    this.showNotification('❌ Signup failed: ' + error.message);
                 }
             },
 
