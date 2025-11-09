@@ -4,549 +4,760 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurrasch Records Studio</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=6911651d&is=6910139d&hm=6e52cf8bf625a03ca93862aa87ad1c5551b1d8c10b7682c770a428267371fa49&' viewBox='0 0 100 100'><text y='75' font-size='75'>🎵</text></svg>">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
+            --bg: #000000;
+            --panel: #1a1a1a;
+            --panel-light: #2a2a2a;
             --accent: #e94560;
-            --accent-light: #ff6b85;
-            --text: #eee;
-            --text-dim: #aaa;
-            --success: #00d9ff;
-            --warning: #ffd700;
+            --cyan: #00d9ff;
+            --gold: #ffd700;
+            --text: #ffffff;
+            --dim: #666666;
+            --grid: #333333;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        .app {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            position: relative;
-        }
-
-        .music-notes {
+        /* RAINBOW FALLING NOTES */
+        .rainbow-notes {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
             overflow: hidden;
         }
 
-        .note {
+        .musical-note {
             position: absolute;
             font-size: 2rem;
-            opacity: 0.3;
-            animation: fall linear infinite;
+            font-weight: bold;
+            animation: fall linear forwards;
+            text-shadow: 0 0 10px currentColor;
         }
 
         @keyframes fall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 0.3;
+            from { 
+                transform: translateY(-100px) rotate(0deg); 
+                opacity: 0.7; 
             }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
+            to { 
+                transform: translateY(calc(100vh + 100px)) rotate(360deg); 
+                opacity: 0; 
             }
         }
 
-        header {
-            background: rgba(0,0,0,0.3);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--accent);
-            position: relative;
-            z-index: 10;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        nav button {
-            background: none;
-            border: none;
-            color: var(--text);
-            padding: 0.5rem 1rem;
-            margin: 0 0.25rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        nav button:hover {
-            color: var(--accent-light);
-        }
-
-        .content {
-            flex: 1;
-            overflow: auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 5;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .landing {
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .hero {
-            margin-bottom: 4rem;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--accent), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .card.elite {
-            border-color: var(--warning);
-            background: rgba(255,215,0,0.1);
-        }
-
-        .card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .card .price {
-            font-size: 2rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .card ul {
-            list-style: none;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .card li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            background: var(--accent-light);
-            transform: scale(1.05);
-        }
-
-        .btn-secondary {
-            background: var(--success);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--accent);
-        }
-
-        .btn-small {
-            padding: 0.4rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .auth-container {
-            max-width: 450px;
-            margin: 2rem auto;
-            background: rgba(255,255,255,0.05);
-            padding: 2rem;
-            border-radius: 12px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-dim);
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: 300px 1fr 300px;
-            gap: 2rem;
-            height: 100%;
-        }
-
-        .panel {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-
-        .panel h2 {
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .project-item, .artist-item, .track-item {
-            background: rgba(0,0,0,0.3);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .project-item:hover, .artist-item:hover {
-            background: rgba(233,69,96,0.2);
-        }
-
-        .quota-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 1rem;
-            background: rgba(0,0,0,0.3);
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            transition: width 0.3s;
-        }
-
-        .profile-page {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .profile-banner {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            border-radius: 12px 12px 0 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-banner input[type="file"] {
-            display: none;
-        }
-
-        .profile-banner .upload-overlay {
-            position: absolute;
+        /* LOGIN SCREEN */
+        .login-screen {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
+            background: var(--bg);
+            display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10;
+        }
+
+        .login-box {
+            background: var(--panel);
+            padding: 3rem;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            width: 400px;
+            box-shadow: 0 0 50px rgba(233,69,96,0.5);
+            position: relative;
+            z-index: 11;
+        }
+
+        .login-logo {
+            text-align: center;
             font-size: 2rem;
-            cursor: pointer;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px currentColor;
         }
 
-        .profile-banner:hover .upload-overlay {
-            display: flex;
+        .login-logo-img {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            display: block;
+            border-radius: 10px;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 30px rgba(233,69,96,0.6);
         }
 
-        .profile-header {
-            position: relative;
-            margin-top: -80px;
-            padding: 0 2rem 2rem;
-            display: flex;
-            gap: 2rem;
+        .login-input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--bg);
+            border: 2px solid var(--grid);
+            color: var(--text);
+            font-size: 1rem;
+            border-radius: 5px;
         }
 
-        .profile-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            border: 5px solid var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            position: relative;
-            cursor: pointer;
-            flex-shrink: 0;
+        .login-input:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
-        .profile-avatar input[type="file"] {
-            display: none;
-        }
-
-        .profile-avatar .upload-icon {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
             background: var(--accent);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .profile-info {
-            flex: 1;
-            margin-top: 80px;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 1rem;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
             margin-top: 1rem;
         }
 
-        .profile-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
+        .login-btn:hover {
+            background: #ff5577;
         }
 
-        .profile-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 1.5rem;
+        .signup-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--cyan);
+            cursor: pointer;
+            font-size: 0.9rem;
         }
 
-        .studio {
+        /* MAIN DAW */
+        .daw {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+        }
+
+        .daw.active {
+            display: flex;
+        }
+
+        /* TOP MENU BAR */
+        .menu-bar {
+            height: 40px;
+            background: var(--panel);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-right: 2rem;
+            text-shadow: 0 0 10px currentColor;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-img {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid var(--accent);
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .menu-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background: var(--panel-light);
+            color: var(--accent);
+        }
+
+        .menu-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .menu-btn {
+            padding: 0.4rem 1.2rem;
+            background: var(--accent);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .menu-btn:hover {
+            background: #ff5577;
+        }
+
+        /* VIEW TABS */
+        .view-tabs {
+            height: 50px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--grid);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 0.5rem;
+        }
+
+        .view-tab {
+            padding: 0.6rem 1.5rem;
+            background: var(--panel);
+            border: none;
+            color: var(--dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .view-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .view-tab:hover:not(.active) {
+            background: var(--panel-light);
+            color: var(--text);
+        }
+
+        /* MAIN WORKSPACE */
+        .workspace {
+            flex: 1;
             display: grid;
-            grid-template-columns: 280px 1fr 320px;
-            grid-template-rows: 60px 1fr 120px;
-            gap: 1rem;
+            grid-template-columns: 220px 1fr 280px;
+            overflow: hidden;
+        }
+
+        /* LEFT BROWSER PANEL */
+        .browser-panel {
+            background: var(--panel);
+            border-right: 1px solid var(--grid);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .browser-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--grid);
+        }
+
+        .browser-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: var(--bg);
+            border-right: 1px solid var(--grid);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .browser-tab.active {
+            background: var(--panel);
+            color: var(--accent);
+        }
+
+        .browser-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .browser-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            padding: 0.5rem;
+        }
+
+        .browser-item {
+            padding: 0.6rem;
+            background: var(--bg);
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .browser-item:hover {
+            background: var(--panel-light);
+            border-left-color: var(--accent);
+        }
+
+        .add-track-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--accent);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .add-track-btn:hover {
+            background: #ff5577;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--cyan);
+            border: none;
+            color: var(--bg);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .upload-btn:hover {
+            background: #00b3cc;
+        }
+
+        /* CENTER WORKSPACE */
+        .center-workspace {
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workspace-view {
+            display: none;
+            flex-direction: column;
             height: 100%;
         }
 
-        .studio-header {
-            grid-column: 1 / -1;
-            background: rgba(0,0,0,0.5);
-            border-radius: 8px;
-            padding: 1rem;
+        .workspace-view.active {
             display: flex;
-            justify-content: space-between;
+        }
+
+        /* ARRANGEMENT VIEW */
+        .arrangement-header {
+            height: 40px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--grid);
+            display: flex;
             align-items: center;
-        }
-
-        .mixer-channel {
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .channel-strip {
-            background: rgba(255,255,255,0.05);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .channel-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .knob-group {
-            display: flex;
+            padding: 0 1rem;
             justify-content: space-between;
-            gap: 0.5rem;
+            font-size: 0.85rem;
         }
 
-        .knob {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.5);
-            border: 3px solid var(--accent);
-            position: relative;
-            cursor: pointer;
+        .timeline-ruler {
+            height: 30px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--grid);
+            display: flex;
+            overflow-x: auto;
         }
 
-        .knob::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            height: 20px;
-            background: white;
-            top: 5px;
-            left: 50%;
-            transform-origin: 50% 100%;
-            transform: translateX(-50%) rotate(0deg);
+        .ruler-mark {
+            min-width: 80px;
+            border-right: 1px solid var(--grid);
+            text-align: center;
+            line-height: 30px;
+            font-size: 0.7rem;
+            color: var(--dim);
         }
 
-        .fader-container {
-            margin-top: 1rem;
-        }
-
-        .fader {
-            width: 100%;
-            height: 100px;
-            writing-mode: bt-lr;
-            -webkit-appearance: slider-vertical;
-        }
-
-        .timeline {
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 1rem;
+        .tracks-container {
+            flex: 1;
             overflow: auto;
         }
 
-        .timeline-grid {
-            display: grid;
-            grid-template-rows: repeat(auto-fill, 60px);
-            gap: 0.5rem;
-            min-height: 100%;
+        .track-row {
+            height: 100px;
+            border-bottom: 1px solid var(--grid);
+            display: flex;
         }
 
-        .timeline-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
+        .track-header {
+            width: 180px;
+            background: var(--panel);
+            border-right: 1px solid var(--grid);
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .track-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .track-controls {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .track-btn {
+            width: 22px;
+            height: 22px;
+            background: var(--bg);
+            border: 1px solid var(--grid);
+            color: var(--dim);
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .track-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .track-btn.active {
+            background: var(--cyan);
+            color: var(--bg);
+            border-color: var(--cyan);
+        }
+
+        .track-timeline {
+            flex: 1;
             position: relative;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 79px,
+                var(--grid) 79px,
+                var(--grid) 80px
+            );
         }
 
         .audio-clip {
             position: absolute;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-            height: 100%;
-            border-radius: 4px;
+            height: 80px;
+            top: 10px;
+            border-radius: 3px;
             padding: 0.5rem;
-            font-size: 0.8rem;
+            cursor: move;
+            border: 2px solid rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* MIXER VIEW */
+        .mixer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 90px);
+            gap: 1rem;
+            padding: 2rem;
+            overflow: auto;
+        }
+
+        .mixer-strip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--panel);
+            padding: 1rem 0.5rem;
+            border-radius: 4px;
+            border: 2px solid var(--grid);
+        }
+
+        .strip-name {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        .level-meter {
+            width: 25px;
+            height: 120px;
+            background: var(--bg);
+            border: 2px solid var(--grid);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meter-level {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #00ff00, #ffff00 60%, #ff0000);
+            transition: height 0.1s;
+        }
+
+        .vertical-fader {
+            width: 40px;
+            height: 150px;
+            -webkit-appearance: slider-vertical;
+            writing-mode: bt-lr;
+            cursor: pointer;
+        }
+
+        .vertical-fader::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 40px;
+            height: 18px;
+            background: var(--accent);
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .fader-value {
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .strip-controls {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .strip-btn {
+            width: 28px;
+            height: 22px;
+            background: var(--bg);
+            border: 1px solid var(--grid);
+            color: var(--dim);
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .strip-btn.active {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        /* PIANO ROLL VIEW */
+        .piano-roll-container {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            grid-template-rows: 40px 1fr;
+            overflow: hidden;
+        }
+
+        .piano-roll-header {
+            grid-column: 1 / -1;
+            background: var(--panel);
+            border-bottom: 1px solid var(--grid);
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .piano-keys {
+            background: var(--panel);
+            border-right: 1px solid var(--grid);
+            overflow-y: hidden;
+        }
+
+        .piano-key {
+            height: 15px;
+            border-bottom: 1px solid var(--grid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: var(--dim);
+            cursor: pointer;
+        }
+
+        .piano-key.white {
+            background: var(--panel-light);
+        }
+
+        .piano-key.black {
+            background: var(--bg);
+        }
+
+        .piano-key:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .piano-roll-grid {
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 29px,
+                var(--grid) 29px,
+                var(--grid) 30px
+            );
+            position: relative;
+            overflow: auto;
+        }
+
+        .midi-note {
+            position: absolute;
+            height: 13px;
+            background: var(--accent);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 2px;
             cursor: move;
         }
 
-        .ai-voice-panel {
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            overflow-y: auto;
+        /* STEP SEQUENCER VIEW */
+        .step-seq-container {
+            padding: 2rem;
+            overflow: auto;
         }
 
-        .voice-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin: 1rem 0;
+        .step-track {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            background: var(--panel);
+            padding: 0.5rem;
+            border-radius: 4px;
         }
 
-        .voice-option {
-            background: rgba(255,255,255,0.05);
-            padding: 0.75rem;
-            border-radius: 6px;
+        .step-track-name {
+            width: 120px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--cyan);
+        }
+
+        .step-grid {
+            display: flex;
+            gap: 0.25rem;
+            flex: 1;
+        }
+
+        .step-pad {
+            width: 30px;
+            height: 30px;
+            background: var(--bg);
+            border: 2px solid var(--grid);
             cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            transition: all 0.2s;
         }
 
-        .voice-option:hover {
+        .step-pad:hover {
             border-color: var(--accent);
         }
 
-        .voice-option.selected {
-            border-color: var(--success);
-            background: rgba(0,217,255,0.1);
+        .step-pad.active {
+            background: var(--accent);
+            border-color: var(--accent);
         }
 
-        .transport {
-            grid-column: 1 / -1;
-            background: rgba(0,0,0,0.5);
-            border-radius: 8px;
+        /* RIGHT PROPERTIES PANEL */
+        .properties-panel {
+            background: var(--panel);
+            border-left: 1px solid var(--grid);
+            overflow-y: auto;
             padding: 1rem;
+        }
+
+        .property-group {
+            margin-bottom: 1.5rem;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .property-header {
+            font-size: 0.8rem;
+            color: var(--cyan);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .property-control {
+            margin-bottom: 1rem;
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            color: var(--dim);
+            margin-bottom: 0.25rem;
+        }
+
+        .control-slider {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .control-select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--panel);
+            border: 1px solid var(--grid);
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        .control-value {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: bold;
+            margin-top: 0.25rem;
+        }
+
+        /* TRANSPORT BAR */
+        .transport-bar {
+            height: 80px;
+            background: var(--panel);
+            border-top: 2px solid var(--accent);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0 2rem;
         }
 
         .transport-controls {
@@ -554,24 +765,23 @@
             gap: 1rem;
         }
 
-        .transport button {
-            width: 60px;
-            height: 60px;
+        .transport-button {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: none;
             background: var(--accent);
+            border: none;
             color: white;
+            font-size: 1.3rem;
             cursor: pointer;
-            font-size: 1.5rem;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
-        .transport button:hover {
-            background: var(--accent-light);
+        .transport-button:hover {
             transform: scale(1.1);
         }
 
-        .transport button.recording {
+        .transport-button.recording {
             background: #ff0000;
             animation: pulse 1s infinite;
         }
@@ -581,191 +791,67 @@
             50% { opacity: 0.5; }
         }
 
-        .meter-section {
-            display: flex;
-            gap: 1rem;
-            flex: 1;
-        }
-
-        .meter {
-            display: flex;
-            gap: 2px;
-            height: 80px;
-            align-items: flex-end;
-            flex: 1;
-        }
-
-        .meter-bar {
-            flex: 1;
-            background: var(--success);
-            border-radius: 2px 2px 0 0;
-            transition: height 0.05s;
-        }
-
-        .admin {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 2rem;
-        }
-
-        .admin-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: rgba(0,0,0,0.3);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
+        .time-display {
+            font-size: 1.8rem;
+            font-family: monospace;
+            color: var(--cyan);
             font-weight: bold;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            margin-top: 0.5rem;
-        }
-
-        .user-list, .session-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .user-item, .session-item {
-            background: rgba(0,0,0,0.3);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            background: var(--success);
-            color: black;
-        }
-
-        .status-badge.pending {
-            background: var(--warning);
-        }
-
-        .status-badge.rejected {
-            background: #ff4444;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--secondary);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 700px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            color: var(--text);
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .upload-area {
-            border: 2px dashed rgba(255,255,255,0.3);
-            border-radius: 8px;
-            padding: 2rem;
+            min-width: 180px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
         }
 
-        .upload-area:hover {
-            border-color: var(--accent);
-            background: rgba(255,255,255,0.05);
+        .bpm-display {
+            text-align: center;
         }
 
-        .file-list {
-            margin-top: 1rem;
+        .bpm-label {
+            font-size: 0.7rem;
+            color: var(--dim);
+            text-transform: uppercase;
         }
 
-        .file-item {
-            background: rgba(0,0,0,0.3);
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
+        .bpm-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .master-section {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            gap: 0.5rem;
         }
 
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
+        .master-label {
+            font-size: 0.7rem;
+            color: var(--dim);
+            text-transform: uppercase;
         }
 
+        .master-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        /* NOTIFICATION */
         .notification {
             position: fixed;
-            top: 80px;
+            top: 60px;
             right: 20px;
             background: var(--accent);
             color: white;
             padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 2000;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 1000;
             animation: slideIn 0.3s;
+            box-shadow: 0 4px 20px rgba(233,69,96,0.6);
         }
 
         @keyframes slideIn {
@@ -773,1348 +859,826 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .collab-request {
-            background: rgba(255,215,0,0.1);
-            border: 2px solid var(--warning);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
         }
 
-        .collab-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
         }
 
-        .search-bar {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            color: var(--text);
-            margin-bottom: 1rem;
+        ::-webkit-scrollbar-thumb {
+            background: var(--panel-light);
+            border-radius: 5px;
         }
 
-        .fx-section {
-            background: rgba(0,0,0,0.2);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-        }
-
-        .fx-title {
-            font-size: 0.8rem;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        .slider-control {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .slider-control label {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        .slider-control input[type="range"] {
-            flex: 1;
-            margin: 0 0.5rem;
-        }
-
-        .slider-control span {
-            font-size: 0.8rem;
-            min-width: 40px;
-            text-align: right;
-        }
-
-        .follow-btn {
-            padding: 0.5rem 1.5rem;
-            background: var(--success);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .follow-btn.following {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .follow-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            border-bottom-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .music-track {
-            background: rgba(0,0,0,0.3);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .play-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        ::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="music-notes" id="musicNotes"></div>
-    
-    <div class="app">
-        <header>
-            <div class="logo">🎵 KURRASCH RECORDS</div>
-            <nav id="nav">
-                <button onclick="app.showPage('landing')">Home</button>
-                <button onclick="app.showPage('login')">Login</button>
-            </nav>
-        </header>
+    <!-- FALLING RAINBOW NOTES BACKGROUND -->
+    <div class="rainbow-notes" id="rainbowNotes"></div>
 
-        <div class="content">
-            <div id="landing" class="page landing">
-                <div class="hero">
-                    <h1>Professional Recording Studio Online</h1>
-                    <p>Create, mix, and produce with AI-powered tools</p>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <img src="data:image/svg+xml,%3Csvg xmlns='https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=6911651d&is=6910139d&hm=6e52cf8bf625a03ca93862aa87ad1c5551b1d8c10b7682c770a428267371fa49&' viewBox='0 0 200 200'%3E%3Crect fill='%231a1a1a' width='200' height='200'/%3E%3Ctext x='100' y='120' font-size='80' text-anchor='middle' fill='%23e94560'%3E🎵%3C/text%3E%3C/svg%3E" class="login-logo-img" id="logoImage" alt="Kurrasch Records">
+            <div class="login-logo">KURRASCH<br>RECORDS</div>
+            <input type="email" class="login-input" id="loginEmail" placeholder="Email Address">
+            <input type="password" class="login-input" id="loginPassword" placeholder="Password">
+            <button class="login-btn" onclick="APP.login()">LOGIN</button>
+            <div class="signup-link" onclick="APP.showSignup()">Create New Account</div>
+        </div>
+    </div>
+
+    <!-- MAIN DAW APPLICATION -->
+    <div class="daw" id="dawApp">
+        <!-- TOP MENU BAR -->
+        <div class="menu-bar">
+            <div class="logo">
+                <img src="data:image/svg+xml,%3Csvg xmlns='https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=6911651d&is=6910139d&hm=6e52cf8bf625a03ca93862aa87ad1c5551b1d8c10b7682c770a428267371fa49&' viewBox='0 0 200 200'%3E%3Crect fill='%231a1a1a' width='200' height='200'/%3E%3Ctext x='100' y='120' font-size='80' text-anchor='middle' fill='%23e94560'%3E🎵%3C/text%3E%3C/svg%3E" class="logo-img" id="topLogoImage" alt="KR">
+                <span>KURRASCH<br>RECORDS</span>
+            </div>
+            <div class="menu-items">
+                <div class="menu-item">File</div>
+                <div class="menu-item">Edit</div>
+                <div class="menu-item">View</div>
+                <div class="menu-item">Options</div>
+                <div class="menu-item">Tools</div>
+            </div>
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="DAW.save()">💾 Save</button>
+                <button class="menu-btn" onclick="DAW.exportProject()">⬇ Export</button>
+                <button class="menu-btn" onclick="DAW.submitToLabel()">📧 Submit</button>
+                <button class="menu-btn" onclick="APP.showProfile()">👤 Profile</button>
+                <button class="menu-btn" onclick="APP.logout()">🚪 Logout</button>
+            </div>
+        </div>
+
+        <!-- VIEW TABS -->
+        <div class="view-tabs">
+            <button class="view-tab active" onclick="DAW.switchView('arrangement')">ARRANGEMENT</button>
+            <button class="view-tab" onclick="DAW.switchView('mixer')">MIXER</button>
+            <button class="view-tab" onclick="DAW.switchView('piano')">PIANO ROLL</button>
+            <button class="view-tab" onclick="DAW.switchView('step')">STEP SEQUENCER</button>
+        </div>
+
+        <!-- MAIN WORKSPACE -->
+        <div class="workspace">
+            <!-- LEFT BROWSER PANEL -->
+            <div class="browser-panel">
+                <div class="browser-tabs">
+                    <div class="browser-tab active">BROWSER</div>
+                    <div class="browser-tab">MIXER</div>
                 </div>
-
-                <div class="pricing-cards">
-                    <div class="card">
-                        <h3>Basic</h3>
-                        <div class="price">Free</div>
-                        <ul>
-                            <li>✓ 12 hours/day studio time</li>
-                            <li>✓ 25 AI generations/month</li>
-                            <li>✓ 8 tracks max</li>
-                            <li>✓ Basic effects & EQ</li>
-                            <li>✓ MP3 export</li>
-                            <li>✓ Public profile</li>
-                        </ul>
-                        <button class="btn" onclick="app.selectPlan('basic')">Get Started</button>
+                <div class="browser-content">
+                    <div class="browser-section">
+                        <div class="section-header">SAMPLES</div>
+                        <div class="browser-item" onclick="DAW.addSample('Drum Loop 1')">
+                            🥁 Drum Loop 1
+                        </div>
+                        <div class="browser-item" onclick="DAW.addSample('Bass Line')">
+                            🎸 Bass Line
+                        </div>
+                        <div class="browser-item" onclick="DAW.addSample('Melody')">
+                            🎹 Melody
+                        </div>
+                        <div class="browser-item" onclick="DAW.addSample('Vocal Sample')">
+                            🎤 Vocal Sample
+                        </div>
                     </div>
 
-                    <div class="card">
-                        <h3>Pro</h3>
-                        <div class="price">$29/mo</div>
-                        <ul>
-                            <li>✓ 24 hours/day studio time</li>
-                            <li>✓ 100 AI generations/month</li>
-                            <li>✓ 16 tracks max</li>
-                            <li>✓ Advanced mixer & effects</li>
-                            <li>✓ WAV + MP3 export</li>
-                            <li>✓ AI voice training & cloning</li>
-                            <li>✓ Collaboration features</li>
-                        </ul>
-                        <button class="btn" onclick="app.selectPlan('pro')">Subscribe</button>
+                    <div class="browser-section">
+                        <div class="section-header">AI VOICES (DONNA-STYLE)</div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Aria')">
+                            🎤 Aria (Female Pop/R&B)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Marcus')">
+                            🎤 Marcus (Male Hip-Hop)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Luna')">
+                            🎤 Luna (Female Jazz/Soul)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Kai')">
+                            🎤 Kai (Male Rock)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Sofia')">
+                            🎤 Sofia (Female Latin)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Derek')">
+                            🎤 Derek (Male Country)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Nova')">
+                            🎤 Nova (Female EDM)
+                        </div>
+                        <div class="browser-item" onclick="DAW.addAIVoice('Tyler')">
+                            🎤 Tyler (Male Trap/Drill)
+                        </div>
                     </div>
 
-                    <div class="card elite">
-                        <h3>Elite</h3>
-                        <div class="price">$99/year</div>
-                        <ul>
-                            <li>✓ Unlimited studio time</li>
-                            <li>✓ Unlimited AI generations</li>
-                            <li>✓ 32 tracks max</li>
-                            <li>✓ Professional mixing console</li>
-                            <li>✓ All formats export</li>
-                            <li>✓ Priority support</li>
-                            <li>✓ Label management</li>
-                            <li>✓ Multi-year discounts available</li>
-                        </ul>
-                        <button class="btn btn-secondary" onclick="app.selectPlan('elite')">Contact for Elite</button>
+                    <div class="browser-section">
+                        <div class="section-header">INSTRUMENTS</div>
+                        <div class="browser-item">
+                            🎹 Piano
+                        </div>
+                        <div class="browser-item">
+                            🎸 Guitar
+                        </div>
+                        <div class="browser-item">
+                            🥁 Drums
+                        </div>
                     </div>
+
+                    <button class="add-track-btn" onclick="DAW.addTrack()">+ ADD TRACK</button>
+                    <button class="upload-btn" onclick="DAW.uploadAudio()">📁 UPLOAD AUDIO</button>
+                    <button class="upload-btn" onclick="DAW.recordMic()" style="background: var(--accent); margin-top: 0.5rem;">🎤 RECORD MIC</button>
                 </div>
             </div>
 
-            <div id="login" class="page hidden">
-                <div class="auth-container">
-                    <h2>Login</h2>
-                    <form onsubmit="app.login(event)">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="loginEmail" required>
+            <!-- CENTER WORKSPACE -->
+            <div class="center-workspace">
+                <!-- ARRANGEMENT VIEW -->
+                <div class="workspace-view active" id="arrangementView">
+                    <div class="arrangement-header">
+                        <div>Pattern <strong style="color: var(--accent);">1</strong> | Bar <strong style="color: var(--cyan);">1</strong></div>
+                        <div id="trackCount">0 Tracks</div>
+                    </div>
+                    <div class="timeline-ruler" id="timelineRuler"></div>
+                    <div class="tracks-container" id="tracksContainer"></div>
+                </div>
+
+                <!-- MIXER VIEW -->
+                <div class="workspace-view" id="mixerView">
+                    <div class="mixer-container" id="mixerContainer"></div>
+                </div>
+
+                <!-- PIANO ROLL VIEW -->
+                <div class="workspace-view" id="pianoView">
+                    <div class="piano-roll-container">
+                        <div class="piano-roll-header">
+                            <div>Piano Roll - <strong style="color: var(--accent);">Track 1</strong></div>
+                            <div style="color: var(--dim);">C Major | 4/4</div>
                         </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="loginPassword" required>
-                        </div>
-                        <button type="submit" class="btn">Login</button>
-                        <button type="button" class="btn btn-outline" onclick="app.showPage('signup')" style="margin-left: 1rem;">Sign Up</button>
-                    </form>
+                        <div class="piano-keys" id="pianoKeys"></div>
+                        <div class="piano-roll-grid" id="pianoGrid"></div>
+                    </div>
+                </div>
+
+                <!-- STEP SEQUENCER VIEW -->
+                <div class="workspace-view" id="stepView">
+                    <div class="step-seq-container" id="stepContainer"></div>
                 </div>
             </div>
 
-            <div id="signup" class="page hidden">
-                <div class="auth-container">
-                    <h2>Create Account</h2>
-                    <form onsubmit="app.signup(event)">
-                        <div class="form-group">
-                            <label>Artist Name *</label>
-                            <input type="text" id="signupName" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email *</label>
-                            <input type="email" id="signupEmail" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Password *</label>
-                            <input type="password" id="signupPassword" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Bio</label>
-                            <textarea id="signupBio" placeholder="Tell the world about your music..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Genres</label>
-                            <input type="text" id="signupGenres" placeholder="Hip-Hop, R&B, Pop...">
-                        </div>
-                        <div class="form-group">
-                            <label>Plan *</label>
-                            <select id="signupPlan">
-                                <option value="basic">Basic (Free)</option>
-                                <option value="pro">Pro ($29/mo)</option>
-                            </select>
-                        </div>
-                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem;">Elite plan requires contacting kurraschgamingmerchstore@gmail.com</p>
-                        <button type="submit" class="btn">Create Account</button>
-                    </form>
-                </div>
-            </div>
-
-            <div id="dashboard" class="page hidden dashboard">
-                <div class="panel">
-                    <h2>My Projects</h2>
-                    <button class="btn" onclick="app.createProject()">+ New Project</button>
-                    <div id="projectList" style="margin-top: 1rem;"></div>
-                </div>
-
-                <div class="panel">
-                    <h2>Quick Actions</h2>
-                    <button class="btn" onclick="app.createProject()" style="width: 100%; margin-bottom: 1rem;">🎵 Create Project</button>
-                    <button class="btn btn-secondary" onclick="app.openStudioDirect()" style="width: 100%; margin-bottom: 1rem;">🎚 Open Studio</button>
-                    <button class="btn btn-outline" onclick="app.showPage('artists')" style="width: 100%; margin-bottom: 1rem;">👥 Browse Artists</button>
-                    <button class="btn btn-outline" onclick="app.showProfilePage(app.currentUser.id)" style="width: 100%;">👤 My Profile</button>
-                </div>
-
-                <div class="panel">
-                    <h2>Notifications</h2>
-                    <div id="collabRequests"></div>
-                    <h2 style="margin-top: 1.5rem;">Usage & Quotas</h2>
-                    <div id="quotaDisplay"></div>
-                </div>
-            </div>
-
-            <div id="profile" class="page hidden">
-                <div class="profile-page">
-                    <div class="panel" style="padding: 0;">
-                        <div class="profile-banner" id="profileBanner">
-                            <div class="upload-overlay" onclick="document.getElementById('bannerUpload').click()">
-                                📷 Upload Banner
-                            </div>
-                            <input type="file" id="bannerUpload" accept="image/*" onchange="app.uploadBanner(event)">
-                        </div>
-                        
-                        <div class="profile-header">
-                            <div class="profile-avatar" onclick="document.getElementById('avatarUpload').click()">
-                                <span id="profileAvatarText">👤</span>
-                                <div class="upload-icon">📷</div>
-                                <input type="file" id="avatarUpload" accept="image/*" onchange="app.uploadAvatar(event)">
-                            </div>
-                            <div class="profile-info">
-                                <h1 id="profileName"></h1>
-                                <p id="profileEmail" style="color: var(--text-dim);"></p>
-                                <div style="margin: 0.5rem 0;">
-                                    <span class="status-badge" id="profilePlan"></span>
-                                    <span id="profileGenres" style="margin-left: 1rem; color: var(--text-dim);"></span>
-                                </div>
-                                <div class="profile-actions" id="profileActions"></div>
-                            </div>
-                        </div>
-
-                        <div style="padding: 0 2rem 2rem;">
-                            <div class="tabs">
-                                <div class="tab active" onclick="app.switchProfileTab('music')">Music</div>
-                                <div class="tab" onclick="app.switchProfileTab('about')">About</div>
-                                <div class="tab" onclick="app.switchProfileTab('edit')">Edit Profile</div>
-                            </div>
-
-                            <div id="profileTabMusic" class="profile-content">
-                                <div class="profile-section">
-                                    <h3>My Tracks</h3>
-                                    <div id="profileMusicList"></div>
-                                </div>
-                                <div class="profile-section">
-                                    <h3>Following</h3>
-                                    <div id="profileFollowing"></div>
-                                    <h3 style="margin-top: 1.5rem;">Followers</h3>
-                                    <div id="profileFollowers"></div>
-                                </div>
-                            </div>
-
-                            <div id="profileTabAbout" class="profile-content hidden">
-                                <div class="profile-section">
-                                    <h3>Bio</h3>
-                                    <p id="profileBioText"></p>
-                                    <h3 style="margin-top: 1.5rem;">Location</h3>
-                                    <p id="profileLocationText"></p>
-                                    <h3 style="margin-top: 1.5rem;">Links</h3>
-                                    <p id="profileLinkText"></p>
-                                    <h3 style="margin-top: 1.5rem;">Member Since</h3>
-                                    <p id="profileJoinedText"></p>
-                                </div>
-                            </div>
-
-                            <div id="profileTabEdit" class="profile-content hidden">
-                                <div class="profile-section">
-                                    <form onsubmit="app.updateProfile(event)">
-                                        <div class="form-group">
-                                            <label>Artist Name</label>
-                                            <input type="text" id="profileNameInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Bio</label>
-                                            <textarea id="profileBio" placeholder="Tell other artists about yourself..."></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Genres</label>
-                                            <input type="text" id="profileGenresInput" placeholder="Hip-Hop, R&B, Pop...">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Location</label>
-                                            <input type="text" id="profileLocation" placeholder="City, Country">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>SoundCloud / Spotify / Website Link</label>
-                                            <input type="url" id="profileLink" placeholder="https://...">
-                                        </div>
-                                        <button type="submit" class="btn">Update Profile</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+            <!-- RIGHT PROPERTIES PANEL -->
+            <div class="properties-panel">
+                <div class="property-group">
+                    <div class="property-header">PREAMP</div>
+                    <div class="property-control">
+                        <div class="control-label">Gain</div>
+                        <input type="range" class="control-slider" min="-20" max="60" value="0" oninput="DAW.updateGain(this.value)">
+                        <div class="control-value" id="gainValue">0 dB</div>
                     </div>
-                </div>
-            </div>
-
-            <div id="artists" class="page hidden">
-                <div class="panel" style="max-width: 1200px; margin: 0 auto;">
-                    <h2>Browse Artists</h2>
-                    <input type="text" class="search-bar" id="artistSearch" placeholder="Search artists by name or genre..." oninput="app.searchArtists()">
-                    <div id="artistList"></div>
-                </div>
-            </div>
-
-            <div id="studio" class="page hidden studio">
-                <div class="studio-header">
-                    <div>
-                        <input type="text" id="projectTitle" placeholder="Project Title" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 4px; color: white;">
-                        <span id="collabIndicator" style="margin-left: 1rem; color: var(--warning);"></span>
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn" onclick="app.saveProject()">💾 Save</button>
-                        <button class="btn btn-secondary" onclick="app.exportProject()">⬇ Export</button>
-                        <button class="btn" style="background: var(--warning);" onclick="app.submitProject()">📧 Submit to Label</button>
+                    <div class="property-control">
+                        <div class="control-label">+48V Phantom Power</div>
+                        <select class="control-select">
+                            <option>OFF</option>
+                            <option>ON</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="mixer-channel">
-                    <h3>Mixer</h3>
-                    <button class="btn" onclick="app.addTrack()" style="width: 100%; margin-bottom: 1rem;">+ Add Channel</button>
-                    <div id="mixerChannels"></div>
-                </div>
-
-                <div class="timeline">
-                    <div class="timeline-grid" id="timelineGrid"></div>
-                </div>
-
-                <div class="ai-voice-panel">
-                    <h3>AI Voice Generator</h3>
-                    <div class="tabs" style="font-size: 0.9rem;">
-                        <div class="tab active" onclick="app.switchAITab('generate')">Generate</div>
-                        <div class="tab" onclick="app.switchAITab('voices')">Voices</div>
-                        <div class="tab" onclick="app.switchAITab('train')">Train</div>
+                <div class="property-group">
+                    <div class="property-header">EQUALIZER (4-BAND)</div>
+                    <div class="property-control">
+                        <div class="control-label">Low (80Hz)</div>
+                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('low', this.value)">
+                        <div class="control-value" id="eqLowValue">0 dB</div>
                     </div>
-
-                    <div id="aiTabGenerate">
-                        <div class="form-group">
-                            <label>Music/Vocal Prompt</label>
-                            <textarea id="aiPrompt" placeholder="Describe the music or vocals you want to generate..."></textarea>
-                        </div>
-                        <button class="btn" onclick="app.generateAI()" style="width: 100%;">🎵 Generate Audio</button>
+                    <div class="property-control">
+                        <div class="control-label">Low-Mid (400Hz)</div>
+                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('lowmid', this.value)">
+                        <div class="control-value" id="eqLowMidValue">0 dB</div>
                     </div>
-
-                    <div id="aiTabVoices" class="hidden">
-                        <h4 style="margin-bottom: 0.5rem;">Select Voice</h4>
-                        <div class="voice-grid" id="voiceGrid"></div>
-                        <div class="form-group" style="margin-top: 1rem;">
-                            <label>Text to Speech</label>
-                            <textarea id="ttsText" placeholder="Enter text to convert to speech..."></textarea>
-                        </div>
-                        <button class="btn" onclick="app.generateTTS()" style="width: 100%;">🎤 Generate Voice</button>
+                    <div class="property-control">
+                        <div class="control-label">High-Mid (2.5kHz)</div>
+                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('highmid', this.value)">
+                        <div class="control-value" id="eqHighMidValue">0 dB</div>
                     </div>
-
-                    <div id="aiTabTrain" class="hidden">
-                        <button class="btn btn-outline" onclick="app.openVoiceTraining()" style="width: 100%;">🎙 Train Custom Voice</button>
-                        <h4 style="margin-top: 1rem;">My Trained Voices</h4>
-                        <div id="trainedVoices"></div>
+                    <div class="property-control">
+                        <div class="control-label">High (12kHz)</div>
+                        <input type="range" class="control-slider" min="-12" max="12" value="0" oninput="DAW.updateEQ('high', this.value)">
+                        <div class="control-value" id="eqHighValue">0 dB</div>
                     </div>
                 </div>
 
-                <div class="transport">
-                    <div class="transport-controls">
-                        <button id="recordBtn" onclick="app.toggleRecord()">⏺</button>
-                        <button id="playBtn" onclick="app.togglePlay()">▶</button>
-                        <button onclick="app.stop()">⏹</button>
+                <div class="property-group">
+                    <div class="property-header">COMPRESSOR</div>
+                    <div class="property-control">
+                        <div class="control-label">Threshold</div>
+                        <input type="range" class="control-slider" min="-40" max="0" value="-20" oninput="DAW.updateComp('threshold', this.value)">
+                        <div class="control-value" id="compThresholdValue">-20 dB</div>
                     </div>
-                    <div class="meter-section">
-                        <div class="meter" id="meterL"></div>
-                        <div class="meter" id="meterR"></div>
+                    <div class="property-control">
+                        <div class="control-label">Ratio</div>
+                        <input type="range" class="control-slider" min="1" max="20" value="4" oninput="DAW.updateComp('ratio', this.value)">
+                        <div class="control-value" id="compRatioValue">4:1</div>
                     </div>
-                    <div style="color: var(--text-dim); font-size: 0.9rem;">
-                        <div>Master Volume</div>
-                        <input type="range" min="0" max="100" value="80" style="width: 150px;">
+                    <div class="property-control">
+                        <div class="control-label">Attack</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="10" oninput="DAW.updateComp('attack', this.value)">
+                        <div class="control-value" id="compAttackValue">10 ms</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Release</div>
+                        <input type="range" class="control-slider" min="0" max="1000" value="100" oninput="DAW.updateComp('release', this.value)">
+                        <div class="control-value" id="compReleaseValue">100 ms</div>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <div class="property-header">NOISE GATE</div>
+                    <div class="property-control">
+                        <div class="control-label">Threshold</div>
+                        <input type="range" class="control-slider" min="-60" max="0" value="-40" oninput="DAW.updateGate('threshold', this.value)">
+                        <div class="control-value" id="gateThresholdValue">-40 dB</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Range</div>
+                        <input type="range" class="control-slider" min="0" max="60" value="0" oninput="DAW.updateGate('range', this.value)">
+                        <div class="control-value" id="gateRangeValue">0 dB</div>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <div class="property-header">EFFECTS</div>
+                    <div class="property-control">
+                        <div class="control-label">Reverb</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('reverb', this.value)">
+                        <div class="control-value" id="reverbValue">0%</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Delay</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('delay', this.value)">
+                        <div class="control-value" id="delayValue">0%</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Chorus</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateFX('chorus', this.value)">
+                        <div class="control-value" id="chorusValue">0%</div>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <div class="property-header">NOSTALGIA/LO-FI FILTERS</div>
+                    <div class="property-control">
+                        <div class="control-label">Filter Type</div>
+                        <select class="control-select" onchange="DAW.updateLoFi(this.value)">
+                            <option value="off">Off</option>
+                            <option value="vinyl">Vinyl Record</option>
+                            <option value="cassette1">Cassette Type I</option>
+                            <option value="cassette2">Cassette Type II</option>
+                            <option value="cassette3">Cassette Type III</option>
+                            <option value="cassette4">Cassette Type IV</option>
+                            <option value="vhs">VHS Tape</option>
+                            <option value="reel">Reel-to-Reel</option>
+                            <option value="8bit">8-bit/Chiptune</option>
+                            <option value="telephone">Telephone</option>
+                            <option value="radio">AM Radio</option>
+                        </select>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Wow & Flutter</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateLoFiParam('wow', this.value)">
+                        <div class="control-value" id="wowValue">0%</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Noise Amount</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateLoFiParam('noise', this.value)">
+                        <div class="control-value" id="noiseValue">0%</div>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <div class="property-header">INSERT EFFECTS</div>
+                    <div class="property-control">
+                        <div class="control-label">Slot 1</div>
+                        <select class="control-select">
+                            <option value="off">Empty</option>
+                            <option value="distortion">Distortion</option>
+                            <option value="bitcrusher">Bitcrusher</option>
+                            <option value="flanger">Flanger</option>
+                            <option value="phaser">Phaser</option>
+                        </select>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Slot 2</div>
+                        <select class="control-select">
+                            <option value="off">Empty</option>
+                            <option value="autotune">Auto-Tune</option>
+                            <option value="vocoder">Vocoder</option>
+                            <option value="pitchshift">Pitch Shift</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <div class="property-header">SEND/AUX</div>
+                    <div class="property-control">
+                        <div class="control-label">Send 1</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateSend(1, this.value)">
+                        <div class="control-value" id="send1Value">0%</div>
+                    </div>
+                    <div class="property-control">
+                        <div class="control-label">Send 2</div>
+                        <input type="range" class="control-slider" min="0" max="100" value="0" oninput="DAW.updateSend(2, this.value)">
+                        <div class="control-value" id="send2Value">0%</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="admin" class="page hidden">
-                <div style="margin-bottom: 2rem;">
-                    <h1 style="color: var(--accent);">Admin Dashboard</h1>
-                    <div class="admin-grid" style="margin-top: 1.5rem;">
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalUsers">0</div>
-                            <div class="stat-label">Total Users</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalProjects">0</div>
-                            <div class="stat-label">Total Projects</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalSubmissions">0</div>
-                            <div class="stat-label">Submissions</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin">
-                    <div class="admin-section">
-                        <h2>Studio Sessions</h2>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
-                                <div style="font-size: 2rem; font-weight: bold; color: var(--accent);" id="basicActive">0/5</div>
-                                <div style="font-size: 0.9rem; color: var(--text-dim);">Basic Studio</div>
-                                <input type="number" id="maxBasic" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
-                            </div>
-                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
-                                <div style="font-size: 2rem; font-weight: bold; color: var(--success);" id="proActive">0/5</div>
-                                <div style="font-size: 0.9rem; color: var(--text-dim);">Pro Studio</div>
-                                <input type="number" id="maxPro" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
-                            </div>
-                            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
-                                <div style="font-size: 2rem; font-weight: bold; color: var(--warning);" id="eliteActive">0/5</div>
-                                <div style="font-size: 0.9rem; color: var(--text-dim);">Elite Studio</div>
-                                <input type="number" id="maxElite" value="5" min="1" max="50" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: white;" onchange="app.updateStudioSlots()">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="admin-section">
-                        <h2>User Management</h2>
-                        <input type="text" class="search-bar" placeholder="Search users..." id="adminUserSearch" oninput="app.filterAdminUsers()">
-                        <div class="user-list" id="userList"></div>
-                    </div>
-
-                    <div class="admin-section">
-                        <h2>Submissions to Label</h2>
-                        <div id="submissionList"></div>
-                    </div>
-
-                    <div class="admin-section">
-                        <h2>Collaboration Requests</h2>
-                        <div id="adminCollabList"></div>
-                    </div>
-
-                    <div class="admin-section">
-                        <h2>System Analytics</h2>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
-                            <strong>AI Generations Today:</strong> <span id="aiGenToday">0</span>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
-                            <strong>Studio Hours Used:</strong> <span id="studioHours">0</span>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
-                            <strong>Active Collaborations:</strong> <span id="activeCollabs">0</span>
-                        </div>
-                    </div>
-
-                    <div class="admin-section">
-                        <h2>Revenue Overview</h2>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
-                            <strong>Monthly (Pro):</strong> $<span id="monthlyRev">0</span>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;">
-                            <strong>Yearly (Elite):</strong> $<span id="yearlyRev">0</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- TRANSPORT BAR -->
+        <div class="transport-bar">
+            <div class="transport-controls">
+                <button class="transport-button" onclick="DAW.record()">⏺</button>
+                <button class="transport-button" onclick="DAW.playPause()">▶</button>
+                <button class="transport-button" onclick="DAW.stop()">⏹</button>
+            </div>
+            <div class="time-display" id="timeDisplay">00:00:000</div>
+            <div class="bpm-display">
+                <div class="bpm-label">BPM</div>
+                <div class="bpm-number">120</div>
+            </div>
+            <div class="master-section">
+                <div class="master-label">Master</div>
+                <input type="range" class="vertical-fader" min="0" max="100" value="75" oninput="DAW.updateMaster(this.value)">
+                <div class="master-value" id="masterValue">75%</div>
             </div>
         </div>
     </div>
 
     <script>
-        const DONNA_VOICES = [
-            { id: 'aria', name: 'Aria', type: 'Female', style: 'Pop/R&B' },
-            { id: 'marcus', name: 'Marcus', type: 'Male', style: 'Hip-Hop' },
-            { id: 'luna', name: 'Luna', type: 'Female', style: 'Jazz/Soul' },
-            { id: 'kai', name: 'Kai', type: 'Male', style: 'Rock/Alternative' },
-            { id: 'sofia', name: 'Sofia', type: 'Female', style: 'Latin/Pop' },
-            { id: 'derek', name: 'Derek', type: 'Male', style: 'Country/Folk' },
-            { id: 'nova', name: 'Nova', type: 'Female', style: 'EDM/Dance' },
-            { id: 'tyler', name: 'Tyler', type: 'Male', style: 'Trap/Drill' }
-        ];
-
-        const app = {
+        // GLOBAL STATE
+        const APP = {
             currentUser: null,
-            currentProject: null,
-            tracks: [],
-            isRecording: false,
-            isPlaying: false,
-            audioContext: null,
-            mediaRecorder: null,
-            recordedChunks: [],
-            selectedVoice: 'aria',
-            studioSlots: {
-                basic: { max: 5, active: 0 },
-                pro: { max: 5, active: 0 },
-                elite: { max: 5, active: 0 }
-            },
-            db: {
-                users: [],
-                projects: [],
-                submissions: [],
-                collabRequests: [],
-                following: [],
-                tracks: []
-            },
+            session: null,
 
-            init() {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.initMeters();
-                this.loadFromMemory();
-                this.createMusicNotes();
-                this.initVoices();
-            },
-
-            createMusicNotes() {
-                const container = document.getElementById('musicNotes');
-                const notes = ['♪', '♫', '♬', '𝄞'];
+            async init() {
+                this.startRainbowNotes();
+                this.initTimeline();
+                this.initPianoRoll();
+                this.initStepSequencer();
                 
-                setInterval(() => {
-                    const note = document.createElement('div');
-                    note.className = 'note';
-                    note.textContent = notes[Math.floor(Math.random() * notes.length)];
-                    note.style.left = Math.random() * 100 + '%';
-                    note.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                    note.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                    container.appendChild(note);
-                    
-                    setTimeout(() => note.remove(), 10000);
-                }, 500);
+                // Allow logo uploads
+                document.getElementById('logoImage')?.addEventListener('click', () => this.uploadLogo('login'));
+                document.getElementById('topLogoImage')?.addEventListener('click', () => this.uploadLogo('top'));
             },
 
-            initVoices() {
-                const grid = document.getElementById('voiceGrid');
-                grid.innerHTML = DONNA_VOICES.map(voice => `
-                    <div class="voice-option ${voice.id === this.selectedVoice ? 'selected' : ''}" onclick="app.selectVoice('${voice.id}')">
-                        <div style="font-weight: bold;">${voice.name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);">${voice.type}</div>
-                        <div style="font-size: 0.75rem; color: var(--success);">${voice.style}</div>
-                    </div>
-                `).join('');
-            },
-
-            selectVoice(voiceId) {
-                this.selectedVoice = voiceId;
-                this.initVoices();
-                const voice = DONNA_VOICES.find(v => v.id === voiceId);
-                this.notify(`Voice selected: ${voice.name} (${voice.style})`);
-            },
-
-            switchAITab(tab) {
-                document.querySelectorAll('#aiTabGenerate, #aiTabVoices, #aiTabTrain').forEach(el => el.classList.add('hidden'));
-                document.getElementById('aiTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
-            },
-
-            switchProfileTab(tab) {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                event.target.classList.add('active');
-                document.querySelectorAll('[id^="profileTab"]').forEach(el => el.classList.add('hidden'));
-                document.getElementById('profileTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
-            },
-
-            loadFromMemory() {
-                const data = localStorage.getItem('appData');
-                if (data) {
-                    this.db = JSON.parse(data);
-                }
-                const slots = localStorage.getItem('studioSlots');
-                if (slots) {
-                    this.studioSlots = JSON.parse(slots);
-                    document.getElementById('maxBasic').value = this.studioSlots.basic.max;
-                    document.getElementById('maxPro').value = this.studioSlots.pro.max;
-                    document.getElementById('maxElite').value = this.studioSlots.elite.max;
-                }
-            },
-
-            saveToMemory() {
-                localStorage.setItem('appData', JSON.stringify(this.db));
-                localStorage.setItem('studioSlots', JSON.stringify(this.studioSlots));
-            },
-
-            showPage(pageId) {
-                document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-                const page = document.getElementById(pageId);
-                if (page) {
-                    page.classList.remove('hidden');
-                }
-            },
-
-            selectPlan(plan) {
-                if (plan === 'elite') {
-                    alert('Elite Plan: $99/year\n\nFor multi-year discounts and custom pricing, please contact:\nkurraschgamingmerchstore@gmail.com\n\n2 Year: Contact for pricing\n3 Year: Contact for pricing');
-                    return;
-                }
-                document.getElementById('signupPlan').value = plan;
-                this.showPage('signup');
-            },
-
-            signup(e) {
-                e.preventDefault();
-                const name = document.getElementById('signupName').value;
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                const bio = document.getElementById('signupBio').value;
-                const genres = document.getElementById('signupGenres').value;
-                const plan = document.getElementById('signupPlan').value;
-
-                if (this.db.users.find(u => u.email === email)) {
-                    this.notify('Email already exists');
+            async uploadLogo(location) {
+                if (!this.currentUser || this.currentUser.email !== 'kurraschgamingmerchstore@gmail.com') {
+                    this.showNotification('Only admin can change logo');
                     return;
                 }
 
-                const quotas = {
-                    basic: { aiGen: 25, dailyHours: 12 },
-                    pro: { aiGen: 100, dailyHours: 24 },
-                    elite: { aiGen: 999999, dailyHours: 999999 }
-                };
-
-                const isAdmin = email === 'kurraschgamingmerchstore@gmail.com';
-
-                const newUser = {
-                    id: 'user_' + Date.now(),
-                    email,
-                    name,
-                    password,
-                    role: isAdmin ? 'admin' : 'artist',
-                    plan: isAdmin ? 'elite' : plan,
-                    bio: bio || '',
-                    genres: genres || '',
-                    location: '',
-                    link: '',
-                    avatar: '',
-                    banner: '',
-                    createdAt: new Date().toISOString(),
-                    quotas: isAdmin ? { aiGen: 999999, dailyHours: 999999 } : quotas[plan],
-                    used: { aiGen: 0, dailyHours: 0 }
-                };
-
-                this.db.users.push(newUser);
-                this.saveToMemory();
-
-                this.currentUser = newUser;
-                localStorage.setItem('currentUser', JSON.stringify(newUser));
-                this.updateNav();
-                
-                if (isAdmin) {
-                    this.showPage('admin');
-                    this.loadAdmin();
-                } else {
-                    this.showPage('dashboard');
-                    this.loadDashboard();
-                }
-                
-                this.notify('Account created! Welcome to Kurrasch Records!');
-            },
-
-            login(e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-
-                const user = this.db.users.find(u => u.email === email && u.password === password);
-
-                if (user) {
-                    this.currentUser = user;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    this.updateNav();
-                    
-                    if (user.role === 'admin') {
-                        this.showPage('admin');
-                        this.loadAdmin();
-                    } else {
-                        this.showPage('dashboard');
-                        this.loadDashboard();
-                    }
-                    this.notify('Welcome back, ' + user.name + '!');
-                } else {
-                    this.notify('Invalid email or password');
-                }
-            },
-
-            logout() {
-                this.currentUser = null;
-                localStorage.removeItem('currentUser');
-                this.updateNav();
-                this.showPage('landing');
-                this.notify('Logged out successfully');
-            },
-
-            updateNav() {
-                const nav = document.getElementById('nav');
-                if (this.currentUser) {
-                    nav.innerHTML = `
-                        <button onclick="app.showPage('dashboard')">Dashboard</button>
-                        <button onclick="app.showPage('artists')">Artists</button>
-                        <button onclick="app.showProfilePage('${this.currentUser.id}')">Profile</button>
-                        <button onclick="app.openStudioDirect()">Studio</button>
-                        ${this.currentUser.role === 'admin' ? '<button onclick="app.showPage(\'admin\')">Admin</button>' : ''}
-                        <button onclick="app.logout()">Logout</button>
-                    `;
-                } else {
-                    nav.innerHTML = `
-                        <button onclick="app.showPage('landing')">Home</button>
-                        <button onclick="app.showPage('login')">Login</button>
-                    `;
-                }
-            },
-
-            updateStudioSlots() {
-                this.studioSlots.basic.max = parseInt(document.getElementById('maxBasic').value);
-                this.studioSlots.pro.max = parseInt(document.getElementById('maxPro').value);
-                this.studioSlots.elite.max = parseInt(document.getElementById('maxElite').value);
-                
-                this.saveToMemory();
-                this.loadStudioStats();
-                this.notify('Studio slot limits updated');
-            },
-
-            loadStudioStats() {
-                const basicUsers = this.db.users.filter(u => u.plan === 'basic').length;
-                const proUsers = this.db.users.filter(u => u.plan === 'pro').length;
-                const eliteUsers = this.db.users.filter(u => u.plan === 'elite').length;
-
-                document.getElementById('basicActive').textContent = `${basicUsers}/${this.studioSlots.basic.max}`;
-                document.getElementById('proActive').textContent = `${proUsers}/${this.studioSlots.pro.max}`;
-                document.getElementById('eliteActive').textContent = `${eliteUsers}/${this.studioSlots.elite.max}`;
-            },
-
-            loadDashboard() {
-                this.loadProjects();
-                this.updateQuotas();
-                this.loadCollabRequests();
-            },
-
-            loadProjects() {
-                const userProjects = this.db.projects.filter(p => 
-                    p.userId === this.currentUser.id || p.collaborators?.includes(this.currentUser.id)
-                );
-                const list = document.getElementById('projectList');
-                
-                if (userProjects.length === 0) {
-                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No projects yet. Create your first project!</div>';
-                } else {
-                    list.innerHTML = userProjects.map(p => `
-                        <div class="project-item" onclick="app.openProject('${p.id}')">
-                            <div><strong>${p.title}</strong></div>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">${p.trackCount || 0} tracks${p.collaborators?.length ? ' • Collab' : ''}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-dim);">${new Date(p.updatedAt).toLocaleDateString()}</div>
-                        </div>
-                    `).join('');
-                }
-            },
-
-            loadCollabRequests() {
-                const requests = this.db.collabRequests.filter(r => 
-                    r.toUserId === this.currentUser.id && r.status === 'pending'
-                );
-                
-                const container = document.getElementById('collabRequests');
-                if (requests.length === 0) {
-                    container.innerHTML = '<div style="color: var(--text-dim); padding: 0.5rem;">No pending requests</div>';
-                } else {
-                    container.innerHTML = requests.map(r => {
-                        const fromUser = this.db.users.find(u => u.id === r.fromUserId);
-                        return `
-                            <div class="collab-request">
-                                <strong>${fromUser.name}</strong> wants to collaborate
-                                <div style="font-size: 0.9rem; color: var(--text-dim); margin: 0.5rem 0;">${r.message}</div>
-                                <div class="collab-actions">
-                                    <button class="btn btn-small" onclick="app.respondToCollab('${r.id}', 'accepted')">Accept</button>
-                                    <button class="btn btn-outline btn-small" onclick="app.respondToCollab('${r.id}', 'rejected')">Decline</button>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            },
-
-            respondToCollab(requestId, status) {
-                const request = this.db.collabRequests.find(r => r.id === requestId);
-                if (!request) return;
-
-                request.status = status;
-                this.saveToMemory();
-
-                if (status === 'accepted') {
-                    this.notify('Collaboration accepted! You can now work together.');
-                } else {
-                    this.notify('Collaboration request declined.');
-                }
-
-                this.loadCollabRequests();
-            },
-
-            updateQuotas() {
-                const display = document.getElementById('quotaDisplay');
-                const user = this.currentUser;
-                
-                const aiGenPercent = user.quotas.aiGen > 999 ? 0 : (user.used.aiGen / user.quotas.aiGen) * 100;
-                const hoursPercent = user.quotas.dailyHours > 999 ? 0 : (user.used.dailyHours / user.quotas.dailyHours) * 100;
-
-                display.innerHTML = `
-                    <div class="quota-item">
-                        <div>
-                            <strong>AI Generations</strong>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">
-                                ${user.quotas.aiGen > 999 ? 'Unlimited' : `${user.used.aiGen} / ${user.quotas.aiGen}`}
-                            </div>
-                        </div>
-                    </div>
-                    ${user.quotas.aiGen <= 999 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${aiGenPercent}%"></div></div>` : ''}
-                    
-                    <div class="quota-item" style="margin-top: 1rem;">
-                        <div>
-                            <strong>Studio Time Today</strong>
-                            <div style="font-size: 0.9rem; color: var(--text-dim);">
-                                ${user.quotas.dailyHours > 999 ? 'Unlimited' : `${user.used.dailyHours} / ${user.quotas.dailyHours} hours`}
-                            </div>
-                        </div>
-                    </div>
-                    ${user.quotas.dailyHours <= 999 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${hoursPercent}%"></div></div>` : ''}
-                `;
-            },
-
-            showProfilePage(userId) {
-                const user = this.db.users.find(u => u.id === userId);
-                if (!user) return;
-
-                const isOwnProfile = user.id === this.currentUser.id;
-                const isFollowing = this.db.following.some(f => f.fromUserId === this.currentUser.id && f.toUserId === userId);
-                const hasCollab = this.db.collabRequests.find(r => 
-                    ((r.fromUserId === this.currentUser.id && r.toUserId === userId) ||
-                     (r.fromUserId === userId && r.toUserId === this.currentUser.id)) &&
-                    r.status === 'accepted'
-                );
-
-                document.getElementById('profileAvatarText').textContent = user.avatar || user.name.charAt(0).toUpperCase();
-                document.getElementById('profileName').textContent = user.name;
-                document.getElementById('profileEmail').textContent = user.email;
-                document.getElementById('profilePlan').textContent = user.plan.toUpperCase();
-                document.getElementById('profileGenres').textContent = user.genres || 'No genres listed';
-
-                const actions = document.getElementById('profileActions');
-                if (isOwnProfile) {
-                    actions.innerHTML = '';
-                } else {
-                    actions.innerHTML = `
-                        <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="app.toggleFollow('${userId}')">
-                            ${isFollowing ? '✓ Following' : '+ Follow'}
-                        </button>
-                        ${!hasCollab ? `<button class="btn btn-small" onclick="app.requestCollab('${userId}')">🤝 Collaborate</button>` : '<span class="status-badge">Collaborating</span>'}
-                    `;
-                }
-
-                document.getElementById('profileBioText').textContent = user.bio || 'No bio yet';
-                document.getElementById('profileLocationText').textContent = user.location || 'Not specified';
-                document.getElementById('profileLinkText').innerHTML = user.link ? `<a href="${user.link}" target="_blank" style="color: var(--success);">${user.link}</a>` : 'No links';
-                document.getElementById('profileJoinedText').textContent = new Date(user.createdAt).toLocaleDateString();
-
-                if (isOwnProfile) {
-                    document.getElementById('profileNameInput').value = user.name;
-                    document.getElementById('profileBio').value = user.bio || '';
-                    document.getElementById('profileGenresInput').value = user.genres || '';
-                    document.getElementById('profileLocation').value = user.location || '';
-                    document.getElementById('profileLink').value = user.link || '';
-                }
-
-                const userTracks = this.db.tracks.filter(t => t.userId === userId);
-                const musicList = document.getElementById('profileMusicList');
-                if (userTracks.length === 0) {
-                    musicList.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No tracks yet</div>';
-                } else {
-                    musicList.innerHTML = userTracks.map(track => `
-                        <div class="music-track">
-                            <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                                <div class="play-icon">▶</div>
-                                <div>
-                                    <strong>${track.title}</strong>
-                                    <div style="font-size: 0.85rem; color: var(--text-dim);">${track.genre || 'Unknown'} • ${new Date(track.createdAt).toLocaleDateString()}</div>
-                                </div>
-                            </div>
-                            ${isOwnProfile ? `<button class="btn btn-small" onclick="app.downloadTrack('${track.id}')">⬇</button>` : ''}
-                        </div>
-                    `).join('');
-                }
-
-                const followers = this.db.following.filter(f => f.toUserId === userId);
-                const following = this.db.following.filter(f => f.fromUserId === userId);
-                
-                document.getElementById('profileFollowers').innerHTML = followers.length > 0 ? 
-                    followers.map(f => {
-                        const follower = this.db.users.find(u => u.id === f.fromUserId);
-                        return `<div style="padding: 0.5rem; color: var(--text-dim);">${follower?.name || 'Unknown'}</div>`;
-                    }).join('') : '<div style="color: var(--text-dim);">No followers yet</div>';
-
-                document.getElementById('profileFollowing').innerHTML = following.length > 0 ? 
-                    following.map(f => {
-                        const followed = this.db.users.find(u => u.id === f.toUserId);
-                        return `<div style="padding: 0.5rem; color: var(--text-dim);">${followed?.name || 'Unknown'}</div>`;
-                    }).join('') : '<div style="color: var(--text-dim);">Not following anyone</div>';
-
-                this.showPage('profile');
-            },
-
-            toggleFollow(userId) {
-                const existingFollow = this.db.following.findIndex(f => 
-                    f.fromUserId === this.currentUser.id && f.toUserId === userId
-                );
-
-                if (existingFollow >= 0) {
-                    this.db.following.splice(existingFollow, 1);
-                    this.notify('Unfollowed');
-                } else {
-                    this.db.following.push({
-                        id: 'follow_' + Date.now(),
-                        fromUserId: this.currentUser.id,
-                        toUserId: userId,
-                        createdAt: new Date().toISOString()
-                    });
-                    this.notify('Following!');
-                }
-
-                this.saveToMemory();
-                this.showProfilePage(userId);
-            },
-
-            uploadAvatar(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    this.notify('Avatar uploaded!');
-                }
-            },
-
-            uploadBanner(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    this.notify('Banner uploaded!');
-                }
-            },
-
-            updateProfile(e) {
-                e.preventDefault();
-                this.currentUser.name = document.getElementById('profileNameInput').value;
-                this.currentUser.bio = document.getElementById('profileBio').value;
-                this.currentUser.genres = document.getElementById('profileGenresInput').value;
-                this.currentUser.location = document.getElementById('profileLocation').value;
-                this.currentUser.link = document.getElementById('profileLink').value;
-
-                const index = this.db.users.findIndex(u => u.id === this.currentUser.id);
-                if (index >= 0) {
-                    this.db.users[index] = this.currentUser;
-                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-                    this.saveToMemory();
-                }
-
-                this.notify('Profile updated successfully!');
-                this.showProfilePage(this.currentUser.id);
-            },
-
-            searchArtists() {
-                const query = document.getElementById('artistSearch').value.toLowerCase();
-                const artists = this.db.users.filter(u => 
-                    u.role === 'artist' && u.id !== this.currentUser.id &&
-                    (u.name.toLowerCase().includes(query) || 
-                     u.genres?.toLowerCase().includes(query) ||
-                     u.bio?.toLowerCase().includes(query))
-                );
-
-                const list = document.getElementById('artistList');
-                if (artists.length === 0) {
-                    list.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">No artists found</div>';
-                } else {
-                    list.innerHTML = artists.map(artist => {
-                        const isFollowing = this.db.following.some(f => f.fromUserId === this.currentUser.id && f.toUserId === artist.id);
-                        
-                        return `
-                            <div class="artist-item" onclick="app.showProfilePage('${artist.id}')">
-                                <div style="display: flex; gap: 1rem; align-items: center;">
-                                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--success)); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;">
-                                        ${artist.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <strong style="font-size: 1.2rem;">${artist.name}</strong>
-                                        <div style="color: var(--text-dim); margin: 0.25rem 0;">${artist.genres || 'No genres listed'}</div>
-                                        <div style="font-size: 0.9rem;">${artist.bio || 'No bio'}</div>
-                                        ${artist.location ? `<div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">📍 ${artist.location}</div>` : ''}
-                                    </div>
-                                    <div>
-                                        <span class="status-badge">${artist.plan.toUpperCase()}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            },
-
-            requestCollab(artistId) {
-                const message = prompt('Send a message with your collaboration request:');
-                if (!message) return;
-
-                const request = {
-                    id: 'collab_' + Date.now(),
-                    fromUserId: this.currentUser.id,
-                    toUserId: artistId,
-                    message,
-                    status: 'pending',
-                    createdAt: new Date().toISOString()
-                };
-
-                this.db.collabRequests.push(request);
-                this.saveToMemory();
-                this.notify('Collaboration request sent!');
-                this.showProfilePage(artistId);
-            },
-
-            createProject() {
-                const title = prompt('Project name:', 'My New Song');
-                if (!title) return;
-
-                const newProject = {
-                    id: 'proj_' + Date.now(),
-                    userId: this.currentUser.id,
-                    title,
-                    tracks: [],
-                    trackCount: 0,
-                    collaborators: [],
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-
-                this.db.projects.push(newProject);
-                this.saveToMemory();
-
-                this.currentProject = newProject;
-                this.tracks = [];
-                document.getElementById('projectTitle').value = title;
-                
-                this.notify('Project created!');
-                this.loadProjects();
-                this.showPage('studio');
-                this.renderMixer();
-            },
-
-            openProject(projectId) {
-                const project = this.db.projects.find(p => p.id === projectId);
-                if (project) {
-                    const canAccess = project.userId === this.currentUser.id || 
-                                    project.collaborators?.includes(this.currentUser.id);
-                    
-                    if (!canAccess) {
-                        this.notify('You do not have access to this project');
-                        return;
-                    }
-
-                    this.currentProject = project;
-                    this.tracks = project.tracks || [];
-                    document.getElementById('projectTitle').value = project.title;
-                    
-                    if (project.collaborators?.length > 0) {
-                        const collabNames = project.collaborators.map(id => {
-                            const user = this.db.users.find(u => u.id === id);
-                            return user ? user.name : 'Unknown';
-                        }).join(', ');
-                        document.getElementById('collabIndicator').textContent = `🤝 Collab: ${collabNames}`;
-                    } else {
-                        document.getElementById('collabIndicator').textContent = '';
-                    }
-
-                    this.showPage('studio');
-                    this.renderMixer();
-                    this.notify('Project loaded: ' + project.title);
-                }
-            },
-
-            openStudioDirect() {
-                if (!this.currentProject) {
-                    this.createProject();
-                } else {
-                    this.showPage('studio');
-                    this.renderMixer();
-                }
-            },
-
-            saveProject() {
-                if (!this.currentProject) {
-                    this.notify('No project to save');
-                    return;
-                }
-
-                this.currentProject.title = document.getElementById('projectTitle').value;
-                this.currentProject.tracks = this.tracks;
-                this.currentProject.trackCount = this.tracks.length;
-                this.currentProject.updatedAt = new Date().toISOString();
-
-                const index = this.db.projects.findIndex(p => p.id === this.currentProject.id);
-                if (index >= 0) {
-                    this.db.projects[index] = this.currentProject;
-                } else {
-                    this.db.projects.push(this.currentProject);
-                }
-
-                this.saveToMemory();
-                this.notify('Project saved!');
-            },
-
-            addTrack() {
-                const name = prompt('Channel name:', `Track ${this.tracks.length + 1}`);
-                if (!name) return;
-
-                const track = {
-                    id: 'track_' + Date.now(),
-                    name,
-                    volume: 80,
-                    pan: 0,
-                    muted: false,
-                    solo: false,
-                    eq: { low: 0, mid: 0, high: 0 },
-                    compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
-                    reverb: 0,
-                    delay: 0,
-                    clips: []
-                };
-
-                this.tracks.push(track);
-                this.renderMixer();
-                this.notify('Channel added: ' + name);
-            },
-
-            renderMixer() {
-                const mixer = document.getElementById('mixerChannels');
-                const timeline = document.getElementById('timelineGrid');
-
-                if (this.tracks.length === 0) {
-                    mixer.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No channels yet</div>';
-                    timeline.innerHTML = '<div style="color: var(--text-dim); padding: 2rem; text-align: center;">Add channels to start</div>';
-                    return;
-                }
-
-                mixer.innerHTML = this.tracks.map((track, i) => `
-                    <div class="channel-strip">
-                        <strong>${track.name}</strong>
-                        
-                        <div class="fx-section">
-                            <div class="fx-title">EQ</div>
-                            <div class="slider-control">
-                                <label>Low</label>
-                                <input type="range" min="-12" max="12" value="${track.eq.low}" oninput="app.updateEQ(${i}, 'low', this.value)">
-                                <span>${track.eq.low}dB</span>
-                            </div>
-                            <div class="slider-control">
-                                <label>Mid</label>
-                                <input type="range" min="-12" max="12" value="${track.eq.mid}" oninput="app.updateEQ(${i}, 'mid', this.value)">
-                                <span>${track.eq.mid}dB</span>
-                            </div>
-                            <div class="slider-control">
-                                <label>High</label>
-                                <input type="range" min="-12" max="12" value="${track.eq.high}" oninput="app.updateEQ(${i}, 'high', this.value)">
-                                <span>${track.eq.high}dB</span>
-                            </div>
-                        </div>
-
-                        <div class="fx-section">
-                            <div class="fx-title">Compression</div>
-                            <div class="slider-control">
-                                <label>Ratio</label>
-                                <input type="range" min="1" max="20" value="${track.compression.ratio}" oninput="app.updateCompression(${i}, 'ratio', this.value)">
-                                <span>${track.compression.ratio}:1</span>
-                            </div>
-                        </div>
-
-                        <div class="fx-section">
-                            <div class="fx-title">Effects</div>
-                            <div class="slider-control">
-                                <label>Reverb</label>
-                                <input type="range" min="0" max="100" value="${track.reverb}" oninput="app.updateFX(${i}, 'reverb', this.value)">
-                                <span>${track.reverb}%</span>
-                            </div>
-                            <div class="slider-control">
-                                <label>Delay</label>
-                                <input type="range" min="0" max="100" value="${track.delay}" oninput="app.updateFX(${i}, 'delay', this.value)">
-                                <span>${track.delay}%</span>
-                            </div>
-                        </div>
-
-                        <div class="channel-controls" style="margin-top: 1rem;">
-                            <button onclick="app.toggleMute(${i})" style="flex: 1; padding: 0.5rem; background: ${track.muted ? '#ff4444' : 'rgba(0,0,0,0.5)'}; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">
-                                ${track.muted ? '🔇 Muted' : '🔊'}
-                            </button>
-                            <button onclick="app.toggleSolo(${i})" style="flex: 1; padding: 0.5rem; background: ${track.solo ? '#ffd700' : 'rgba(0,0,0,0.5)'}; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">
-                                ${track.solo ? '🎯 Solo' : '○'}
-                            </button>
-                        </div>
-
-                        <div style="margin-top: 1rem;">
-                            <button onclick="app.uploadToTrack(${i})" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; cursor: pointer;">📁 Upload Audio</button>
-                        </div>
-
-                        <div class="fader-container">
-                            <label style="font-size: 0.8rem; color: var(--text-dim);">Volume</label>
-                            <input type="range" min="0" max="100" value="${track.volume}" orient="vertical" style="width: 100%;" oninput="app.setVolume(${i}, this.value)">
-                            <div style="text-align: center; font-size: 0.8rem; margin-top: 0.5rem;">${track.volume}%</div>
-                        </div>
-
-                        <button onclick="app.deleteTrack(${i})" style="width: 100%; padding: 0.5rem; background: #ff4444; border: none; color: white; border-radius: 4px; cursor: pointer; margin-top: 0.5rem;">🗑 Delete</button>
-                    </div>
-                `).join('');
-
-                timeline.innerHTML = this.tracks.map((track, i) => `
-                    <div class="timeline-track">
-                        ${track.clips.map((clip, j) => `
-                            <div class="audio-clip" style="left: ${clip.start * 10}px; width: ${clip.duration * 10}px;">
-                                ${clip.name}
-                            </div>
-                        `).join('')}
-                    </div>
-                `).join('');
-            },
-
-            updateEQ(index, band, value) {
-                this.tracks[index].eq[band] = parseFloat(value);
-                this.renderMixer();
-            },
-
-            updateCompression(index, param, value) {
-                this.tracks[index].compression[param] = parseFloat(value);
-                this.renderMixer();
-            },
-
-            updateFX(index, fx, value) {
-                this.tracks[index][fx] = parseFloat(value);
-                this.renderMixer();
-            },
-
-            toggleMute(index) {
-                this.tracks[index].muted = !this.tracks[index].muted;
-                this.renderMixer();
-            },
-
-            toggleSolo(index) {
-                this.tracks[index].solo = !this.tracks[index].solo;
-                this.renderMixer();
-            },
-
-            setVolume(index, value) {
-                this.tracks[index].volume = parseFloat(value);
-                this.renderMixer();
-            },
-
-            deleteTrack(index) {
-                if (confirm('Delete channel "' + this.tracks[index].name + '"?')) {
-                    this.tracks.splice(index, 1);
-                    this.renderMixer();
-                    this.notify('Channel deleted');
-                }
-            },
-
-            uploadToTrack(index) {
                 const input = document.createElement('input');
                 input.type = 'file';
-                input.accept = 'audio/*';
+                input.accept = 'image/*';
                 input.onchange = async (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        const clip = {
-                            id: 'clip_' + Date.now(),
-                            name: file.name,
-                            start: 0,
-                            duration: 30,
-                            fileSize: file.size
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                            const logoData = event.target.result;
+                            try {
+                                await window.storage.set('site-logo', logoData, true);
+                                document.getElementById('logoImage').src = logoData;
+                                document.getElementById('topLogoImage').src = logoData;
+                                
+                                // Update favicon
+                                const link = document.querySelector("link[rel*='icon']");
+                                if (link) link.href = logoData;
+                                
+                                this.showNotification('Logo updated!');
+                            } catch (error) {
+                                console.error('Logo save error:', error);
+                                this.showNotification('Logo upload failed');
+                            }
                         };
-                        this.tracks[index].clips.push(clip);
-                        this.renderMixer();
-                        this.notify('Audio uploaded: ' + file.name);
+                        reader.readAsDataURL(file);
                     }
                 };
                 input.click();
             },
 
-            async toggleRecord() {
-                if (this.isRecording) {
-                    this.stopRecording();
-                } else {
-                    await this.startRecording();
+            async login() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    this.showNotification('Please enter email and password');
+                    return;
+                }
+
+                try {
+                    const userKey = `user:${email}`;
+                    const userData = await window.storage.get(userKey);
+
+                    if (!userData) {
+                        this.showNotification('Account not found. Please sign up.');
+                        return;
+                    }
+
+                    const user = JSON.parse(userData.value);
+
+                    if (user.password !== password) {
+                        this.showNotification('Incorrect password');
+                        return;
+                    }
+
+                    this.currentUser = user;
+                    
+                    // Check if admin
+                    if (email === 'kurraschgamingmerchstore@gmail.com') {
+                        this.currentUser.isAdmin = true;
+                        this.currentUser.tier = 'Elite';
+                    }
+
+                    // Load saved logo if exists
+                    try {
+                        const logoResult = await window.storage.get('site-logo', true);
+                        if (logoResult) {
+                            document.getElementById('logoImage').src = logoResult.value;
+                            document.getElementById('topLogoImage').src = logoResult.value;
+                            const link = document.querySelector("link[rel*='icon']");
+                            if (link) link.href = logoResult.value;
+                        }
+                    } catch (error) {
+                        // No saved logo, use default
+                    }
+
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dawApp').classList.add('active');
+                    
+                    this.showNotification(`Welcome back, ${user.name}!`);
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showNotification('Login failed');
                 }
             },
 
-            async startRecording() {
+            async showSignup() {
+                const email = prompt('Enter your email:');
+                if (!email) return;
+
+                const name = prompt('Enter your name:');
+                if (!name) return;
+
+                const password = prompt('Create a password:');
+                if (!password) return;
+
+                try {
+                    const userKey = `user:${email}`;
+                    
+                    const newUser = {
+                        email,
+                        name,
+                        password,
+                        tier: 'Basic',
+                        createdAt: Date.now(),
+                        profile: {
+                            bio: '',
+                            genres: [],
+                            location: '',
+                            avatar: '',
+                            banner: '',
+                            musicLinks: []
+                        },
+                        projects: [],
+                        followers: [],
+                        following: []
+                    };
+
+                    await window.storage.set(userKey, JSON.stringify(newUser));
+                    
+                    this.showNotification('Account created! Please login.');
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    this.showNotification('Signup failed');
+                }
+            },
+
+            logout() {
+                this.currentUser = null;
+                document.getElementById('dawApp').classList.remove('active');
+                document.getElementById('loginScreen').style.display = 'flex';
+                this.showNotification('Logged out');
+            },
+
+            showProfile() {
+                alert('Profile page coming soon! This will show:\n- Avatar & Banner\n- Bio & Genres\n- Your Music Portfolio\n- Followers/Following\n- Collaboration Requests');
+            },
+
+            startRainbowNotes() {
+                const container = document.getElementById('rainbowNotes');
+                const notes = ['♪', '♫', '♬', '𝄞', '𝄢', '♩', '♭', '♯'];
+                const colors = ['#ff00ff', '#ff69b4', '#ff1493', '#ff0000', '#ff4500', '#ff8c00', '#ffd700', '#adff2f', '#00ff00', '#00ff7f', '#00ffff', '#00bfff', '#0080ff', '#4169e1', '#8a2be2', '#9370db'];
+
+                // Create notes continuously
+                setInterval(() => {
+                    for (let i = 0; i < 2; i++) {
+                        const note = document.createElement('div');
+                        note.className = 'musical-note';
+                        note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                        note.style.left = Math.random() * 100 + '%';
+                        note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                        note.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                        note.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+                        
+                        container.appendChild(note);
+
+                        setTimeout(() => note.remove(), 8000);
+                    }
+                }, 200);
+            },
+
+            initTimeline() {
+                const ruler = document.getElementById('timelineRuler');
+                for (let i = 1; i <= 64; i++) {
+                    const mark = document.createElement('div');
+                    mark.className = 'ruler-mark';
+                    mark.textContent = i;
+                    ruler.appendChild(mark);
+                }
+            },
+
+            initPianoRoll() {
+                const keys = document.getElementById('pianoKeys');
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                
+                for (let octave = 7; octave >= 0; octave--) {
+                    for (let i = 11; i >= 0; i--) {
+                        const key = document.createElement('div');
+                        key.className = 'piano-key ' + (noteNames[i].includes('#') ? 'black' : 'white');
+                        key.textContent = noteNames[i] + octave;
+                        keys.appendChild(key);
+                    }
+                }
+            },
+
+            initStepSequencer() {
+                const container = document.getElementById('stepContainer');
+                const tracks = ['Kick', 'Snare', 'Hi-Hat', 'Clap', 'Tom', 'Cymbal'];
+
+                tracks.forEach(trackName => {
+                    const track = document.createElement('div');
+                    track.className = 'step-track';
+                    
+                    const name = document.createElement('div');
+                    name.className = 'step-track-name';
+                    name.textContent = trackName;
+                    track.appendChild(name);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'step-grid';
+                    
+                    for (let i = 0; i < 16; i++) {
+                        const pad = document.createElement('div');
+                        pad.className = 'step-pad';
+                        pad.onclick = () => pad.classList.toggle('active');
+                        grid.appendChild(pad);
+                    }
+                    
+                    track.appendChild(grid);
+                    container.appendChild(track);
+                });
+            },
+
+            showNotification(message) {
+                const existing = document.querySelector('.notification');
+                if (existing) existing.remove();
+
+                const notif = document.createElement('div');
+                notif.className = 'notification';
+                notif.textContent = message;
+                document.body.appendChild(notif);
+
+                setTimeout(() => notif.remove(), 3000);
+            }
+        };
+
+        // DAW FUNCTIONALITY
+        const DAW = {
+            tracks: [],
+            isPlaying: false,
+            isRecording: false,
+            currentTime: 0,
+            audioContext: null,
+            mediaRecorder: null,
+            recordedChunks: [],
+
+            switchView(view) {
+                document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.workspace-view').forEach(v => v.classList.remove('active'));
+                
+                event.target.classList.add('active');
+                document.getElementById(view + 'View').classList.add('active');
+                
+                if (view === 'mixer') this.updateMixerView();
+            },
+
+            addTrack() {
+                const trackNum = this.tracks.length + 1;
+                const track = {
+                    id: 'track_' + Date.now(),
+                    name: 'Track ' + trackNum,
+                    clips: [],
+                    volume: 75,
+                    muted: false,
+                    solo: false,
+                    settings: {
+                        gain: 0,
+                        eq: { low: 0, lowmid: 0, highmid: 0, high: 0 },
+                        comp: { threshold: -20, ratio: 4, attack: 10, release: 100 },
+                        gate: { threshold: -40, range: 0 },
+                        fx: { reverb: 0, delay: 0, chorus: 0 },
+                        lofi: { type: 'off', wow: 0, noise: 0 }
+                    }
+                };
+
+                this.tracks.push(track);
+                this.renderTracks();
+                this.updateMixerView();
+                APP.showNotification(`Track ${trackNum} added`);
+            },
+
+            renderTracks() {
+                const container = document.getElementById('tracksContainer');
+                container.innerHTML = '';
+
+                this.tracks.forEach((track, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'track-row';
+
+                    row.innerHTML = `
+                        <div class="track-header">
+                            <div class="track-name">${track.name}</div>
+                            <div class="track-controls">
+                                <button class="track-btn ${track.muted ? 'active' : ''}" onclick="DAW.toggleMute(${index})">M</button>
+                                <button class="track-btn ${track.solo ? 'active' : ''}" onclick="DAW.toggleSolo(${index})">S</button>
+                                <button class="track-btn" onclick="DAW.deleteTrack(${index})">X</button>
+                            </div>
+                            <input type="range" style="width: 100%;" min="0" max="100" value="${track.volume}" oninput="DAW.setTrackVolume(${index}, this.value)">
+                        </div>
+                        <div class="track-timeline" id="timeline_${track.id}"></div>
+                    `;
+
+                    container.appendChild(row);
+                });
+
+                document.getElementById('trackCount').textContent = this.tracks.length + ' Tracks';
+            },
+
+            updateMixerView() {
+                const container = document.getElementById('mixerContainer');
+                container.innerHTML = '';
+
+                this.tracks.forEach((track, index) => {
+                    const strip = document.createElement('div');
+                    strip.className = 'mixer-strip';
+
+                    strip.innerHTML = `
+                        <div class="strip-name">${track.name}</div>
+                        <div class="level-meter">
+                            <div class="meter-level" style="height: ${track.volume}%"></div>
+                        </div>
+                        <input type="range" class="vertical-fader" min="0" max="100" value="${track.volume}" oninput="DAW.setTrackVolume(${index}, this.value)">
+                        <div class="fader-value">${track.volume}%</div>
+                        <div class="strip-controls">
+                            <button class="strip-btn ${track.muted ? 'active' : ''}" onclick="DAW.toggleMute(${index})">M</button>
+                            <button class="strip-btn ${track.solo ? 'active' : ''}" onclick="DAW.toggleSolo(${index})">S</button>
+                        </div>
+                    `;
+
+                    container.appendChild(strip);
+                });
+
+                // Add Master strip
+                const master = document.createElement('div');
+                master.className = 'mixer-strip';
+                master.style.borderColor = 'var(--gold)';
+                master.innerHTML = `
+                    <div class="strip-name" style="color: var(--gold);">MASTER</div>
+                    <div class="level-meter">
+                        <div class="meter-level" style="height: 75%"></div>
+                    </div>
+                    <input type="range" class="vertical-fader" min="0" max="100" value="75" oninput="DAW.updateMaster(this.value)">
+                    <div class="fader-value">75%</div>
+                `;
+                container.appendChild(master);
+            },
+
+            toggleMute(index) {
+                this.tracks[index].muted = !this.tracks[index].muted;
+                this.renderTracks();
+                this.updateMixerView();
+            },
+
+            toggleSolo(index) {
+                this.tracks[index].solo = !this.tracks[index].solo;
+                this.renderTracks();
+                this.updateMixerView();
+            },
+
+            setTrackVolume(index, value) {
+                this.tracks[index].volume = parseInt(value);
+                this.updateMixerView();
+            },
+
+            deleteTrack(index) {
+                if (confirm('Delete this track?')) {
+                    this.tracks.splice(index, 1);
+                    this.renderTracks();
+                    this.updateMixerView();
+                    APP.showNotification('Track deleted');
+                }
+            },
+
+            addSample(sampleName) {
                 if (this.tracks.length === 0) {
-                    this.notify('Add a channel first');
+                    APP.showNotification('Add a track first');
                     return;
+                }
+
+                const track = this.tracks[this.tracks.length - 1];
+                const colors = ['#e94560', '#00d9ff', '#ffd700', '#00ff88', '#ff6b6b'];
+                
+                track.clips.push({
+                    name: sampleName,
+                    start: track.clips.length * 160,
+                    duration: 240,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+
+                const timeline = document.getElementById('timeline_' + track.id);
+                const clip = document.createElement('div');
+                clip.className = 'audio-clip';
+                clip.style.left = (track.clips.length - 1) * 160 + 'px';
+                clip.style.width = '240px';
+                clip.style.background = track.clips[track.clips.length - 1].color;
+                clip.textContent = sampleName;
+                timeline.appendChild(clip);
+
+                APP.showNotification(`${sampleName} added to ${track.name}`);
+            },
+
+            addAIVoice(voiceName) {
+                if (this.tracks.length === 0) {
+                    APP.showNotification('Add a track first');
+                    return;
+                }
+
+                const track = this.tracks[this.tracks.length - 1];
+                track.clips.push({
+                    name: `AI Voice: ${voiceName}`,
+                    start: track.clips.length * 160,
+                    duration: 320,
+                    color: '#ff00ff'
+                });
+
+                const timeline = document.getElementById('timeline_' + track.id);
+                const clip = document.createElement('div');
+                clip.className = 'audio-clip';
+                clip.style.left = (track.clips.length - 1) * 160 + 'px';
+                clip.style.width = '320px';
+                clip.style.background = '#ff00ff';
+                clip.textContent = `AI: ${voiceName}`;
+                timeline.appendChild(clip);
+
+                APP.showNotification(`AI Voice "${voiceName}" added`);
+            },
+
+            uploadAudio() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'audio/*';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        APP.showNotification(`Uploaded: ${file.name}`);
+                        this.addSample(file.name);
+                    }
+                };
+                input.click();
+            },
+
+            async recordMic() {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
 
                 try {
@@ -2129,485 +1693,226 @@
                     };
 
                     this.mediaRecorder.onstop = () => {
-                        const clip = {
-                            id: 'clip_' + Date.now(),
-                            name: 'Recording ' + new Date().toLocaleTimeString(),
-                            start: 0,
-                            duration: 30,
-                            fileSize: this.recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)
-                        };
-                        this.tracks[0].clips.push(clip);
-                        this.renderMixer();
-                        this.notify('Recording saved');
+                        const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+                        APP.showNotification('Recording saved!');
+                        this.addSample('Recorded Audio');
                     };
 
                     this.mediaRecorder.start();
                     this.isRecording = true;
-                    document.getElementById('recordBtn').classList.add('recording');
-                    this.notify('Recording...');
-                } catch (e) {
-                    this.notify('Microphone access denied');
+                    APP.showNotification('🎤 Recording started...');
+
+                    setTimeout(() => {
+                        if (this.isRecording) {
+                            this.mediaRecorder.stop();
+                            this.isRecording = false;
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                    }, 10000);
+
+                } catch (error) {
+                    console.error('Mic access error:', error);
+                    APP.showNotification('Could not access microphone');
                 }
             },
 
-            stopRecording() {
-                if (this.mediaRecorder && this.isRecording) {
-                    this.mediaRecorder.stop();
-                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                    this.isRecording = false;
-                    document.getElementById('recordBtn').classList.remove('recording');
-                }
+            record() {
+                this.recordMic();
             },
 
-            togglePlay() {
+            playPause() {
                 this.isPlaying = !this.isPlaying;
-                document.getElementById('playBtn').textContent = this.isPlaying ? '⏸' : '▶';
                 if (this.isPlaying) {
-                    this.notify('Playing...');
-                    this.animateMeters();
+                    APP.showNotification('▶ Playing');
+                    this.startPlayback();
+                } else {
+                    APP.showNotification('⏸ Paused');
                 }
             },
 
             stop() {
                 this.isPlaying = false;
-                this.isRecording = false;
-                document.getElementById('playBtn').textContent = '▶';
-                document.getElementById('recordBtn').classList.remove('recording');
+                this.currentTime = 0;
+                document.getElementById('timeDisplay').textContent = '00:00:000';
+                APP.showNotification('⏹ Stopped');
             },
 
-            initMeters() {
-                const meterL = document.getElementById('meterL');
-                const meterR = document.getElementById('meterR');
-                for (let i = 0; i < 30; i++) {
-                    const barL = document.createElement('div');
-                    barL.className = 'meter-bar';
-                    barL.style.height = '0%';
-                    meterL.appendChild(barL);
-
-                    const barR = document.createElement('div');
-                    barR.className = 'meter-bar';
-                    barR.style.height = '0%';
-                    meterR.appendChild(barR);
-                }
-            },
-
-            animateMeters() {
-                if (!this.isPlaying) return;
-                
-                document.querySelectorAll('.meter-bar').forEach(bar => {
-                    const height = Math.random() * 100;
-                    bar.style.height = height + '%';
-                    bar.style.background = height > 80 ? '#ff0000' : height > 60 ? '#ffff00' : '#00ff00';
-                });
-
-                setTimeout(() => this.animateMeters(), 50);
-            },
-
-            generateAI() {
-                const prompt = document.getElementById('aiPrompt').value;
-                if (!prompt) {
-                    this.notify('Enter a prompt');
-                    return;
-                }
-
-                if (this.currentUser.used.aiGen >= this.currentUser.quotas.aiGen && this.currentUser.quotas.aiGen < 999) {
-                    this.notify('AI quota exceeded. Upgrade your plan!');
-                    return;
-                }
-
-                this.notify('Generating AI audio...');
-
-                setTimeout(() => {
-                    const track = {
-                        id: 'track_' + Date.now(),
-                        name: 'AI: ' + prompt.substring(0, 15),
-                        volume: 80,
-                        pan: 0,
-                        muted: false,
-                        solo: false,
-                        eq: { low: 0, mid: 0, high: 0 },
-                        compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
-                        reverb: 0,
-                        delay: 0,
-                        clips: [{
-                            id: 'clip_' + Date.now(),
-                            name: 'AI Generated',
-                            start: 0,
-                            duration: 60,
-                            fileSize: 2048000
-                        }]
-                    };
-
-                    this.tracks.push(track);
-                    this.renderMixer();
-
-                    this.currentUser.used.aiGen++;
-                    this.updateUserInDB();
-                    this.updateQuotas();
+            startPlayback() {
+                const update = () => {
+                    if (!this.isPlaying) return;
                     
-                    this.notify('AI track generated!');
-                    document.getElementById('aiPrompt').value = '';
-                }, 2500);
+                    this.currentTime += 16;
+                    const mins = Math.floor(this.currentTime / 60000);
+                    const secs = Math.floor((this.currentTime % 60000) / 1000);
+                    const ms = this.currentTime % 1000;
+                    
+                    document.getElementById('timeDisplay').textContent = 
+                        String(mins).padStart(2, '0') + ':' +
+                        String(secs).padStart(2, '0') + ':' +
+                        String(ms).padStart(3, '0');
+                    
+                    requestAnimationFrame(update);
+                };
+                update();
             },
 
-            generateTTS() {
-                const text = document.getElementById('ttsText').value;
-                if (!text) {
-                    this.notify('Enter text for TTS');
+            updateGain(value) {
+                document.getElementById('gainValue').textContent = value + ' dB';
+            },
+
+            updateEQ(band, value) {
+                const id = band === 'low' ? 'eqLowValue' : 
+                          band === 'lowmid' ? 'eqLowMidValue' :
+                          band === 'highmid' ? 'eqHighMidValue' : 'eqHighValue';
+                document.getElementById(id).textContent = value + ' dB';
+            },
+
+            updateComp(param, value) {
+                if (param === 'threshold') {
+                    document.getElementById('compThresholdValue').textContent = value + ' dB';
+                } else if (param === 'ratio') {
+                    document.getElementById('compRatioValue').textContent = value + ':1';
+                } else if (param === 'attack') {
+                    document.getElementById('compAttackValue').textContent = value + ' ms';
+                } else if (param === 'release') {
+                    document.getElementById('compReleaseValue').textContent = value + ' ms';
+                }
+            },
+
+            updateGate(param, value) {
+                if (param === 'threshold') {
+                    document.getElementById('gateThresholdValue').textContent = value + ' dB';
+                } else if (param === 'range') {
+                    document.getElementById('gateRangeValue').textContent = value + ' dB';
+                }
+            },
+
+            updateFX(fx, value) {
+                if (fx === 'reverb') {
+                    document.getElementById('reverbValue').textContent = value + '%';
+                } else if (fx === 'delay') {
+                    document.getElementById('delayValue').textContent = value + '%';
+                } else if (fx === 'chorus') {
+                    document.getElementById('chorusValue').textContent = value + '%';
+                }
+            },
+
+            updateLoFi(type) {
+                APP.showNotification(`Lo-Fi filter: ${type}`);
+            },
+
+            updateLoFiParam(param, value) {
+                if (param === 'wow') {
+                    document.getElementById('wowValue').textContent = value + '%';
+                } else if (param === 'noise') {
+                    document.getElementById('noiseValue').textContent = value + '%';
+                }
+            },
+
+            updateSend(num, value) {
+                document.getElementById(`send${num}Value`).textContent = value + '%';
+            },
+
+            updateMaster(value) {
+                document.getElementById('masterValue').textContent = value + '%';
+            },
+
+            async save() {
+                if (!APP.currentUser) {
+                    APP.showNotification('Please login first');
                     return;
                 }
 
-                const voice = DONNA_VOICES.find(v => v.id === this.selectedVoice);
-                this.notify(`Generating voice with ${voice.name}...`);
+                const project = {
+                    id: 'project_' + Date.now(),
+                    name: 'My Project',
+                    tracks: this.tracks,
+                    bpm: 120,
+                    createdAt: Date.now(),
+                    owner: APP.currentUser.email
+                };
 
-                setTimeout(() => {
-                    const track = {
-                        id: 'track_' + Date.now(),
-                        name: `${voice.name} Voice`,
-                        volume: 80,
-                        pan: 0,
-                        muted: false,
-                        solo: false,
-                        eq: { low: 0, mid: 0, high: 0 },
-                        compression: { threshold: -20, ratio: 4, attack: 10, release: 100 },
-                        reverb: 20,
-                        delay: 0,
-                        clips: [{
-                            id: 'clip_' + Date.now(),
-                            name: 'TTS Voice',
-                            start: 0,
-                            duration: 45,
-                            fileSize: 1536000
-                        }]
-                    };
-
-                    this.tracks.push(track);
-                    this.renderMixer();
-
-                    this.currentUser.used.aiGen++;
-                    this.updateUserInDB();
-                    
-                    this.notify(`${voice.name} voice generated!`);
-                    document.getElementById('ttsText').value = '';
-                }, 2000);
-            },
-
-            updateUserInDB() {
-                const index = this.db.users.findIndex(u => u.id === this.currentUser.id);
-                if (index >= 0) {
-                    this.db.users[index] = this.currentUser;
-                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-                    this.saveToMemory();
+                try {
+                    const projectKey = `project:${APP.currentUser.email}:${project.id}`;
+                    await window.storage.set(projectKey, JSON.stringify(project));
+                    APP.showNotification('💾 Project saved!');
+                } catch (error) {
+                    console.error('Save error:', error);
+                    APP.showNotification('Save failed');
                 }
-            },
-
-            openVoiceTraining() {
-                const modal = document.createElement('div');
-                modal.className = 'modal';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Train Custom AI Voice</h2>
-                            <button class="close-btn" onclick="this.closest('.modal').remove()">✕</button>
-                        </div>
-                        <p style="color: var(--text-dim); margin-bottom: 1rem;">
-                            Upload 5-10 audio samples of a voice (each 10-30 seconds) to train a custom AI voice model.
-                        </p>
-                        <div class="upload-area" onclick="document.getElementById('voiceFiles').click()">
-                            <div style="font-size: 3rem;">🎤</div>
-                            <div>Click to upload voice samples</div>
-                            <input type="file" id="voiceFiles" multiple accept="audio/*" style="display: none;" onchange="app.handleVoiceUpload(event)">
-                        </div>
-                        <div class="file-list" id="voiceFileList"></div>
-                        <div class="form-group" style="margin-top: 1rem;">
-                            <label>Voice Name</label>
-                            <input type="text" id="voiceModelName" placeholder="My Custom Voice">
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="voiceConsent">
-                                I have permission to use these voice samples and agree to the terms
-                            </label>
-                        </div>
-                        <button class="btn" onclick="app.trainVoice()" style="margin-top: 1rem; width: 100%;">🎙 Start Training</button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-            },
-
-            handleVoiceUpload(e) {
-                const files = Array.from(e.target.files);
-                const list = document.getElementById('voiceFileList');
-                list.innerHTML = files.map(f => `
-                    <div class="file-item">
-                        <span>🎵 ${f.name}</span>
-                        <span>${(f.size / 1024 / 1024).toFixed(2)} MB</span>
-                    </div>
-                `).join('');
-            },
-
-            trainVoice() {
-                const files = document.getElementById('voiceFiles').files;
-                const consent = document.getElementById('voiceConsent').checked;
-                const modelName = document.getElementById('voiceModelName').value;
-                
-                if (files.length === 0) {
-                    this.notify('Upload voice samples');
-                    return;
-                }
-                
-                if (!modelName) {
-                    this.notify('Enter a voice name');
-                    return;
-                }
-                
-                if (!consent) {
-                    this.notify('Accept terms to continue');
-                    return;
-                }
-
-                this.notify('Training voice model...');
-                
-                setTimeout(() => {
-                    const newVoice = {
-                        id: 'custom_' + Date.now(),
-                        name: modelName,
-                        type: 'Custom',
-                        style: 'Trained Voice',
-                        userId: this.currentUser.id
-                    };
-                    
-                    DONNA_VOICES.push(newVoice);
-                    this.initVoices();
-                    
-                    const trainedList = document.getElementById('trainedVoices');
-                    if (trainedList) {
-                        trainedList.innerHTML += `
-                            <div class="file-item">
-                                <span>${modelName}</span>
-                                <span class="status-badge">Ready</span>
-                            </div>
-                        `;
-                    }
-                    
-                    document.querySelector('.modal').remove();
-                    this.notify('Voice model trained successfully!');
-                }, 3500);
             },
 
             exportProject() {
-                if (!this.currentProject || this.tracks.length === 0) {
-                    this.notify('Nothing to export');
+                const project = {
+                    name: 'My Project',
+                    tracks: this.tracks,
+                    bpm: 120,
+                    exportedAt: Date.now(),
+                    format: 'WAV/MP3'
+                };
+
+                const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'project_export.json';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                APP.showNotification('⬇ Project exported!');
+            },
+
+            async submitToLabel() {
+                if (!APP.currentUser) {
+                    APP.showNotification('Please login first');
                     return;
                 }
 
-                this.notify('Exporting project...');
-                
-                setTimeout(() => {
-                    const exportData = {
-                        project: this.currentProject.title,
-                        artist: this.currentUser.name,
-                        tracks: this.tracks.map(t => ({
-                            name: t.name,
-                            clips: t.clips.length,
-                            volume: t.volume,
-                            eq: t.eq,
-                            fx: { reverb: t.reverb, delay: t.delay }
-                        })),
-                        exportDate: new Date().toISOString(),
-                        format: 'WAV 44.1kHz 24-bit'
-                    };
+                const submission = {
+                    id: 'submission_' + Date.now(),
+                    artist: APP.currentUser.name,
+                    email: APP.currentUser.email,
+                    project: {
+                        tracks: this.tracks,
+                        bpm: 120
+                    },
+                    submittedAt: Date.now(),
+                    status: 'pending'
+                };
 
-                    const newTrack = {
-                        id: 'track_' + Date.now(),
-                        userId: this.currentUser.id,
-                        title: this.currentProject.title,
-                        genre: this.currentUser.genres?.split(',')[0] || 'Unknown',
-                        createdAt: new Date().toISOString()
-                    };
-                    this.db.tracks.push(newTrack);
-                    this.saveToMemory();
-
-                    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${this.currentProject.title.replace(/\s/g, '_')}_export.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
+                try {
+                    const submissionKey = `submission:${submission.id}`;
+                    await window.storage.set(submissionKey, JSON.stringify(submission), true);
                     
-                    this.notify('Project exported & saved to profile!');
-                }, 1500);
-            },
-
-            downloadTrack(trackId) {
-                this.notify('Downloading track...');
-            },
-
-            submitProject() {
-                if (!this.currentProject || this.tracks.length === 0) {
-                    this.notify('Complete your project first');
-                    return;
+                    APP.showNotification(`📧 Submitted to kurraschgamingmerchstore@gmail.com\n\nYour music will be reviewed for label release!`);
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    APP.showNotification('Submission failed');
                 }
-
-                if (!confirm(`Submit "${this.currentProject.title}" to Kurrasch Records Label?\n\nThis will email the final mix to kurraschgamingmerchstore@gmail.com for review and potential release.`)) {
-                    return;
-                }
-
-                this.notify('Preparing submission...');
-
-                setTimeout(() => {
-                    const submission = {
-                        id: 'sub_' + Date.now(),
-                        projectId: this.currentProject.id,
-                        projectTitle: this.currentProject.title,
-                        artistName: this.currentUser.name,
-                        artistEmail: this.currentUser.email,
-                        trackCount: this.tracks.length,
-                        submittedAt: new Date().toISOString(),
-                        status: 'submitted'
-                    };
-
-                    this.db.submissions.push(submission);
-                    this.saveToMemory();
-
-                    this.notify('SUBMITTED TO LABEL!');
-                    
-                    setTimeout(() => {
-                        alert(`✅ Submission Confirmed!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nProject: ${this.currentProject.title}\nArtist: ${this.currentUser.name}\nTracks: ${this.tracks.length}\n\nSubmitted to:\nkurraschgamingmerchstore@gmail.com\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nYour music will be reviewed for label release.\nIf accepted, Kurrasch Records will handle distribution.\n\nThank you for submitting!`);
-                    }, 500);
-                }, 1500);
-            },
-
-            loadAdmin() {
-                this.loadAdminStats();
-                this.loadUsers();
-                this.loadSubmissions();
-                this.loadAdminCollabs();
-                this.loadStudioStats();
-            },
-
-            loadAdminStats() {
-                document.getElementById('totalUsers').textContent = this.db.users.length;
-                document.getElementById('totalProjects').textContent = this.db.projects.length;
-                document.getElementById('totalSubmissions').textContent = this.db.submissions.length;
-                
-                const aiGenToday = this.db.users.reduce((sum, u) => sum + u.used.aiGen, 0);
-                document.getElementById('aiGenToday').textContent = aiGenToday;
-                
-                const studioHours = this.db.users.reduce((sum, u) => sum + u.used.dailyHours, 0);
-                document.getElementById('studioHours').textContent = studioHours;
-                
-                const activeCollabs = this.db.collabRequests.filter(r => r.status === 'accepted').length;
-                document.getElementById('activeCollabs').textContent = activeCollabs;
-                
-                const monthlyRev = this.db.users.filter(u => u.plan === 'pro').length * 29;
-                document.getElementById('monthlyRev').textContent = monthlyRev;
-                
-                const yearlyRev = this.db.users.filter(u => u.plan === 'elite').length * 99;
-                document.getElementById('yearlyRev').textContent = yearlyRev;
-            },
-
-            loadUsers() {
-                const list = document.getElementById('userList');
-                list.innerHTML = this.db.users.map(u => `
-                    <div class="user-item">
-                        <div>
-                            <strong>${u.name}</strong><br>
-                            <span style="font-size: 0.9rem; color: var(--text-dim);">${u.email}</span><br>
-                            <span style="font-size: 0.8rem; color: var(--text-dim);">
-                                AI: ${u.used.aiGen}/${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen} | 
-                                Hours: ${u.used.dailyHours}/${u.quotas.dailyHours > 999 ? '∞' : u.quotas.dailyHours}
-                            </span>
-                        </div>
-                        <div>
-                            <span class="status-badge">${u.plan.toUpperCase()}</span>
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            filterAdminUsers() {
-                const query = document.getElementById('adminUserSearch').value.toLowerCase();
-                const filtered = this.db.users.filter(u => 
-                    u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)
-                );
-                
-                const list = document.getElementById('userList');
-                list.innerHTML = filtered.map(u => `
-                    <div class="user-item">
-                        <div>
-                            <strong>${u.name}</strong><br>
-                            <span style="font-size: 0.9rem; color: var(--text-dim);">${u.email}</span><br>
-                            <span style="font-size: 0.8rem; color: var(--text-dim);">
-                                AI: ${u.used.aiGen}/${u.quotas.aiGen > 999 ? '∞' : u.quotas.aiGen}
-                            </span>
-                        </div>
-                        <div>
-                            <span class="status-badge">${u.plan.toUpperCase()}</span>
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            loadSubmissions() {
-                const list = document.getElementById('submissionList');
-                if (this.db.submissions.length === 0) {
-                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No submissions yet</div>';
-                } else {
-                    list.innerHTML = this.db.submissions.map(s => `
-                        <div class="file-item">
-                            <div>
-                                <strong>${s.projectTitle}</strong><br>
-                                <span style="font-size: 0.9rem; color: var(--text-dim);">
-                                    ${s.artistName} (${s.artistEmail})<br>
-                                    ${s.trackCount} tracks • ${new Date(s.submittedAt).toLocaleString()}
-                                </span>
-                            </div>
-                            <span class="status-badge">${s.status}</span>
-                        </div>
-                    `).join('');
-                }
-            },
-
-            loadAdminCollabs() {
-                const list = document.getElementById('adminCollabList');
-                if (this.db.collabRequests.length === 0) {
-                    list.innerHTML = '<div style="color: var(--text-dim); padding: 1rem; text-align: center;">No collaboration requests</div>';
-                } else {
-                    list.innerHTML = this.db.collabRequests.map(r => {
-                        const fromUser = this.db.users.find(u => u.id === r.fromUserId);
-                        const toUser = this.db.users.find(u => u.id === r.toUserId);
-                        return `
-                            <div class="file-item">
-                                <div>
-                                    <strong>${fromUser?.name || 'Unknown'}</strong> → <strong>${toUser?.name || 'Unknown'}</strong><br>
-                                    <span style="font-size: 0.9rem; color: var(--text-dim);">
-                                        ${r.message}<br>
-                                        ${new Date(r.createdAt).toLocaleString()}
-                                    </span>
-                                </div>
-                                <span class="status-badge ${r.status === 'pending' ? 'pending' : r.status === 'rejected' ? 'rejected' : ''}">${r.status}</span>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            },
-
-            notify(message) {
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.textContent = message;
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.style.opacity = '0';
-                    setTimeout(() => notification.remove(), 300);
-                }, 3000);
             }
         };
 
-        window.addEventListener('DOMContentLoaded', () => app.init());
+        // INITIALIZE APP
+        window.addEventListener('DOMContentLoaded', () => {
+            APP.init();
+        });
+
+        // KEYBOARD SHORTCUTS
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                DAW.playPause();
+            } else if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                DAW.save();
+            } else if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                DAW.record();
+            } else if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                DAW.exportProject();
+            }
+        });
     </script>
 </body>
 </html>
