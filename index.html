@@ -888,7 +888,7 @@
     <!-- LOGIN SCREEN -->
     <div class="auth-screen" id="loginScreen">
         <div class="auth-box">
-            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=69120ddd&is=6910bc5d&hm=ecc654b64e0ba1d66267596f35c6474fb66aa564271cc8a236885910c25e1fdd&" class="auth-logo-img" alt="Kurrasch Records">
+            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="auth-logo-img" alt="Kurrasch Records">
             <div class="auth-logo">KURRASCH RECORDS</div>
             <input type="email" class="auth-input" id="loginEmail" placeholder="Email Address">
             <input type="password" class="auth-input" id="loginPassword" placeholder="Password">
@@ -900,7 +900,7 @@
     <!-- SIGNUP SCREEN -->
     <div class="auth-screen hidden" id="signupScreen">
         <div class="auth-box">
-            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=69120ddd&is=6910bc5d&hm=ecc654b64e0ba1d66267596f35c6474fb66aa564271cc8a236885910c25e1fdd&" class="auth-logo-img" alt="Kurrasch Records">
+            <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="auth-logo-img" alt="Kurrasch Records">
             <div class="auth-logo">CREATE ACCOUNT</div>
             <input type="text" class="auth-input" id="signupName" placeholder="Full Name">
             <input type="email" class="auth-input" id="signupEmail" placeholder="Email Address">
@@ -916,7 +916,7 @@
         <!-- TOP MENU BAR -->
         <div class="menu-bar">
             <div class="logo">
-                <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png?ex=69120ddd&is=6910bc5d&hm=ecc654b64e0ba1d66267596f35c6474fb66aa564271cc8a236885910c25e1fdd&" class="logo-img" alt="KR">
+                <img src="https://cdn.discordapp.com/attachments/1428592257581318255/1436930289472372866/Kurrasch_Records-Photoroom.png" class="logo-img" alt="KR">
                 <span>KURRASCH RECORDS</span>
             </div>
             <div class="menu-items">
@@ -1130,10 +1130,21 @@
 
                 try {
                     const userKey = `user:${email}`;
-                    let userData = await window.storage.get(userKey);
+                    let user = null;
 
-                    if (!userData && email === 'kurraschgamingmerchstore@gmail.com') {
-                        const adminUser = {
+                    // Try to get existing user
+                    try {
+                        const userData = await window.storage.get(userKey);
+                        if (userData && userData.value) {
+                            user = JSON.parse(userData.value);
+                        }
+                    } catch (e) {
+                        // User doesn't exist
+                    }
+
+                    // Auto-create admin if it's the admin email and doesn't exist
+                    if (!user && email === 'kurraschgamingmerchstore@gmail.com') {
+                        user = {
                             email: email,
                             name: 'Kurrasch Records Admin',
                             password: password,
@@ -1141,36 +1152,39 @@
                             isAdmin: true,
                             createdAt: Date.now()
                         };
-                        await window.storage.set(userKey, JSON.stringify(adminUser));
-                        userData = { value: JSON.stringify(adminUser) };
+                        
+                        await window.storage.set(userKey, JSON.stringify(user));
+                        this.showNotification('✅ Admin account created!');
                     }
 
-                    if (!userData) {
-                        this.showNotification('Account not found. Please sign up.');
+                    // Check if user exists
+                    if (!user) {
+                        this.showNotification('❌ Account not found. Please sign up first.');
                         return;
                     }
 
-                    const user = JSON.parse(userData.value);
-
+                    // Check password
                     if (user.password !== password) {
-                        this.showNotification('Incorrect password');
+                        this.showNotification('❌ Incorrect password');
                         return;
                     }
 
-                    this.currentUser = user;
-                    
+                    // Set admin flag
                     if (email === 'kurraschgamingmerchstore@gmail.com') {
-                        this.currentUser.isAdmin = true;
-                        this.currentUser.tier = 'Elite';
+                        user.isAdmin = true;
+                        user.tier = 'Elite';
                     }
 
+                    // Login successful
+                    this.currentUser = user;
                     document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('signupScreen').classList.add('hidden');
                     document.getElementById('dawApp').classList.add('active');
                     
-                    this.showNotification(`Welcome, ${user.name}!`);
+                    this.showNotification(`✅ Welcome, ${user.name}!`);
                 } catch (error) {
                     console.error('Login error:', error);
-                    this.showNotification('Login failed');
+                    this.showNotification('❌ Login error: ' + error.message);
                 }
             },
 
@@ -1180,38 +1194,55 @@
                 const password = document.getElementById('signupPassword').value;
                 const confirm = document.getElementById('signupConfirm').value;
 
-                if (!name || !email || !password || !confirm) {
-                    this.showNotification('Please fill in all fields');
+                if (!name) {
+                    this.showNotification('❌ Please enter your name');
+                    return;
+                }
+
+                if (!email) {
+                    this.showNotification('❌ Please enter your email');
+                    return;
+                }
+
+                if (!password) {
+                    this.showNotification('❌ Please enter a password');
+                    return;
+                }
+
+                if (!confirm) {
+                    this.showNotification('❌ Please confirm your password');
                     return;
                 }
 
                 if (password !== confirm) {
-                    this.showNotification('Passwords do not match');
+                    this.showNotification('❌ Passwords do not match');
                     return;
                 }
 
                 if (password.length < 6) {
-                    this.showNotification('Password must be at least 6 characters');
+                    this.showNotification('❌ Password must be at least 6 characters');
                     return;
                 }
 
                 try {
                     const userKey = `user:${email}`;
                     
+                    // Check if user already exists
                     try {
-                        const exists = await window.storage.get(userKey);
-                        if (exists) {
-                            this.showNotification('Email already registered');
+                        const existing = await window.storage.get(userKey);
+                        if (existing && existing.value) {
+                            this.showNotification('❌ Email already registered. Please login.');
                             return;
                         }
                     } catch (e) {
-                        // Key doesn't exist, which is what we want
+                        // User doesn't exist, good to proceed
                     }
                     
+                    // Create new user
                     const newUser = {
-                        email,
-                        name,
-                        password,
+                        email: email,
+                        name: name,
+                        password: password,
                         tier: 'Basic',
                         isAdmin: false,
                         createdAt: Date.now()
@@ -1219,11 +1250,14 @@
 
                     await window.storage.set(userKey, JSON.stringify(newUser));
                     
-                    this.showNotification('✅ Account created successfully! Please login.');
+                    this.showNotification('✅ Account created successfully!');
                     
+                    // Switch to login and pre-fill email
                     setTimeout(() => {
                         this.showLoginScreen();
                         document.getElementById('loginEmail').value = email;
+                        
+                        // Clear signup form
                         document.getElementById('signupName').value = '';
                         document.getElementById('signupEmail').value = '';
                         document.getElementById('signupPassword').value = '';
@@ -1623,6 +1657,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             APP.init();
+            APP.startRainbowNotes();
         });
     </script>
 </body>
